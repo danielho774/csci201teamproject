@@ -1,0 +1,1 @@
+# Add documentation on how to get the backend working (setup database)

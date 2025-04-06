@@ -1,4 +1,4 @@
--- CREATE DATABASE project201; 
+CREATE DATABASE IF NOT EXISTS project201; 
 USE project201; 
 
 -- USERS 

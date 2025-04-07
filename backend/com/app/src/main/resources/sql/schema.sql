@@ -112,10 +112,17 @@ CREATE TABLE Comments (
     	date_created DATE, 
     	archived BOOLEAN, 
     	resolved BOOLEAN,
-    	reaction INT, 
-    	FOREIGN KEY (member_id) REFERENCES ProjectMembers(member_id), 
-    	FOREIGN KEY (reaction) REFERENCES Reactions(reaction_id)
+    	FOREIGN KEY (member_id) REFERENCES ProjectMembers(member_id)
 ); 
+CREATE TABLE CommentReactions (
+	comment_id INT, 
+	user_id INT, 
+	reaction_id INT, 
+	PRIMARY KEY (comment_id, user_id, reaction_id), 
+	FOREIGN KEY (comment_id) REFERENCES Comments(comment_id), 
+	FOREIGN KEY (user_id) REFERENCES Users(user_id), 
+	FOREIGN KEY (reaction_id) REFERENCES Reactions(reaction_id)
+);
 
 -- NOTIFICATION 
 CREATE TABLE Notification (

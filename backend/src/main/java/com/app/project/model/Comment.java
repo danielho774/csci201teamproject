@@ -1,3 +1,5 @@
+package com.app.project.model;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.ArrayList;

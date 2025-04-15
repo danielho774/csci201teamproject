@@ -1,7 +1,4 @@
 package com.app.project.model;
-
-// import com.app.project.model.Project; 
-
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,14 +12,25 @@ public class User {
 	@Column(name = "user_id", nullable = false)
 	private int userID; 
 
-	@Column(name = "username", nullable = false, unique = true)
+	@Column(name = "username", length = 25, nullable = false, unique = true)
 	private String username; 
 
-	@Column(name = "email", nullable = false, unique = true)
+	@Column(name = "email", length = 50, nullable = false, unique = true)
 	private String email; 
+
+	@Column(name = "password", length = 50, nullable = false)
+	private String password; 
+
+	@Column(name = "first_name", length = 25, nullable = false)
+	private String firstName; 
+
+	@Column(name = "last_name", length = 25, nullable = false) 
+	private String lastName; 
 
 	@Column(name = "is_guest")
 	private boolean isGuest; 
+
+	private boolean loggedIn; 
 
 	// for projects the user owns 
 	// OneToMany --> one user can have multiple projects they own
@@ -47,6 +55,18 @@ public class User {
 		inverseJoinColumns = @JoinColumn(name = "project_id")
 	)
 	private List<Project> memberOfProjects = new ArrayList<>(); 
+
+	// one user can have multiple availabilities 
+	@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL) 
+	private List<Availability> availability = new ArrayList<>(); 
+
+	@ManyToMany 
+	@JoinTable(
+		name = "TaskAssignments", 
+		joinColumns = @JoinColumn(name = "member_id"), 
+		inverseJoinColumns = @JoinColumn(name = "task_id")
+	) 
+	private List<Task> assignedTasks; 
 	
 	public User(int userID, String username, String email, boolean isGuest) {
 		this.userID = userID; 
@@ -55,32 +75,57 @@ public class User {
 		this.isGuest = isGuest; 
 	}
 
-	public boolean login(String username, String password) {
-
+	public boolean login(String username, String email, String password) {
+		if (this.username.equals(username) || this.email.equals(email)) {
+			if (this.password.equals(password)) {
+				this.loggedIn = true; 
+				return true; 
+			}
+		}
 		
-		return false; 
+		this.loggedIn = false; 
+		return false;  
 	}
 
 	public void logout() {
-		
+		this.loggedIn = false; 
 	}
 
+	// returns a combined list of owned and member of projects
 	public List<Project> getProjects() {
 		List<Project> allProjects = new ArrayList<>(ownedProjects); 
-		
-		return null; 
+		for (int i = 0; i < memberOfProjects.size(); i++) {
+			if (!allProjects.contains(memberOfProjects.get(i))) {
+				allProjects.add(memberOfProjects.get(i)); 
+			} 
+		}
+		 
+		return allProjects; 
 	}
 
-	public boolean updateAvailability() {
-		
-		
+	public boolean addAvailability(Availability newAvail) {
+		if (availability.contains(newAvail)) {
+			return false; 
+		}
+
+		newAvail.setUser(this); 
+		availability.add(newAvail); 
+		return true; 
+	}
+
+	public boolean removeAvailability(Availability removeAvail) {
+		if (availability.remove(removeAvail)) {
+			removeAvail.setUser(null); 
+			return true; 
+		}
+
 		return false; 
 	}
 
 	public List<Task> getAssignedTasks() {
+		List<Task> allTasks = new ArrayList<>(); 
 		
 		
-		return null; 
 	}
 	
 //	Getters and Setters 
@@ -104,12 +149,44 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email; 
 	}
+
+	public String getPassword() {
+		return password; 
+	}
+	public void setPassword(String password) {
+		this.password = password; 
+	}
+
+	public String getFirstName() {
+		return firstName; 
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName; 
+	}
+
+	public String getLastName() {
+		return lastName; 
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName; 
+	}
 	
 	public boolean isGuest() {
 		return isGuest; 
 	}
 	public void setGuest(boolean isGuest) {
 		this.isGuest = isGuest;
+	}
+
+	public List<Availability> getAvailabilities() {
+		return availability; 
+	}
+	public void setAvailability(List<Availability> availability) {
+		this.availability = availability; 
+	}
+
+	public boolean isLoggedIn() {
+		return loggedIn; 
 	}
 }
 

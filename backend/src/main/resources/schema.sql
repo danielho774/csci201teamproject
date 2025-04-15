@@ -25,7 +25,7 @@ CREATE TABLE Projects (
 );
 
 -- PROJECT MEMBERS  
-CREATE TABLE ProjectMembers (
+CREATE TABLE ProjectMember (
 	project_id INT, 
     	user_id INT, 
     	member_id INT AUTO_INCREMENT PRIMARY KEY, 

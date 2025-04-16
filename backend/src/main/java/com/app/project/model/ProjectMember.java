@@ -3,6 +3,7 @@ package com.app.project.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.ArrayList; 
 
 @Entity
 @Table(name = "ProjectMember")
@@ -23,17 +24,13 @@ public class ProjectMember {
     @Column(name = "role")
 	private boolean role;
 
-    @ManyToMany(mappedBy = "assignees") 
-    private List<Task> assignedTasks; 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL) 
+    private List<TaskAssignments> assignments = new ArrayList<>(); 
 
     public ProjectMember(Project project, User user, boolean role) {
         this.project = project; 
         this.user = user; 
         this.role = role; 
-    }
-
-    public List<Task> getAssignedTasks() {
-        return assignedTasks; 
     }
 
     // Getters and Setters 
@@ -63,5 +60,12 @@ public class ProjectMember {
     }
     public void setRole(boolean role) {
         this.role = role; 
+    }
+
+    public List<TaskAssignments> getAssignments() {
+        return assignments; 
+    }
+    public void setAssignments(List<TaskAssignments> assignments) {
+        this.assignments = assignments; 
     }
 }

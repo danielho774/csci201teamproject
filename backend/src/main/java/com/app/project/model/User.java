@@ -60,13 +60,8 @@ public class User {
 	@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL) 
 	private List<Availability> availability = new ArrayList<>(); 
 
-	@ManyToMany 
-	@JoinTable(
-		name = "TaskAssignments", 
-		joinColumns = @JoinColumn(name = "member_id"), 
-		inverseJoinColumns = @JoinColumn(name = "task_id")
-	) 
-	private List<Task> assignedTasks; 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
+	private List<ProjectMember> memberships = new ArrayList<>(); 
 	
 	public User(int userID, String username, String email, boolean isGuest) {
 		this.userID = userID; 
@@ -125,7 +120,22 @@ public class User {
 	public List<Task> getAssignedTasks() {
 		List<Task> allTasks = new ArrayList<>(); 
 		
-		
+		if (memberOfProjects != null) {
+			for (int i = 0; i < memberOfProjects.size(); i++) {
+				ProjectMember member = memberships.get(i); 
+				List<TaskAssignments> assignments = member.getAssignments();  
+				if (assignments != null) {
+					for (int j = 0; j < assignments.size(); j++) {
+						TaskAssignments assignment = assignments.get(j); 
+						if (assignment.getTask() != null && !allTasks.contains(assignment.getTask())) {
+							allTasks.add(assignment.getTask()); 
+						}
+					}
+				}
+			}
+		}
+
+		return allTasks; 
 	}
 	
 //	Getters and Setters 

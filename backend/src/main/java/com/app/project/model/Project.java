@@ -6,10 +6,4 @@ import jakarta.persistence.*;
 @Table(name = "Projects")
 public class Project {
 
-
-    
-
-    public User getUser() {
-        return user; 
-    }
 }

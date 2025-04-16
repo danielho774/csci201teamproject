@@ -1,1 +1,2 @@
-# Add documentation on how to run frontend
+npm start
+to run the frontend

@@ -1,4 +1,88 @@
-.container {
-    padding: 1rem;
+.page {
     
-}
+    margin-left: 240px;
+    background: #0f0f35;
+    min-height: 100vh;
+    color: white;
+    font-family: sans-serif;
+  }
+  
+  
+  .header {
+    height: 60px;
+    background: linear-gradient(90deg, #3b8ad9, #1cca9c);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+  }
+  .header h1 {
+    color: white;
+    font-size: 20px;
+  }
+  
+  
+  .monthBar {
+    height: 50px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    margin: 8px 16px;
+    border-radius: 4px;
+  }
+  .arrow {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 8px;
+  }
+  .monthLabel {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  
+  .calendar {
+    display: flex;
+    margin: 0 16px 16px;
+  }
+  
+  
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1; 
+    text-align: center;
+  }
+  .weekday {
+    padding: 8px 0;
+    font-weight: bold;
+  }
+  
+ 
+  .times {
+    display: flex;
+    flex-direction: column;
+    margin-right: 8px;
+  }
+  .timeLabel {
+    height: 60px;         
+    line-height: 60px;   
+    text-align: right;
+    padding-right: 8px;
+    font-size: 14px;
+  }
+  
+ 
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 60px;
+    flex: 1;
+  }
+  .cell {
+    border: 1px solid #444;
+  }
+  

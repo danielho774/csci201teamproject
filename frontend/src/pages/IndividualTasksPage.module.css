@@ -2,3 +2,20 @@
     padding: 1rem;
     
 }
+
+
+.user-page {
+    background: #060412;
+    min-height: 100vh;
+  }
+
+  .user-page h2 {
+    background: #360F6A;  /*for browsers that don't support gradients*/
+    background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
+    min-height: 12vh;
+    font-size: 5em;
+    margin-bottom: 6px;
+    color: #eeebff;
+    text-align: center;
+
+  }

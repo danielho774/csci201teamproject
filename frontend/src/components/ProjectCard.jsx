@@ -1,10 +1,15 @@
-import React from "react";
+import React from 'react';
+import styles from './ProjectCard.module.css';
 
-function ProjectCard() {
+
+function ProjectCard(props) {
     return (
-        <div className = "projectCard">
-            <h1>This is the project name</h1>
-            <p>This is the project info (maybe)</p>
+        <div className = {styles['wrapper']}>
+            <div className = {styles['project-card']}></div>
+                <div className={styles['project-text']}>
+                    <h1 className = {styles['project-title']}>{props['project-title']}</h1>
+                    <div className = {styles['menu-button']}>☰</div>
+                </div>
         </div>
     )
 }

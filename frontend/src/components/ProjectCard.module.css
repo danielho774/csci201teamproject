@@ -1,0 +1,89 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin-bottom: 1.5rem;
+
+    justify-content: center;
+}
+.project-card {
+    /* background: #b1a7e4; */
+    background-color: #b1a7e4; /*for browsers that don't support gradients*/
+    background-image: linear-gradient(180deg,#D9FCFF 20%, #E6AAFB 100%);
+    border-radius: 7px;
+    padding: 10px;
+    width: 300px;
+    height: 300px;
+    margin: 16px;
+    float: left;
+
+    display: flex; 
+    justify-content: center; 
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease; 
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      0deg, 
+      transparent, 
+      transparent 30%, 
+      rgb(255, 255, 255)
+    );
+    transform: rotate(-45deg);
+    transition: all 0.5s ease;
+    opacity: 0;
+  }
+
+  .project-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgb(0, 255, 255);
+    cursor: pointer;
+  }
+  
+  .project-card:hover::before {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(100%);
+  }
+
+  .project-card:hover .menu-button {
+    opacity: 1;
+  }
+
+ .project-title {
+    font-size: 2.5em;
+    margin-bottom: 6px;
+    color: white;
+    text-align: center;
+}
+
+
+.project-text{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  .project-title:hover{
+    color: #b4f6ff;
+    cursor: pointer;
+  }
+
+  .project-text:hover .menu-button {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .menu-button {
+    opacity: 0;
+    color: white;
+    font-size: 2.5rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}

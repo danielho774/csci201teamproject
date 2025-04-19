@@ -1,0 +1,37 @@
+.container {
+    padding: 1rem;
+    background-color: #020f1c;
+    min-height: 100vh;
+}
+/*Above is unused rn*/
+
+.project-hub {
+    background: #060412;
+    min-height: 100vh;
+    /* border-radius: 7px;
+    box-shadow: 0 2px 5px #b6e2fd;
+    padding: 10px;
+    width: 240px;
+    margin: 16px;
+    float: left; */
+  }
+
+  .project-hub h2 {
+    background: #360F6A;  /*for browsers that don't support gradients*/
+    background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
+    min-height: 12vh;
+    font-size: 5em;
+    margin-bottom: 6px;
+    color: #eeebff;
+    text-align: center;
+
+  }
+
+
+.grid {
+    display: flex;
+    gap: 2.5rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}

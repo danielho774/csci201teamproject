@@ -1,0 +1,40 @@
+.navbar {
+  background-color: #333; /* Dark background */
+  padding: 0.5rem 1rem;
+  position: fixed; /* Fix it to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex; 
+  justify-content: center; 
+}
+
+.navItem {
+  margin: 0 1rem; 
+}
+
+.navLink {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover,
+.navLink:focus {
+  color: #b1a7e4; 
+}
+
+
+.mainContent {
+  padding-top: 60px; 
+} 

@@ -114,3 +114,20 @@
 }
 
 /*Adding this comment so I can make sure I'm pushing to my own branch from now on*/
+
+.submit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 59px;
+    margin: 20px auto;
+    color: #fff;
+    background: #00c851;
+    /* bright green */
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+    /* matches .submit style, but green instead of purple */
+}

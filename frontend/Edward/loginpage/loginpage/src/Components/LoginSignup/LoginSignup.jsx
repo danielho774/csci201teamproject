@@ -8,6 +8,15 @@ import passwordIcon from '../Assets/password.png'
 export const LoginSignup = () => {
 
   const [action, setAction] = React.useState("Log In");
+   const processLogin = () => {
+    console.log("Processing login...");
+    // leave this empty for backend team
+  }
+
+  const processSignup = () => {
+    console.log("Processing signup...");
+    // leave this empty for backend team
+  }
   //usestate is what React calls a Hook, it enables functional components to manage the state of the variable
   //also note that you can import the React Usestate instead of directly calling it like I did :P
   return (
@@ -39,6 +48,15 @@ export const LoginSignup = () => {
         <div className={action === "Sign Up" ? "submit gray" : "submit"} onClick={() => { setAction("Log In") }}>Log In</div>
         {/*These two blocks control which page you're in: Login or Sign Up, clicking on one page prevents you from re-clicking it again, and greys out the button*/}
       </div>
+      <div className="submit-button" onClick={() => {
+        if (action === "Log In") {
+          processLogin();
+        } else {
+          processSignup();
+        }
+      }}>
+        {action}
+        </div>
     </div> 
   )
 }

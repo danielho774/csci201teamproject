@@ -20,6 +20,22 @@ function showProjectsList(projectItem){
   );
 }
 
+import ProjectHub from './pages/ProjectHubPage';
+import IndividualTasks from './pages/IndividualTasksPage'
+import CreateProjectPage from './pages/CreateProjectPage';
+import ProjectConfirmedPage from './pages/ProjectConfirmedPage';
+
+function showProjectsList(projectItem){
+  return(
+    <ProjectCard
+      key = {projectItem.key}
+      project-title = {projectItem.project-title}
+      project-info = {projectItem.project-info}
+    />
+  );
+}
+/*Note: the above is unused right now*/
+
 function App() {
   return (
     

@@ -22,7 +22,14 @@ function showProjectsList(projectItem){
 
 function App() {
   return (
+    
     <Router>
+      /*Remove the below - just to test project confirmation page*/
+      <div>
+      <h1>Hello React!</h1>
+      <ProjectConfirmedPage/>
+    </div>
+
       <NavigationBar />
       <div className={styles.mainContent}>
         <Routes>
@@ -34,6 +41,8 @@ function App() {
         </Routes>
       </div>
     </Router>
+
+
   );
 }
 

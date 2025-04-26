@@ -1,0 +1,16 @@
+.share-code-card {
+    background-color: #b1a7e4; /*for browsers that don't support gradients*/
+    background-image: linear-gradient(180deg,#D9FCFF 20%, #E6AAFB 100%);
+    border-radius: 10px;
+    padding: 10px;
+    width: 400px;
+    height: 100px;
+    margin: 16px;
+    float: left;
+}
+
+.code {
+    color: rgb(50, 5, 127);
+    text-align: center;
+    font-size: 3em;
+}

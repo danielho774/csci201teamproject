@@ -1,47 +1,101 @@
 package com.app.project.model;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
+@Entity
+@Table(name = "Comments")
 public class Comment {
-    private int id;
-    private int postId;
-    private int commentId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
+    private int commentID;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private ProjectMember member;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", nullable = false)
+    private Task task;
+
+    @Column(name = "comment", length = 1000, nullable = false)
     private String comment;
-    private LocalDateTime createdAt;
 
-    private Map<Integer, List<Integer>> reactions;
+    @Column(name = "date_created", nullable = false)
+    private LocalDate dateCreated;
 
-    public void addReaction(int reactionId, int userId) {
-        List<Integer> users = reactions.get(reactionId);
-        if(users == null){
-            users = new ArrayList<>();
-            reactions.put(reactionId, users);
-        }
-        if(!users.contains(userId)) {
-            users.add(userId);
-        }
+    @Column(name = "archived", nullable = false)
+    private boolean archived;
+
+    @Column(name = "resolved", nullable = false)
+    private boolean resolved;
+
+    public Comment() {}
+
+    public Comment(ProjectMember member, Task task, String comment, LocalDate dateCreated, boolean archived, boolean resolved) {
+        this.member = member;
+        this.task = task;
+        this.comment = comment;
+        this.dateCreated = dateCreated;
+        this.archived = archived;
+        this.resolved = resolved;
     }
 
-    public void removeReaction(int reactionId, int userId) {
-        List<Integer> users = reactions.get(reactionId);
-
-        if(users == null || !users.contains(userId)) {
-            System.out.println("This user has not reacted to this comment with this reaction.");
-            return;
-        }
-        users.remove(Integer.valueOf(userId)); //dont remove by index on accident
-
-        if(users.isEmpty()) {
-            reactions.remove(reactionId);
-        }
+    public int getCommentID() {
+        return commentID;
     }
 
-    public Map<Integer, List<Integer>> getReactions() {
-        return reactions;
+    public void setCommentID(int commentID) {
+        this.commentID = commentID;
+    }
+
+    public ProjectMember getMember() {
+        return member;
+    }
+
+    public void setMember(ProjectMember member) {
+        this.member = member;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public LocalDate getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDate dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
     }
     
 }

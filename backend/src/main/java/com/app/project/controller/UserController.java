@@ -15,39 +15,32 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    // @Autowired
-    // private UserService userService;
+    @Autowired
+    private UserService userService;
 
-    // @PostMapping
-    // public ResponseEntity<User> saveUser(@RequestBody User user){
-    //     return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.CREATED);
-    // }
-    // //GetAll Rest Api
-    // @GetMapping
-    // public List<User> getAllUser(){
-    //     return UserService.getAllUser();
-    // }
+    @PostMapping
+    public ResponseEntity<User> saveUser(@RequestBody User user){
+        return new ResponseEntity<User>(userService.saveUser(user), HttpStatus.CREATED);
+    }
+    //GetAll Rest Api
+    @GetMapping
+    public List<User> getAllUser(){
+        return userService.getAllUsers();
+    }
 
-    // //Get by Id Rest Api
-    // @GetMapping("{id}")
-    // // localhost:8080/api/Users/1
-    // public ResponseEntity<User> getUserById(@PathVariable("id") long userID){
-    //     return new ResponseEntity<User>(userService.getUserById(userID),HttpStatus.OK);
-    // }
+    //Get by Id Rest Api
+    @GetMapping("{id}")
+    // localhost:8080/api/Users/1
+    public ResponseEntity<User> getUserById(@PathVariable("id") long userID){
+        return new ResponseEntity<User>(userService.getUserByID(userID),HttpStatus.OK);
+    }
 
-    // //Update Rest Api
-    // @PutMapping("{id}")
-    // public ResponseEntity<User> updateUser(@PathVariable("id") long id,
-    //                                                @RequestBody User user){
-    //     return new ResponseEntity<User>(userService.updateUser(user,id),HttpStatus.OK);
-    // }
-
-    // //Delete Rest Api
-    // @DeleteMapping("{id}")
-    // public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
-    //     //delete User from db
-    //     userService.deleteUser(id);
-    //     return new ResponseEntity<String>("User deleted Successfully.",HttpStatus.OK);
-    // }
+    //Delete Rest Api
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
+        //delete User from db
+        userService.deleteUser(id);
+        return new ResponseEntity<String>("User deleted Successfully.",HttpStatus.OK);
+    }
 
 }

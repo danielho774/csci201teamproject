@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service 
-public class UserServiceImpl implements User {
+public class UserServiceImpl implements UserService {
     @Autowired 
     private UserRepository userRepository; 
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements User {
         return userRepository.findAll(); 
     }
 
-    public User getUserById(long id) {
+    public User getUserByID(long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user.get(); 

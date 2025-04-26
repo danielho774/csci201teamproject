@@ -1,3 +1,11 @@
+package com.app.project.model;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 @Entity
 @Table(name = "Tasks")
 public class Task {

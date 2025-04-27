@@ -26,11 +26,11 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "status_type")
-    private Status status; 
+    private TaskStatus status; 
 
     @ManyToOne
     @JoinColumn(name = "priority") 
-    private Priority priority; 
+    private TaskPriority priority; 
 
     @Column(name = "start_date")
     private LocalDate startDate; 
@@ -57,7 +57,7 @@ public class Task {
     }
     
     public Task(Project project, String taskName, String taskDescrip, 
-                Status status, Priority priority, LocalDate startDate, 
+                TaskStatus status, TaskPriority priority, LocalDate startDate, 
                 LocalDate endDate, int duration, boolean assigned) {
         this.project = project; 
         this.taskName = taskName; 
@@ -71,7 +71,7 @@ public class Task {
     }
     
     // Required methods
-    public boolean updateStatus(Status status) {
+    public boolean updateStatus(TaskStatus status) {
         this.status = status;
         return true;
     }
@@ -138,19 +138,19 @@ public class Task {
         this.taskDescrip = taskDescrip;
     }
     
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
     
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
     
-    public Priority getPriority() {
+    public TaskPriority getPriority() {
         return priority;
     }
     
-    public void setPriority(Priority priority) {
+    public void setPriority(TaskPriority priority) {
         this.priority = priority;
     }
     

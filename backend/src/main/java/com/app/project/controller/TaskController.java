@@ -2,7 +2,7 @@ package com.app.project.controller;
 
 import com.app.project.model.Task;
 import com.app.project.model.Comment;
-import com.app.project.model.Status;
+import com.app.project.model.TaskStatus;
 import com.app.project.service.TaskService;  
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +97,7 @@ public class TaskController {
     @PutMapping("/{taskId}/status")
     public ResponseEntity<String> updateTaskStatus(
             @PathVariable("taskId") long taskId, 
-            @RequestBody Status status) {
+            @RequestBody TaskStatus status) {
         boolean success = taskService.updateTaskStatus(taskId, status);
         if (success) {
             return new ResponseEntity<>("Task status updated successfully", HttpStatus.OK);

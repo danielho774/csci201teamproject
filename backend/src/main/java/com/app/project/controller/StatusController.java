@@ -1,7 +1,7 @@
 package com.app.project.controller;
 
-import com.app.project.model.Status;
-import com.app.project.service.StatusService;
+import com.app.project.model.TaskStatus;
+import com.app.project.service.TaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,11 @@ import java.util.List;
 public class StatusController {
 
     @Autowired
-    private StatusService statusService;
+    private TaskStatusService statusService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Status> getStatusById(@PathVariable long id) {
-        Status status = statusService.getStatusById(id);
+    public ResponseEntity<TaskStatus> getStatusById(@PathVariable long id) {
+        TaskStatus status = statusService.getStatusById(id);
         if (status != null) {
             return new ResponseEntity<>(status, HttpStatus.OK);
         } else {
@@ -27,8 +27,8 @@ public class StatusController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Status>> getAllStatus() {
-        List<Status> status = statusService.getAllStatus();
+    public ResponseEntity<List<TaskStatus>> getAllStatus() {
+        List<TaskStatus> status = statusService.getAllStatus();
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 }

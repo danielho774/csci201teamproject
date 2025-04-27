@@ -4,7 +4,7 @@ import com.app.project.model.Task;
 import com.app.project.model.Project;
 import com.app.project.model.User;
 import com.app.project.model.Comment;
-import com.app.project.model.Status;
+import com.app.project.model.TaskStatus;
 import com.app.project.repository.TaskRepository;
 import com.app.project.repository.UserRepository;
 import com.app.project.service.TaskService;
@@ -101,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
     }
     
     @Override
-    public boolean updateTaskStatus(long taskId, Status status) {
+    public boolean updateTaskStatus(long taskId, TaskStatus status) {
         Task task = getTaskById(taskId);
         boolean result = task.updateStatus(status);
         if (result) {

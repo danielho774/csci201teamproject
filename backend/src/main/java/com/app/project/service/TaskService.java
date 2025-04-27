@@ -4,7 +4,7 @@ import com.app.project.model.Task;
 import com.app.project.model.Project;
 import com.app.project.model.User;
 import com.app.project.model.Comment;
-import com.app.project.model.Status;
+import com.app.project.model.TaskStatus;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface TaskService {
     boolean removeUserFromTask(long taskId, long userId);
     
     // Status related
-    boolean updateTaskStatus(long taskId, Status status);
+    boolean updateTaskStatus(long taskId, TaskStatus status);
     List<Task> getTasksByStatus(String statusName);
     
     // Priority related

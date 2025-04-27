@@ -1,5 +1,7 @@
 package com.app.project.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 public class Reactions {
@@ -10,6 +12,9 @@ public class Reactions {
 
     @Column(name = "reaction_type", nullable = false)
     private String reactionType;
+
+    @OneToMany(mappedBy = "reaction")
+    private List<CommentReaction> commentReactions;
 }
 
 

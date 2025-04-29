@@ -52,10 +52,10 @@ public class ProjectController {
     }
 
 
-    /*@GetMapping("/{projectID}/progress")
+    @GetMapping("/{projectID}/progress")
     public double getProjectProgress(@PathVariable int projectID) {
         return projectService.calculateProjectProgress(projectID);
-    }*/
+    }
     @DeleteMapping("/{projectID}")
     public void deleteProject(@PathVariable int projectID) {
         projectService.deleteProject(projectID);

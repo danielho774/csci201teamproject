@@ -13,9 +13,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     // Find tasks by project
     List<Task> findByProject(Project project);
     
-    // Find tasks assigned to a specific user
-    List<Task> findByAssigneesContaining(User user);
-    
     // Find tasks by status
     List<Task> findByStatus_StatusName(String statusName);
     

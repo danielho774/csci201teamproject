@@ -44,9 +44,6 @@ public class Task {
     @Column(name = "assigned")
     private boolean assigned;
     
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> assignees = new ArrayList<>();
-    
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
@@ -80,26 +77,6 @@ public class Task {
         if (comment != null) {
             comment.setTask(this);
             comments.add(comment);
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean addAssignee(User user) {
-        if (user != null && !assignees.contains(user)) {
-            assignees.add(user);
-            this.assigned = true;
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean removeAssignee(User user) {
-        if (user != null && assignees.contains(user)) {
-            assignees.remove(user);
-            if (assignees.isEmpty()) {
-                this.assigned = false;
-            }
             return true;
         }
         return false;
@@ -184,15 +161,6 @@ public class Task {
     
     public void setAssigned(boolean assigned) {
         this.assigned = assigned;
-    }
-    
-    public List<User> getAssignees() {
-        return assignees;
-    }
-    
-    public void setAssignees(List<User> assignees) {
-        this.assignees = assignees;
-        this.assigned = !assignees.isEmpty();
     }
     
     public List<Comment> getComments() {

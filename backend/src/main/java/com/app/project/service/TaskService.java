@@ -20,9 +20,9 @@ public interface TaskService {
     List<Task> getTasksByProject(Project project);
     
     // User related
-    List<Task> getTasksByUser(User user);
+    List<Task> getTasksAssignedToUser(User user); // Consider renaming for clarity
     boolean assignTaskToUser(long taskId, long userId);
-    boolean removeUserFromTask(long taskId, long userId);
+    boolean removeUserFromTask(long taskId, long userId); // Keep this signature
     
     // Status related
     boolean updateTaskStatus(long taskId, TaskStatus status);

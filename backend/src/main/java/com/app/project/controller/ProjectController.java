@@ -1,12 +1,17 @@
 package com.app.project.controller;
 
 import com.app.project.model.Project;
-import com.app.project.service.ProjectService;  
+import com.app.project.model.ProjectMember;
+import com.app.project.service.impl.ProjectMemberServiceImpl;
+import com.app.project.service.impl.ProjectService;
+import com.app.project.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import java.util.List;
 
@@ -15,39 +20,44 @@ import java.util.List;
 @RequestMapping("/api/projects")
 public class ProjectController {
 
-    // @Autowired
-    // private ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    // @PostMapping
-    // public ResponseEntity<Project> saveProject(@RequestBody Project project){
-    //     return new ResponseEntity<Project>(projectService.saveProject(project), HttpStatus.CREATED);
-    // }
-    // //GetAll Rest Api
-    // @GetMapping
-    // public List<Project> getAllProject(){
-    //     return ProjectService.getAllProject();
-    // }
+    @Autowired
+    private ProjectMemberServiceImpl projectMemberService;
 
-    // //Get by Id Rest Api
-    // @GetMapping("{id}")
-    // // localhost:8080/api/projects/1
-    // public ResponseEntity<Project> getProjectById(@PathVariable("id") long projectID){
-    //     return new ResponseEntity<Project>(projectService.getProjectById(projectID),HttpStatus.OK);
-    // }
+    @PostMapping("/create")
+    public Project createProject(@RequestBody Project project, @RequestParam int memberID) {
+        return projectService.createProject(project, memberID);
+    }
 
-    // //Update Rest Api
-    // @PutMapping("{id}")
-    // public ResponseEntity<Project> updateProject(@PathVariable("id") long id,
-    //                                                @RequestBody Project project){
-    //     return new ResponseEntity<Project>(projectService.updateProject(project,id),HttpStatus.OK);
-    // }
+    @GetMapping("/{projectID}")
+    public Optional<Project> getProject(@PathVariable int projectID) {
+        return projectService.getProject(projectID);
+    }
 
-    // //Delete Rest Api
-    // @DeleteMapping("{id}")
-    // public ResponseEntity<String> deleteProject(@PathVariable("id") long id){
-    //     //delete project from db
-    //     projectService.deleteProject(id);
-    //     return new ResponseEntity<String>("Project deleted Successfully.",HttpStatus.OK);
-    // }
+    @PostMapping("/{projectID}/addMember")
+    public void addMember(@PathVariable Project project, @RequestParam int memberID) {
+        projectService.addMember(project, memberID);
+    }
 
+    @PostMapping("/{projectID}/leave")
+    public void leaveProject(@PathVariable int projectID, @RequestParam int memberID) {
+        projectMemberService.leaveProject(memberID);
+    }
+
+    @PostMapping("/{projectID}/transferOwnership")
+    public void transferOwnership(@PathVariable int projectID, @RequestParam int newOwnerMemberID) {
+        projectService.transferOwnership(projectID, newOwnerMemberID);
+    }
+
+
+    /*@GetMapping("/{projectID}/progress")
+    public double getProjectProgress(@PathVariable int projectID) {
+        return projectService.calculateProjectProgress(projectID);
+    }*/
+    @DeleteMapping("/{projectID}")
+    public void deleteProject(@PathVariable int projectID) {
+        projectService.deleteProject(projectID);
+    }
 }

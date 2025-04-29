@@ -14,5 +14,8 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, In
 
     // Add method to find all memberships for a user
     List<ProjectMember> findByUserUserID(int userId);
+    List<ProjectMember> findByProject_ProjectID(int projectID);
+    //Role of user in a project
+    Optional<ProjectMember> findByProjectProjectIDAndRoleTrue(int projectId);
 
 }

@@ -28,8 +28,8 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
-    //change baised on task 
-    /*public double calculateProjectProgress(int projectID) {
+    //assuming that taskStatus is set to complete when task is complete
+    public double calculateProjectProgress(int projectID) {
         Project project = getProjectById(projectID);
 
         if (project.getTasks().isEmpty()) {
@@ -37,11 +37,13 @@ public class ProjectService {
         }
 
         long completedTasks = project.getTasks().stream()
-                .filter(Task::isCompleted) 
+                .filter(task-> task.getStatus() != null &&
+                                task.getStatus().getStatusName() != null &&
+                                task.getStatus().getStatusName().equalsIgnoreCase("complete") ) 
                 .count();
 
         return (double) completedTasks / project.getTasks().size() * 100.0;
-    }*/
+    }
 
     //can change to user if needed
     public Project createProject(Project project, int memberID) {

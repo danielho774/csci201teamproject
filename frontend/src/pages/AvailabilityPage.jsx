@@ -1,68 +1,138 @@
+import React, { useState, useMemo } from 'react';
+import styles from './AvailabilityPage.module.css';
 
-import React, { useState } from 'react'
-import styles from './AvailabilityPage.module.css'
-
-const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const TIMES = [
-  '8 AM','9 AM','10 AM','11 AM','12 PM',
-  '1 PM','2 PM','3 PM','4 PM','5 PM','6 PM'
-]
+  '8 AM','9 AM','10 AM','11 AM','12 PM',
+  '1 PM','2 PM','3 PM','4 PM','5 PM','6 PM'
+];
+
+const SAMPLE = [
+  { user: 'Alice', slots: ['Mon-9 AM','Tue-2 PM','Thu-1 PM'] },
+  { user: 'Bob',   slots: ['Mon-9 AM','Wed-11 AM','Fri-4 PM'] },
+];
 
 export default function AvailabilityPage() {
-  
-  const [date, setDate] = useState(new Date())
-  const monthName = date.toLocaleString('default',{ month: 'long' })
-  const year = date.getFullYear()
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const prevMonth = () =>
-    setDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1))
-  const nextMonth = () =>
-    setDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1))
+
+  const weekStart = useMemo(() => {
+    const d = new Date(currentDate);
+    const day = d.getDay();            
+    return new Date(d.getFullYear(),
+                    d.getMonth(),
+                    d.getDate() - day);
+  }, [currentDate]);
+
+
+  const prevWeek = () =>
+    setCurrentDate(d =>
+      new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7)
+    );
+  const nextWeek = () =>
+    setCurrentDate(d =>
+      new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7)
+    );
+
+
+  const weekDates = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      arr.push(d);
+    }
+    return arr;
+  }, [weekStart]);
+
+
+  const fmtMD = d =>
+    d.toLocaleDateString('default',
+      { month: 'short', day: 'numeric' }
+    );
+
+
+  const weekTitle =
+    `${fmtMD(weekDates[0])} – ${fmtMD(weekDates[6])}, ${weekDates[6].getFullYear()}`;
+
+
+  const slotMap = useMemo(() => {
+    const m = {};
+    SAMPLE.forEach(({ user, slots }) => {
+      slots.forEach(s => {
+        m[s] = m[s] || [];
+        m[s].push(user);
+      });
+    });
+    return m;
+  }, []);
 
   return (
     <div className={styles.page}>
-      {/* Header + Title */}
       <div className={styles.header}>
-        <h1>Calendar Page</h1>
+        <h1>{weekTitle}</h1>
       </div>
 
-      {/* Month selector bar */}
-      <div className={styles.monthBar}>
-        <button onClick={prevMonth} className={styles.arrow}>&lt;</button>
-        <span className={styles.monthLabel}>
-          {monthName} {year}
-        </span>
-        <button onClick={nextMonth} className={styles.arrow}>&gt;</button>
+      <div className={styles.weekBar}>
+        <button onClick={prevWeek} className={styles.arrow}>&lt;</button>
+        <span className={styles.weekLabel}>{weekTitle}</span>
+        <button onClick={nextWeek} className={styles.arrow}>&gt;</button>
       </div>
 
-      {/* Calendar grid */}
       <div className={styles.calendar}>
-        {/* Weekday row */}
         <div className={styles.weekdays}>
-          {DAYS.map(d => (
-            <div key={d} className={styles.weekday}>{d}</div>
+          {weekDates.map(d => (
+            <div key={d.toISOString()} className={styles.weekday}>
+              <div className={styles.weekdayName}>
+                {DAYS[d.getDay()]}
+              </div>
+              <div className={styles.weekdayDate}>
+                {d.getDate()}
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Time labels down the left */}
         <div className={styles.times}>
           {TIMES.map(t => (
             <div key={t} className={styles.timeLabel}>{t}</div>
           ))}
         </div>
 
-        {/* The actual grid of cells */}
         <div className={styles.grid}>
           {TIMES.map(t =>
-            DAYS.map(d => (
-              <div key={`${d}-${t}`} className={styles.cell}>
-                {/* You could shade this cell if user X is available */}
-              </div>
-            ))
+            DAYS.map((_, i) => {
+              const slotKey = `${DAYS[i]}-${t}`;
+              const people = slotMap[slotKey] || [];
+              const isHover = false; 
+
+              return (
+                <div
+  key={slotKey}
+  className={styles.cell}
+>
+
+  {people.length > 0 && (
+    <div className={styles.initials}>
+      {people.map(u => u[0]).join('')}
+    </div>
+  )}
+
+
+  {people.length > 0 && (
+    <div className={styles.tooltip}>
+      {people.join(', ')}
+    </div>
+  )}
+</div>
+
+              );
+            })
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
+
 

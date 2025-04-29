@@ -1,13 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
-import styles from './NavigationBar.module.css'; // We will create this file next
+import { Link } from 'react-router-dom'; 
+import styles from './NavigationBar.module.css'; 
 
-function NavigationBar() {
+// Receive isLoggedIn and onLogout as props
+function NavigationBar({ isLoggedIn, onLogout }) {
   return (
     <nav className={styles.navbar}>
       <ul className={styles.navList}>
         <li className={styles.navItem}>
-          {/* Use Link component for navigation */}
+         
           <Link to="/" className={styles.navLink}>Project Hub</Link>
         </li>
         <li className={styles.navItem}>
@@ -19,7 +20,15 @@ function NavigationBar() {
         <li className={styles.navItem}>
           <Link to="/availability" className={styles.navLink}>Availability</Link>
         </li>
-        {/* Add more links as needed */}
+        {/* Conditional Login/Logout */}
+        <li className={styles.navItem}>
+          {isLoggedIn ? (
+            <button onClick={onLogout} className={`${styles.navLink} ${styles.logoutButton}`}>Logout</button>
+          ) : (
+            <Link to="/login" className={styles.navLink}>Login</Link>
+          )}
+        </li>
+       
       </ul>
     </nav>
   );

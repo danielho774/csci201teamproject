@@ -6,16 +6,14 @@
 
 .user-page {
     background: #060412;
-    min-height: 100vh;
+    min-height: calc(100vh - 45px);
   }
 
   .user-page h2 {
-    background: #360F6A;  /*for browsers that don't support gradients*/
     background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
-    min-height: 12vh;
-    font-size: 5em;
-    margin-bottom: 6px;
+    padding: 1rem;
+    font-size: 3.5em;
+    margin: 0;
     color: #eeebff;
     text-align: center;
-
   }

@@ -7,7 +7,7 @@
     justify-content: center;
 }
 .project-card {
-    /* background: #b1a7e4; */
+    
     background-color: #b1a7e4; /*for browsers that don't support gradients*/
     background-image: linear-gradient(180deg,#D9FCFF 20%, #E6AAFB 100%);
     border-radius: 7px;
@@ -65,7 +65,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow:ellipsis;
-    width: 250px; /*Text has fixed width*/
+    width: 250px; 
 }
 
 
@@ -127,4 +127,10 @@
 
 .dropdown-button:hover {
   background: #0056b3;
+}
+
+.cardLink {
+  text-decoration: none; /* Remove underline from link */
+  color: inherit; /* Inherit text color */
+  display: block; /* Ensure the link takes up the card space */
 }

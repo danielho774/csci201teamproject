@@ -4,26 +4,26 @@ import styles from './ProjectHubPage.module.css';
 import ProjectCard from '../components/ProjectCard';
 
 export default function ProjectHubPage() {
+  
+  const projects = [
+    { id: 'proj1', title: 'Project1' },
+    { id: 'proj2', title: 'Project2' },
+    { id: 'proj3', title: 'Project3' },
+    { id: 'proj4', title: 'Project4' },
+    { id: 'proj5', title: 'Project5' },
+    { id: 'superlong', title: 'Insert Super Long Project Name So I Know To Take Care of This Case' },
+    { id: 'proj7', title: 'Project7' },
+  
+  ];
+
   return (
     <div className = {styles['project-hub']}>
       <h2>Project Hub</h2>
       <div className={styles['grid']}>
-      <ProjectCard project-title = "Project1" />
-      <ProjectCard project-title = "Project2" />
-      <ProjectCard project-title = "Project3" />
-      <ProjectCard project-title = "Project4" />
-      <ProjectCard project-title = "Project5" />
-      <ProjectCard project-title = "Insert Super Long Project Name So I Know To Take Care of This Case" />
-      <ProjectCard project-title = "Project7" />
-      <ProjectCard project-title = "Project8" />
-      <ProjectCard project-title = "Project9" />
-      <ProjectCard project-title = "Project10" />
-      <ProjectCard project-title = "Project11" />
-      <ProjectCard project-title = "Project12" />
-
-
+        {projects.map(project => (
+          <ProjectCard key={project.id} projectId={project.id} project-title={project.title} />
+        ))}
+      </div>
     </div>
-    </div>
-    
   );
 }

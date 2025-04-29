@@ -1,88 +1,116 @@
 .page {
-    
-    margin-left: 240px;
-    background: #0f0f35;
-    min-height: 100vh;
-    color: white;
-    font-family: sans-serif;
-  }
-  
-  
-  .header {
-    height: 60px;
-    background: linear-gradient(90deg, #3b8ad9, #1cca9c);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-  }
-  .header h1 {
-    color: white;
-    font-size: 20px;
-  }
-  
-  
-  .monthBar {
-    height: 50px;
-    background: #ddd;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    margin: 8px 16px;
-    border-radius: 4px;
-  }
-  .arrow {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 0 8px;
-  }
-  .monthLabel {
-    flex: 1;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  
-  .calendar {
-    display: flex;
-    margin: 0 16px 16px;
-  }
-  
-  
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    flex: 1; 
-    text-align: center;
-  }
-  .weekday {
-    padding: 8px 0;
-    font-weight: bold;
-  }
-  
- 
-  .times {
-    display: flex;
-    flex-direction: column;
-    margin-right: 8px;
-  }
-  .timeLabel {
-    height: 60px;         
-    line-height: 60px;   
-    text-align: right;
-    padding-right: 8px;
-    font-size: 14px;
-  }
-  
- 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 60px;
-    flex: 1;
-  }
-  .cell {
-    border: 1px solid #444;
-  }
+  background: #0f0f35;
+  min-height: 100vh;
+  color: white;
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.header {
+  background: linear-gradient(90deg, #3b8ad9, #1cca9c);
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  margin: 0;
+}
+
+.header h1 {
+  color: white;
+  font-size: 24px;
+  margin: 0;
+}
+
+.monthBar {
+  background: rgba(221, 221, 221, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem 2rem;
+  border-radius: 8px;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.monthLabel {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin: 0 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.weekdays {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.weekday {
+  padding: 0.5rem 0;
+  font-weight: bold;
+  color: #b1a7e4;
+}
+
+.times {
+  display: flex;
+  flex-direction: column;
+  grid-row: 2;
+}
+
+.timeLabel {
+  height: 60px;
+  line-height: 60px;
+  text-align: right;
+  padding-right: 1rem;
+  font-size: 14px;
+  color: #b1a7e4;
+  white-space: nowrap;
+}
+
+.grid {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 60px;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cell {
+  background: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cell:hover {
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
   

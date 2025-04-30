@@ -93,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectMemberRepository.save(previousOwner);
 
         ProjectMember newOwner = projectMemberRepository.findById(newOwnerMemberID).orElseThrow();// get new owner
-        newOwner.setRole(false); // set the new owner to owner
+        newOwner.setRole(true); // set the new owner to owner
         projectMemberRepository.save(newOwner);
 
         project.setOwner(previousOwner);

@@ -23,6 +23,9 @@ public class TaskAssignments {
         this.member = member; 
     }
 
+    //empty constructor for JPA
+    public TaskAssignments() {}
+
     // Getters and Setters 
     public int getAssignmentID() {
         return assignmentID; 

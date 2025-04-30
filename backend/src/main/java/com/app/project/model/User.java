@@ -63,6 +63,9 @@ public class User {
 		this.isGuest = isGuest; 
 	}
 
+	// empty constructor for JPA
+	public User() {}
+
 	public boolean login(String username, String email, String password) {
 		if (this.username.equals(username) || this.email.equals(email)) {
 			if (this.password.equals(password)) {

@@ -12,5 +12,8 @@ public class Notification {
 
     @Column(name = "notif_type", nullable = false)
     private String notifType;
+
+    //empty constructor for JPA
+    public Notification() {}
 }
 

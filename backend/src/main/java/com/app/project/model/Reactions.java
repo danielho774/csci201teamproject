@@ -18,6 +18,9 @@ public class Reactions {
 
     @OneToMany(mappedBy = "reaction")
     private List<CommentReaction> commentReactions;
+
+    //empty constructor for JPA
+    public Reactions() {}
 }
 
 

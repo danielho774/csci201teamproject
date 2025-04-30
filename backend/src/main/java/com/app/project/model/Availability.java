@@ -36,6 +36,9 @@ public class Availability {
         this.endTime = endTime; 
     }
 
+    //empty constructor for JPA
+    public Availability() {}
+
     // Getters and Setters 
     public int getAvailID() {
         return availID; 

@@ -12,24 +12,25 @@ import java.util.Optional;
 
 import java.util.List;
 
-@Service
-public class ProjectService {
-    @Autowired
-    private ProjectRepository projectRepo;
 
-    @Autowired
-    private UserRepository userRepo;
+public interface ProjectService {
+    /*public void addMember(Long projectId, String userEmail);
+    public void leaveProject(Long projectId, String userEmail);
+    public void deleteProject(Long projectId, String ownerEmail);
+    public void reassignOwner(Long projectId, String currentOwnerEmail, String newOwnerEmail);
+    public void ownerLeaving(Long projectId, String currentOwnerEmail, String newOwnerEmail);*/
 
-    
-    public void addMember(Long projectId, String userEmail){}
+    public Project getProjectById(int projectID);
+    public double calculateProjectProgress(int projectID);
+    public Project createProject(Project project, int memberID);
 
-    public void leaveProject(Long projectId, String userEmail) {}
-    
-
-    public void deleteProject(Long projectId, String ownerEmail) {}
-       
-    public void reassignOwner(Long projectId, String currentOwnerEmail, String newOwnerEmail){}
-
-    public void ownerLeaving(Long projectId, String currentOwnerEmail, String newOwnerEmail){}
+    public Optional<Project> getProject(int projectID);
+    public void saveProject(Project project);
+    public void deleteProject(int projectID);
+    public void addMember(Project project, int userID);
+    public void removeMember(ProjectMember member);
+    public List<ProjectMember> getProjectMembers(int projectID);
+    public void transferOwnership(int projectID, int newOwnerMemberID);
+  
 }
 

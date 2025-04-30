@@ -36,7 +36,7 @@ public class User {
 	// OneToMany --> one user can have multiple projects they own
 	// CascadeType.ALL --> if there are any updates in Project, pass changes
 	// 					to the owner as well 
-	@OneToMany(mappedBy = "owner_id", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
 	private List<Project> ownedProjects = new ArrayList<>(); 
 
 	// for projects the user is a member of 
@@ -57,7 +57,7 @@ public class User {
 	private List<Project> memberOfProjects = new ArrayList<>(); 
 
 	// one user can have multiple availabilities 
-	@OneToMany(mappedBy = "user_id", cascade = CascadeType.ALL) 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
 	private List<Availability> availability = new ArrayList<>(); 
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 

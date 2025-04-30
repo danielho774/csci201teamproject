@@ -72,8 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.deleteById(projectID);
     }
 
-    public void addMember(Project project, int userID) {
-        ProjectMember member = new ProjectMember(project,userID, false);
+    public void addMember(Project project, User user) {
+        ProjectMember member = new ProjectMember(project,user, false);
         projectMemberRepository.save(member);
     }
 
@@ -86,17 +86,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public void transferOwnership(int projectID, int newOwnerMemberID) {
-        Project project = projectRepository.findById(projectID).orElseThrow();
-        List<ProjectMember> members = projectMemberRepository.findByProject_ProjectID(projectID);
-        for (ProjectMember m : members) {
-            if (m.isRole()) {
-                m.setRole(false);
-                projectMemberRepository.save(m);
-            }
-        }
-        ProjectMember newOwner = projectMemberRepository.findById(newOwnerMemberID).orElseThrow();
-        newOwner.setRole(true);
+        Project project = projectRepository.findById(projectID).orElseThrow();// get project
+
+        ProjectMember previousOwner = projectMemberRepository.findById(project.getOwnerID()).orElseThrow();
+        previousOwner.setRole(false); // set the current owner to member
+        projectMemberRepository.save(previousOwner);
+
+        ProjectMember newOwner = projectMemberRepository.findById(newOwnerMemberID).orElseThrow();// get new owner
+        newOwner.setRole(false); // set the new owner to owner
         projectMemberRepository.save(newOwner);
+
+        project.setOwner(previousOwner);
+        projectRepository.save(project);
     }
   
 }

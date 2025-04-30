@@ -4,6 +4,7 @@ import com.app.project.model.Project;
 import com.app.project.model.ProjectMember;
 import com.app.project.service.impl.ProjectMemberServiceImpl;
 import com.app.project.service.ProjectService;
+import com.app.project.service.UserService;
 import com.app.project.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ProjectController {
     @Autowired
     private ProjectMemberServiceImpl projectMemberService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/create")
     public Project createProject(@RequestBody Project project, @RequestParam int memberID) {
         return projectService.createProject(project, memberID);
@@ -38,7 +42,8 @@ public class ProjectController {
 
     @PostMapping("/{projectID}/addMember")
     public void addMember(@PathVariable Project project, @RequestParam int memberID) {
-        projectService.addMember(project, memberID);
+        User member = userService.getUserByID(memberID);
+        projectService.addMember(project, member);
     }
 
     @PostMapping("/{projectID}/leave")

@@ -20,7 +20,7 @@ public class ProjectMember {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     //can change to user if needed
-    private int userID; 
+    private User user; 
 
     @Column(name = "role")//owner is true, member is false
 	private boolean role;
@@ -30,9 +30,9 @@ public class ProjectMember {
 
     public ProjectMember() {}
 
-    public ProjectMember(Project project, int userID, boolean role) {
+    public ProjectMember(Project project, User user, boolean role) {
         this.project = project; 
-        this.userID = userID; 
+        this.user = user; 
         this.role = role; 
     }
 
@@ -52,11 +52,11 @@ public class ProjectMember {
         this.project = project; 
     }
 
-    public int getUserID() {
-        return userID; 
+    public User getUserID() {
+        return user; 
     }
-    public void setUser(int userID) {
-        this.userID = userID; 
+    public void setUser(User user) {
+        this.user = user; 
     }
 
     public boolean isRole() {

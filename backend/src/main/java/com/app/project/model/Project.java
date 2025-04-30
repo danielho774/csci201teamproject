@@ -18,6 +18,10 @@ public class Project {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private ProjectMember owner;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectMember> members = new ArrayList<>();
 
@@ -66,6 +70,18 @@ public class Project {
     public void removeMember(ProjectMember member) {
         members.remove(member);
         member.setProject(null);
+    }
+
+    public ProjectMember getOwner() {
+        return owner;
+    }
+
+    public int getOwnerID() {
+        return owner.getMemberID();
+    }
+
+    public void setOwner(ProjectMember owner) {
+        this.owner = owner;
     }
 
     public List<Task> getTasks() {

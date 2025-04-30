@@ -4,6 +4,7 @@ import com.app.project.model.Project;
 import com.app.project.model.ProjectMember;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
+import com.app.project.service.ProjectMemberService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -7,6 +7,8 @@ import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
 import com.app.project.repository.UserRepository;
+import com.app.project.service.ProjectService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;

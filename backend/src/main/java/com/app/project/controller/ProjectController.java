@@ -3,7 +3,7 @@ package com.app.project.controller;
 import com.app.project.model.Project;
 import com.app.project.model.ProjectMember;
 import com.app.project.service.impl.ProjectMemberServiceImpl;
-import com.app.project.service.impl.ProjectService;
+import com.app.project.service.ProjectService;
 import com.app.project.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;

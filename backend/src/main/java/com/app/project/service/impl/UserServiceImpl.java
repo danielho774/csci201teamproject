@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(); 
     }
 
-    public User getUserByID(long id) {
+    public User getUserByID(int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user.get(); 
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void deleteUser(long id) {
+    public void deleteUser(int id) {
         userRepository.findById(id).orElseThrow(() -> new RuntimeException()); 
         userRepository.deleteById(id); 
     }

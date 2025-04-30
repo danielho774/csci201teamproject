@@ -1,7 +1,7 @@
 package com.app.project.controller;
 
-import com.app.project.model.Priority;
-import com.app.project.service.PriorityService;
+import com.app.project.model.TaskPriority;
+import com.app.project.service.TaskPriorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,11 @@ import java.util.List;
 public class PriorityController {
 
     @Autowired
-    private PriorityService priorityService;
+    private TaskPriorityService priorityService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Priority> getPriorityById(@PathVariable long id) {
-        Priority priority = priorityService.getPriorityById(id);
+    public ResponseEntity<TaskPriority> getPriorityById(@PathVariable long id) {
+        TaskPriority priority = priorityService.getPriorityById(id);
         if (priority != null) {
             return new ResponseEntity<>(priority, HttpStatus.OK);
         } else {
@@ -27,8 +27,8 @@ public class PriorityController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Priority>> getAllPriorities() {
-        List<Priority> priorities = priorityService.getAllPriorities();
+    public ResponseEntity<List<TaskPriority>> getAllPriorities() {
+        List<TaskPriority> priorities = priorityService.getAllPriorities();
         return new ResponseEntity<>(priorities, HttpStatus.OK);
     }
 }

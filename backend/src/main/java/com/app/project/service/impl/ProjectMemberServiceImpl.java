@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Service
-public class ProjectMemberServiceImpl {
+public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Autowired
     private ProjectMemberRepository projectMemberRepository;

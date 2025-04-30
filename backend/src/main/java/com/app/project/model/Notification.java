@@ -2,6 +2,8 @@ package com.app.project.model;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "Notification")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

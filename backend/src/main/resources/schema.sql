@@ -20,7 +20,7 @@ CREATE TABLE Projects (
     	owner_id INT, 
     	start_date DATE, 
     	end_date DATE, 
-    	progress INT,
+    	progress FLOAT,
     	FOREIGN KEY (owner_id) REFERENCES Users(user_id)
 );
 

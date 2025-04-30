@@ -18,6 +18,15 @@ public class Project {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "end_date", nullable = false)
+    private String end_date;
+
+    @Column(name = "start_data", nullable = false)
+    private String start_date;
+
+    @Column(name = "progress")
+    private double progress;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private ProjectMember owner;
@@ -50,6 +59,40 @@ public class Project {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getEndDate() {
+        return end_date;
+    }
+
+    public void setEndDate(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public String getStartDate() {
+        return start_date;
+    }
+
+    public void setStartDate(String start_date) {
+        this.start_date = start_date;
+    }
+    
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
+    public double getProgress() {
+        if (tasks.isEmpty()) {
+            return 0.0;
+        }
+        int completedTasks = 0;
+        for(int i = 0; i < tasks.size(); i++) {
+            if ((tasks.get(i).getStatus() != null) &&(tasks.get(i).getStatus().getStatusName().equalsIgnoreCase("complete"))) {
+                completedTasks++;
+            }
+        }
+        this.progress = (double) completedTasks / tasks.size() * 100.0;
+        return this.progress;
+    }
+    
 
     public String getDescription() {
         return description;

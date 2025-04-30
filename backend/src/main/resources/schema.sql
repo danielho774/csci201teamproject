@@ -89,7 +89,7 @@ CREATE TABLE TaskAssignments (
     	task_id INT, 
     	member_id INT, 
     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
-    	FOREIGN KEY (member_id) REFERENCES ProjectMembers(member_id)
+    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id)
 ); 
 
 -- REACTIONS 
@@ -112,7 +112,7 @@ CREATE TABLE Comments (
     	date_created DATE, 
     	archived BOOLEAN, 
     	resolved BOOLEAN,
-    	FOREIGN KEY (member_id) REFERENCES ProjectMembers(member_id)
+    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id)
 ); 
 CREATE TABLE CommentReactions (
 	comment_id INT, 
@@ -145,6 +145,6 @@ CREATE TABLE History (
     	notif_status INT, 
     	field_changed VARCHAR(50), 
     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
-    	FOREIGN KEY (member_id) REFERENCES ProjectMembers(member_id), 
+    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id), 
     	FOREIGN KEY (notif_status) REFERENCES Notification(notif_id)
 ); 

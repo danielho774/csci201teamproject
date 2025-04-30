@@ -83,7 +83,7 @@ public class TaskServiceImpl implements TaskService {
     
     @Override
     @Transactional // Use transaction to ensure atomicity
-    public boolean assignTaskToUser(long taskId, long userId) {
+    public boolean assignTaskToUser(long taskId, int userId) {
         Task task = getTaskById(taskId); // Finds task or throws exception
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("User not found with id: " + userId)
@@ -114,7 +114,7 @@ public class TaskServiceImpl implements TaskService {
     
     @Override
     @Transactional // Use transaction
-    public boolean removeUserFromTask(long taskId, long userId) {
+    public boolean removeUserFromTask(long taskId, int userId) {
         Task task = getTaskById(taskId); // Finds task or throws exception
         User user = userRepository.findById(userId).orElseThrow(
             () -> new RuntimeException("User not found with id: " + userId)

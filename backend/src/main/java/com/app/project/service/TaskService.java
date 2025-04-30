@@ -21,8 +21,8 @@ public interface TaskService {
     
     // User related
     List<Task> getTasksAssignedToUser(User user); // Consider renaming for clarity
-    boolean assignTaskToUser(long taskId, long userId);
-    boolean removeUserFromTask(long taskId, long userId); // Keep this signature
+    boolean assignTaskToUser(long taskId, int userId);
+    boolean removeUserFromTask(long taskId, int userId); // Keep this signature
     
     // Status related
     boolean updateTaskStatus(long taskId, TaskStatus status);

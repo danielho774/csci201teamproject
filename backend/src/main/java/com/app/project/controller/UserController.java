@@ -31,13 +31,13 @@ public class UserController {
     //Get by Id Rest Api
     @GetMapping("{id}")
     // localhost:8080/api/Users/1
-    public ResponseEntity<User> getUserById(@PathVariable("id") long userID){
+    public ResponseEntity<User> getUserById(@PathVariable("id") int userID){
         return new ResponseEntity<User>(userService.getUserByID(userID),HttpStatus.OK);
     }
 
     //Delete Rest Api
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") int id){
         //delete User from db
         userService.deleteUser(id);
         return new ResponseEntity<String>("User deleted Successfully.",HttpStatus.OK);

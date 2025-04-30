@@ -98,7 +98,7 @@ public class TaskController {
     @PostMapping("/{taskId}/assign/{userId}")
     public ResponseEntity<String> assignTaskToUser(
             @PathVariable("taskId") long taskId,
-            @PathVariable("userId") long userId) {
+            @PathVariable("userId") int userId) {
         try {
              boolean success = taskService.assignTaskToUser(taskId, userId);
              if (success) {
@@ -117,7 +117,7 @@ public class TaskController {
     @DeleteMapping("/{taskId}/remove/{userId}") // CHANGED PATH from /assign/ to /remove/
     public ResponseEntity<String> removeUserFromTask(
             @PathVariable("taskId") long taskId,
-            @PathVariable("userId") long userId) {
+            @PathVariable("userId") int userId) {
          try {
             boolean success = taskService.removeUserFromTask(taskId, userId);
             if (success) {

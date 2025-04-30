@@ -32,13 +32,6 @@ public class User {
 
 	private boolean loggedIn; 
 
-	// for projects the user owns 
-	// OneToMany --> one user can have multiple projects they own
-	// CascadeType.ALL --> if there are any updates in Project, pass changes
-	// 					to the owner as well 
-	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-	private List<Project> ownedProjects = new ArrayList<>(); 
-
 	// for projects the user is a member of 
 	// ManyToMany --> user can be a member of multiple projects 
 	// 			  --> project can have multiple members 
@@ -88,7 +81,7 @@ public class User {
 
 	// returns a combined list of owned and member of projects
 	public List<Project> getProjects() {
-		List<Project> allProjects = new ArrayList<>(ownedProjects); 
+		List<Project> allProjects = new ArrayList<>(); 
 		for (int i = 0; i < memberOfProjects.size(); i++) {
 			if (!allProjects.contains(memberOfProjects.get(i))) {
 				allProjects.add(memberOfProjects.get(i)); 

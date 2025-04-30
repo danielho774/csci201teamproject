@@ -86,7 +86,7 @@ public class TaskController {
             // Fetch the User object using the injected UserService
             User user = userService.getUserByID(userId); // Use getUserByID from UserService
             // Call the service method (potentially renamed, e.g., getTasksAssignedToUser)
-            List<Task> tasks = taskService.getTasksByUser(user); // Assumes TaskService method name is getTasksByUser
+            List<Task> tasks = taskService.getTasksAssignedToUser(user); // Assumes TaskService method name is getTasksByUser
             return new ResponseEntity<>(tasks, HttpStatus.OK);
         } catch (RuntimeException e) { // Catch potential exception if user not found
              // Log the exception e.getMessage()

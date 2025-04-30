@@ -81,7 +81,7 @@ public class TaskController {
 
     // Get tasks assigned to a specific user
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable("userId") long userId) {
+    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable("userId") int userId) {
         try {
             // Fetch the User object using the injected UserService
             User user = userService.getUserByID(userId); // Use getUserByID from UserService

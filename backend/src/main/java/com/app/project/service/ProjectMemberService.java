@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProjectMemberService {
+public interface ProjectMemberService {
 
-    @Autowired
-    private ProjectMemberRepository projectMemberRepository;
+    public Optional<ProjectMember> getMember(int memberID);
 
-    public void leaveProject(int memberID) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'leaveProject'");
-    }
+    public void leaveProject(int memberID);
+
+    public void ownerLeaveAndTransfer(int ownerMemberID, int newOwnerMemberID);
+
+    public void ownerDeleteProject(int ownerMemberID);
 
 }

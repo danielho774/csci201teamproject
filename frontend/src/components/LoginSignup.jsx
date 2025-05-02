@@ -19,21 +19,31 @@ export const LoginSignup = ({onLogin}) => {
   const navigate = useNavigate();
 
 
-  async function processLogin({email, password }){
+  async function processLogin({username, password }){
     try {
-      const response = await fetch('http://localhost:8080/api/users/login', {
+      const result = await fetch('http://localhost:8080/api/users/login', {
         method: 'POST', 
         headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({email, password}), 
+        body: JSON.stringify({username, password}), 
       }); 
 
-      if (!response.ok) {
-        throw new Error ('Login failed. ISSUE'); 
+      if (!result.ok) {
+        const text = await result.text();
+        throw new Error(text ? text : "Error logging in"); 
       }
 
-      const data = await response.json(); 
-      console.log('Logged in user: ', data); 
-      onLogin(data); 
+      const data = await result.json();
+      const userID = data.userID;
+      console.log(userID);
+
+      console.log('Full response: ', data); 
+
+      localStorage.setItem('logged-in', 'true');
+      localStorage.setItem('userID', userID);
+      onLogin();
+
+      navigate('/');
+
     }
     catch(error) {
       console.error('Login error: ', error); 
@@ -49,7 +59,7 @@ export const LoginSignup = ({onLogin}) => {
       });
       if(!result.ok){
         const text = await result.text();
-        throw new Error(text ? text : "Error connecting to backend");
+        throw new Error(text ? text : "Error signing up");
       }
 
       const data = await result.json();
@@ -90,8 +100,8 @@ export const LoginSignup = ({onLogin}) => {
           </>}
         {/*This ternary operator makes it so that the Name field is hidden on the Login page. Because you don't need that*/}
         <div className="input">
-          <img src={emailIcon} alt="" />
-          <input type="email" placeholder = "Email"value={email} onChange={(e) => setEmail(e.target.value)}/>
+          <img src={userIcon} alt="" />
+          <input type="text" placeholder = "username"value={username} onChange={(e) => setUsername(e.target.value)}/>
         </div>
         <div className="input">
           <img src={passwordIcon} alt="" />
@@ -107,7 +117,7 @@ export const LoginSignup = ({onLogin}) => {
       </div>
       <div className="submit-button" onClick={() => {
         if (action === "Log In") {
-          processLogin({email, password});
+          processLogin({username, password});
         } else {
           processSignup({ username, firstName, lastName, email, password });
         }

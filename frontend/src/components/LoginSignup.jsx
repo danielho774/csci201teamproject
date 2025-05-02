@@ -86,8 +86,8 @@ export const LoginSignup = ({onLogin}) => {
         {action === "Log In" ? <div></div> :
         <>
           <div className="input"> 
-            <img src={userIcon} alt="" />
-            <input type="text" placeholder = "Username" value = {username} onChange = {(e) => setUsername(e.target.value)}/>
+            <img src={emailIcon} alt="" />
+            <input type="email" placeholder = "Email" value = {email} onChange = {(e) => setEmail(e.target.value)}/>
           </div>
           <div className="input"> 
           <img src={userIcon} alt="" />
@@ -101,7 +101,7 @@ export const LoginSignup = ({onLogin}) => {
         {/*This ternary operator makes it so that the Name field is hidden on the Login page. Because you don't need that*/}
         <div className="input">
           <img src={userIcon} alt="" />
-          <input type="text" placeholder = "username"value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <input type="text" placeholder = "Username"value={username} onChange={(e) => setUsername(e.target.value)}/>
         </div>
         <div className="input">
           <img src={passwordIcon} alt="" />

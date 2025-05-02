@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {

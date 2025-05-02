@@ -50,8 +50,10 @@ export const LoginSignup = ({onLogin}) => {
       }
 
       const data = await result.json();
-      const userID = data.userId;
+      const userID = data.userID;
       console.log(userID);
+
+      console.log('Full response: ', data); 
 
 
       //localStorage.setItem('logged-in', 'true');

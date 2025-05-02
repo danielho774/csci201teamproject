@@ -28,7 +28,7 @@ export default function CreateProjectPage() {
 
   try {
     // check if this is correct
-    const response = await fetch('/api/projects/create', {
+    const response = await fetch('http://localhost:8080/api/projects/${userID}/createProject', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ public interface ProjectService {
     public void ownerLeaving(Long projectId, String currentOwnerEmail, String newOwnerEmail);*/
 
     public Project getProjectById(int projectID);
-    public double calculateProjectProgress(int projectID);
+    public double updateProjectProgress(int projectID);
     // public Project createProject(Project project, int memberID);
 
     public Optional<Project> getProject(int projectID);

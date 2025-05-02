@@ -6,13 +6,15 @@ import com.app.project.model.Task;
 import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
+import com.app.project.repository.StatusRepository;
 import com.app.project.repository.UserRepository;
 import com.app.project.service.ProjectService;
+import com.app.project.service.TaskStatusService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
-
+import java.io.ObjectInputFilter.Status;
 import java.util.List;
 
 
@@ -25,26 +27,34 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectMemberRepository projectMemberRepository;
 
+    @Autowired
+    private TaskStatusService taskStatusService;
+
     public Project getProjectById(int projectID) {
         return projectRepository.findById(projectID)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
     //assuming that taskStatus is set to complete when task is complete
-    public double calculateProjectProgress(int projectID) {
+    public double updateProjectProgress(int projectID) {
         Project project = getProjectById(projectID);
 
         if (project.getTasks().isEmpty()) {
             return 0.0;
         }
 
-        long completedTasks = project.getTasks().stream()
-                .filter(task-> task.getStatus() != null &&
-                                task.getStatus().getStatusName() != null &&
-                                task.getStatus().getStatusName().equalsIgnoreCase("complete") ) 
-                .count();
+        int completedTasks = 0;
 
-        return (double) completedTasks / project.getTasks().size() * 100.0;
+        for (Task task : project.getTasks()) {
+            if (task.getStatus().getStatusName() == "Completed") { 
+                completedTasks++;
+            }
+        }
+
+        project.setProgress(completedTasks / (double) project.getTasks().size() * 100.0);
+        projectRepository.save(project);
+
+        return project.getProgress();
     }
 
     // //can change to user if needed

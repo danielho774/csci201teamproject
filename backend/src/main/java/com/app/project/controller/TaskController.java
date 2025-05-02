@@ -255,8 +255,30 @@ public class TaskController {
 
     // Get tasks by priority
     @GetMapping("/priority/{priorityName}")
-    public ResponseEntity<List<Task>> getTasksByPriority(@PathVariable("priorityName") String priorityName) {
-        return new ResponseEntity<>(taskService.getTasksByPriority(priorityName), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> getTasksByPriority(@PathVariable("priorityName") String priorityName) {
+        List<Task> tasks = taskService.getTasksByPriority(priorityName);
+        
+        List<Map<String, Object>> taskDtos = tasks.stream()
+            .map(task -> {
+                Map<String, Object> dto = new HashMap<>();
+                dto.put("taskID", task.getTaskID());
+                dto.put("taskName", task.getTaskName());
+                dto.put("description", task.getTaskDescrip());
+                dto.put("projectID", task.getProject().getProjectID());
+                dto.put("projectName", task.getProject().getProjectName());
+                dto.put("statusID", task.getStatus().getStatusID());
+                dto.put("statusName", task.getStatus().getStatusName());
+                dto.put("priorityID", task.getPriority().getPriorityID());
+                dto.put("priorityName", task.getPriority().getPriorityName());
+                dto.put("startDate", task.getStartDate());
+                dto.put("endDate", task.getEndDate());
+                dto.put("duration", task.getDuration());
+                dto.put("assigned", task.isAssigned());
+                return dto;
+            })
+            .collect(Collectors.toList());
+        
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
 
     // Add comment to task

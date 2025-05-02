@@ -9,6 +9,10 @@
     /*Aligns everything to the center of the webpage*/
 }
 
+body {
+    background: linear-gradient(90deg, #1a023b 20%, #22e8f7 100%);
+}
+
 .header{
     display: flex;
     flex-direction: column;

@@ -5,18 +5,41 @@ import userIcon from '../Assets/person.png'
 import emailIcon from '../Assets/email.png'
 import passwordIcon from '../Assets/password.png'
 
-export const LoginSignup = ({setIsLoggedIn}) => {
+
+export const LoginSignup = ({onLogin}) => {
   
+  const [username, setUsername] = React.useState("");
+  const [firstName, setFN] = React.useState("");
+  const [lastName, setLN] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const [action, setAction] = React.useState("Log In");
-   const processLogin = () => {
-    console.log("Processing login...");
-    // leave this empty for backend team
+
+
+  async function processLogin({email, password }){
+
   }
 
-  const processSignup = () => {
-    console.log("Processing signup...");
-    // leave this empty for backend team
+  async function processSignup({ username, firstName, lastName, email, password }){
+    const result = await fetch('/api/users/register', 
+      {method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({username, email, password, firstName, lastName}),
+      });
+      if(!result.ok){
+        throw new Error("Error connecting to backend");
+      }
+
+      const data = await result.json();
+      const userID = data.userId;
+      console.log(userID);
+
+
+      //localStorage.setItem('logged-in', 'true');
+      //localStorage.setItem('user-email', );
+      onLogin();
+      //navigate('/');
   }
   //usestate is what React calls a Hook, it enables functional components to manage the state of the variable
   //also note that you can import the React Usestate instead of directly calling it like I did :P
@@ -28,18 +51,28 @@ export const LoginSignup = ({setIsLoggedIn}) => {
       </div> 
       <div className="inputs">
         {action === "Log In" ? <div></div> :
+        <>
+          <div className="input"> 
+            <img src={userIcon} alt="" />
+            <input type="text" placeholder = "Username" value = {username} onChange = {(e) => setUsername(e.target.value)}/>
+          </div>
           <div className="input"> 
           <img src={userIcon} alt="" />
-          <input type="text" placeholder = "Name"/>
-          </div>}
+            <input type="text" placeholder = "First Name" value = {firstName} onChange = {(e) => setFN(e.target.value)}/>
+          </div>
+          <div className="input">
+          <img src={userIcon} alt="" /> 
+            <input type="text" placeholder = "Last Name" value = {lastName} onChange = {(e) => setLN(e.target.value)}/>
+          </div>
+          </>}
         {/*This ternary operator makes it so that the Name field is hidden on the Login page. Because you don't need that*/}
         <div className="input">
           <img src={emailIcon} alt="" />
-          <input type="email" placeholder = "Email"/>
+          <input type="email" placeholder = "Email"value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div className="input">
           <img src={passwordIcon} alt="" />
-          <input type="password" placeholder = "Password"/>
+          <input type="password" placeholder = "Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
         </div>
       </div>
       {action === "Sign Up" ? <div></div> : <div className="forgot-password">Forgot Your Password? <span>Click Here!</span></div>}
@@ -51,9 +84,9 @@ export const LoginSignup = ({setIsLoggedIn}) => {
       </div>
       <div className="submit-button" onClick={() => {
         if (action === "Log In") {
-          processLogin();
+          processLogin({email, password});
         } else {
-          processSignup();
+          processSignup({ username, firstName, lastName, email, password });
         }
       }}>
         {action}

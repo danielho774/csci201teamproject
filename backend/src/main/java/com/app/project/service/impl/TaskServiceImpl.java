@@ -102,7 +102,7 @@ public class TaskServiceImpl implements TaskService {
         // Find the ProjectMember link
         // Assuming Task has getProject() and Project has getProjectID()
         int projectId = task.getProject().getProjectID();
-        ProjectMember member = projectMemberRepository.findByUserUserIDAndProjectProjectID((int) userId, projectId)
+        ProjectMember member = projectMemberRepository.findByUser_UserIDAndProject_ProjectID((int) userId, projectId)
                 .orElseThrow(() -> new RuntimeException("User " + userId + " is not a member of project " + projectId));
 
         // Check if already assigned
@@ -132,7 +132,7 @@ public class TaskServiceImpl implements TaskService {
 
         // Find the ProjectMember link
         int projectId = task.getProject().getProjectID();
-        ProjectMember member = projectMemberRepository.findByUserUserIDAndProjectProjectID((int) userId, projectId)
+        ProjectMember member = projectMemberRepository.findByUser_UserIDAndProject_ProjectID((int) userId, projectId)
             .orElseThrow(() -> new RuntimeException("User " + userId + " is not a member of project " + projectId));
 
         // Find and delete the assignment

@@ -114,28 +114,42 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public void transferOwnership(int projectID, int newOwnerUserID) {
-        Project project = projectRepository.findById(projectID).orElseThrow();// get project
+        Project project = projectRepository.findById(projectID).orElseThrow(
+            () -> new RuntimeException("Project not found with ID: " + projectID)
+        );
 
-        User newOwner = userRepository.findById(newOwnerUserID).orElseThrow();// get new owner
+        User newOwner = userRepository.findById(newOwnerUserID).orElseThrow(
+            () -> new RuntimeException("User not found with ID: " + newOwnerUserID)
+        );
 
-        int currentOwnerID = project.getOwner().getUserID();// get current owner
+        int currentOwnerID = project.getOwner().getUserID();
 
-        //create a project member object to store the relationship between project and new owner if it doesn't exist
-        if (projectMemberRepository.findByUserUserIDAndProjectProjectID(newOwner.getUserID(), projectID) == null) {
+        //Check if the new owner is already a member
+        Optional<ProjectMember> newOwnerMember = projectMemberRepository
+            .findByUser_UserIDAndProject_ProjectID(newOwnerUserID, projectID);
+            
+        if (newOwnerMember.isEmpty()) {
+            // Not a member yet, create new membership
             ProjectMember projectMember = new ProjectMember(project, newOwner, true);
             projectMemberRepository.save(projectMember);
         } else {
-            ProjectMember projectMember = projectMemberRepository.findByUserUserIDAndProjectProjectID(newOwner.getUserID(), projectID).orElse(null);
+            // Already a member, update role
+            ProjectMember projectMember = newOwnerMember.get();
             projectMember.setRole(true);
             projectMemberRepository.save(projectMember);
         }
 
-        //update the project member object to store the relationship between project and current owner
-        ProjectMember currentOwnerProjectMember = projectMemberRepository.findByUserUserIDAndProjectProjectID(currentOwnerID, projectID).orElse(null);
-        currentOwnerProjectMember.setRole(false);
-        projectMemberRepository.save(currentOwnerProjectMember);
+        // Update the current owner's role
+        Optional<ProjectMember> currentOwnerMember = projectMemberRepository
+            .findByUser_UserIDAndProject_ProjectID(currentOwnerID, projectID);
+        
+        if (currentOwnerMember.isPresent()) {
+            ProjectMember currentOwnerProjectMember = currentOwnerMember.get();
+            currentOwnerProjectMember.setRole(false);
+            projectMemberRepository.save(currentOwnerProjectMember);
+        }
 
-        //update the project owner
+        // Update the project owner
         project.setOwner(newOwner);
         projectRepository.save(project);
     }

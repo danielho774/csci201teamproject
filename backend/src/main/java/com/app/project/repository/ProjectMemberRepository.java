@@ -10,12 +10,14 @@ import java.util.Optional; // Add if needed
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Integer> {
 
     // Add method to find a member by User ID and Project ID
-    Optional<ProjectMember> findByUserUserIDAndProjectProjectID(int userId, int projectId);
+    //Optional<ProjectMember> findByUserUserIDAndProjectProjectID(int userId, int projectId);
+    Optional<ProjectMember> findByUser_UserIDAndProject_ProjectID(int userId, int projectId);
 
     // Add method to find all memberships for a user
     List<ProjectMember> findByUserUserID(int userId);
     List<ProjectMember> findByProject_ProjectID(int projectID);
     //Role of user in a project
     Optional<ProjectMember> findByProjectProjectIDAndRoleTrue(int projectId);
+    
 
 }

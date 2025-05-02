@@ -18,8 +18,11 @@ function NavigationBar() {
 
   const handleLogout = () => {
     localStorage.removeItem('userID'); 
+    localStorgae.setItem('logged-in', 'false');
     // console.log("user logged out")
     setIsLoggedIn(false); 
+
+    window.location.href = '/login';
   }; 
 
   return (

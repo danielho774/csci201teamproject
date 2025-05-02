@@ -18,6 +18,7 @@ function NavigationBar() {
 
   const handleLogout = () => {
     localStorage.removeItem('userID'); 
+    // console.log("user logged out")
     setIsLoggedIn(false); 
   }; 
 

@@ -31,7 +31,7 @@ export const LoginSignup = ({ onLogin }) => {
       }
       const data = await res.json()
       localStorage.setItem('logged-in', 'true')
-      localStorage.setItem('userID', data.userID)
+      localStorage.setItem('userID', data.userId)
       onLogin()
       navigate('/')
     } catch (e) {
@@ -59,7 +59,7 @@ export const LoginSignup = ({ onLogin }) => {
     }
     const data = await res.json()
     localStorage.setItem('logged-in', 'true')
-    localStorage.setItem('userID', data.userID)
+    localStorage.setItem('userID', data.userId)
     onLogin()
     navigate('/')
   }

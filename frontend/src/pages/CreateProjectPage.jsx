@@ -33,8 +33,9 @@ export default function CreateProjectPage() {
 
   try {
     const userID = localStorage.getItem('userID');
+    console.log('UserID: ', userID); 
     // check if this is correct
-    const response = await fetch(`http://localhost:8080/api/projects/${userID}/createProject`, {
+    const response = await fetch(`http://localhost:8080/api/projects/createProject?userID=${userID}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,6 +46,9 @@ export default function CreateProjectPage() {
     if (response.ok) {
       const result = await response.json();
       console.log('Project saved:', result);
+
+      const projectID = result.projectID; 
+      localStorage.setItem('projectID', projectID); 
       // Lead to project confirmation page 
       navigate('/'); 
     } else {

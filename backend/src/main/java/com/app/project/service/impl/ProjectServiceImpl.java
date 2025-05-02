@@ -47,25 +47,22 @@ public class ProjectServiceImpl implements ProjectService {
         return (double) completedTasks / project.getTasks().size() * 100.0;
     }
 
-    //can change to user if needed
-    public Project createProject(Project project, int memberID) {
-        Project savedProject = projectRepository.save(project);
-        ProjectMember owner = projectMemberRepository.findById(memberID).orElseThrow();
-        owner.setProject(savedProject);
-        owner.setRole(true); // Set as owner
-        projectMemberRepository.save(owner);
-        return savedProject;
-    }
-
-   
-
+    // //can change to user if needed
+    // public Project createProject(Project project, int memberID) {
+    //     Project savedProject = projectRepository.save(project);
+    //     ProjectMember owner = projectMemberRepository.findById(memberID).orElseThrow();
+    //     owner.setProject(savedProject);
+    //     owner.setRole(true); // Set as owner
+    //     projectMemberRepository.save(owner);
+    //     return savedProject;
+    // }
     
     public Optional<Project> getProject(int projectID) {
         return projectRepository.findById(projectID);
     }
 
-    public void saveProject(Project project) {
-        projectRepository.save(project);
+    public Project saveProject(Project project) {
+        return projectRepository.save(project);
     }
 
     public void deleteProject(int projectID) {

@@ -18,10 +18,10 @@ public interface ProjectService {
 
     public Project getProjectById(int projectID);
     public double calculateProjectProgress(int projectID);
-    public Project createProject(Project project, int memberID);
+    // public Project createProject(Project project, int memberID);
 
     public Optional<Project> getProject(int projectID);
-    public void saveProject(Project project);
+    public Project saveProject(Project project);
     public void deleteProject(int projectID);
     public void addMember(Project project, User user);
     public void removeMember(ProjectMember member);

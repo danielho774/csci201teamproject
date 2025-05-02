@@ -8,13 +8,34 @@ export default function LoginPage({ onLogin }) {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     
     console.log('Attempting login with:', username, password);
     // Assuming login is successful NEEDS TO BE CHANGED
-    onLogin(); 
-    navigate('/'); 
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json', 
+        }, 
+        body: JSON.stringify({username, password}),
+      }); 
+
+      if (!response.ok) {
+        throw new Error('Invalid login.'); 
+      }
+
+      const userData = await response.json(); 
+      console.log('Logged in user: ', userData); 
+
+      onLogin(userData); 
+      navigate('/'); 
+    }
+    catch(error) {
+      console.error('Login failed: ', error.message); 
+      alert('Login failed: ' + error.message); 
+    } 
   };
 
   return (

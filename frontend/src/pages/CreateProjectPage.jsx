@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import styles from './CreateProjectPage.module.css';
+import {AuthContext} from '../context/AuthContext'; 
 
 export default function CreateProjectPage() {
   /* Initialization */
@@ -8,6 +9,8 @@ export default function CreateProjectPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [error, setError] = useState('');
+
+  // const {userID} = useContext(AuthContext); 
 
   const handleSubmission = async (event) => {
     event.preventDefault(); 
@@ -27,6 +30,7 @@ export default function CreateProjectPage() {
   console.log('Project Created:', { projectName, projectDescription, startDate, endDate });
 
   try {
+    const userID = localStorage.getItem('userID');
     // check if this is correct
     const response = await fetch(`http://localhost:8080/api/projects/${userID}/createProject`, {
       method: 'POST',

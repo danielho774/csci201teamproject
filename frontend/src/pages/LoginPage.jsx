@@ -40,7 +40,7 @@ export default function LoginPage({ onLogin }) {
 
   return (
     <div className={styles.loginPage || 'login-page'}>
-      <h2>Login</h2>
+      <h2>Login676567</h2>
       <form onSubmit={handleFormSubmit}>
         <div>
           <label htmlFor="username">Username:</label>

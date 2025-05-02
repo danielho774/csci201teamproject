@@ -1,5 +1,6 @@
 import React from 'react'
 import './LoginSignup.css'
+import { useNavigate, Link } from 'react-router-dom'
 
 import userIcon from '../Assets/person.png'
 import emailIcon from '../Assets/email.png'
@@ -15,6 +16,7 @@ export const LoginSignup = ({onLogin}) => {
   const [password, setPassword] = React.useState("");
 
   const [action, setAction] = React.useState("Log In");
+  const navigate = useNavigate();
 
 
   async function processLogin({email, password }){
@@ -46,7 +48,8 @@ export const LoginSignup = ({onLogin}) => {
         body: JSON.stringify({username, email, password, firstName, lastName}),
       });
       if(!result.ok){
-        throw new Error("Error connecting to backend");
+        const text = await result.text();
+        throw new Error(text ? text : "Error connecting to backend");
       }
 
       const data = await result.json();
@@ -56,10 +59,10 @@ export const LoginSignup = ({onLogin}) => {
       console.log('Full response: ', data); 
 
 
-      //localStorage.setItem('logged-in', 'true');
-      //localStorage.setItem('user-email', );
+      localStorage.setItem('logged-in', 'true');
+      localStorage.setItem('userID', userID);
       onLogin();
-      //navigate('/');
+      navigate('/');
   }
   //usestate is what React calls a Hook, it enables functional components to manage the state of the variable
   //also note that you can import the React Usestate instead of directly calling it like I did :P

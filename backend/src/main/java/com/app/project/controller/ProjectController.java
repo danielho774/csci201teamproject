@@ -65,7 +65,7 @@ public class ProjectController {
 
     @GetMapping("/progress/{projectID}")
     public double getProjectProgress(@PathVariable int projectID) {
-        return projectService.calculateProjectProgress(projectID);
+        return projectService.updateProjectProgress(projectID);
     }
 
     @DeleteMapping("/{projectID}")

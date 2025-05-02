@@ -45,15 +45,15 @@ public class ProjectMember {
         this. memberID = memberID; 
     }
 
-    public Project getProject() {
-        return project; 
+    public int getProjectID() {
+        return project.getProjectID(); 
     }
     public void setProject(Project project) {
         this.project = project; 
     }
 
-    public User getUserID() {
-        return user; 
+    public int getUserID() {
+        return user.getUserID(); 
     }
     public void setUser(User user) {
         this.user = user; 

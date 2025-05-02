@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             return user.get(); 
         }
         else {
-            throw new RuntimeException("User not found with ID: " + id); 
+            return null;
         }
     }
 

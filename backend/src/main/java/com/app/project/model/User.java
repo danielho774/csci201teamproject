@@ -30,8 +30,6 @@ public class User {
 	@Column(name = "is_guest")
 	private boolean isGuest; 
 
-	private boolean loggedIn; 
-
 	// for projects the user is a member of 
 	// ManyToMany --> user can be a member of multiple projects 
 	// 			  --> project can have multiple members 
@@ -41,20 +39,20 @@ public class User {
 	// inverseJoinColumns --> the other entity of the table, tells 
 	// 						JPA to store which Project is associated
 	// 						with a User
-	@ManyToMany
-	@JoinTable(
-		name = "ProjectMembers", 
-		joinColumns = @JoinColumn(name = "user_id"), 
-		inverseJoinColumns = @JoinColumn(name = "project_id")
-	)
-	private List<Project> memberOfProjects = new ArrayList<>(); 
+	// @ManyToMany
+	// @JoinTable(
+	// 	name = "ProjectMembers", 
+	// 	joinColumns = @JoinColumn(name = "user"), 
+	// 	inverseJoinColumns = @JoinColumn(name = "project")
+	// )
+	// private List<Project> projects = new ArrayList<>(); 
 
 	// one user can have multiple availabilities 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
 	private List<Availability> availability = new ArrayList<>(); 
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
-	private List<ProjectMember> memberships = new ArrayList<>(); 
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<ProjectMember> memberships = new ArrayList<>(); 
 	
 	public User(int userID, String username, String email, boolean isGuest) {
 		this.userID = userID; 
@@ -66,32 +64,22 @@ public class User {
 	// empty constructor for JPA
 	public User() {}
 
-	public boolean login(String username, String email, String password) {
+	@Transient // Not stored in the database directly
+    public List<Integer> getProjectIDs() {
+        List<Integer> projects = new ArrayList<>();
+        for (ProjectMember membership : memberships) {
+            projects.add(membership.getProjectID());
+        }
+        return projects;
+    }
+
+	public boolean verify(String username, String email, String password) {
 		if (this.username.equals(username) || this.email.equals(email)) {
 			if (this.password.equals(password)) {
-				this.loggedIn = true; 
 				return true; 
 			}
 		}
-		
-		this.loggedIn = false; 
 		return false;  
-	}
-
-	public void logout() {
-		this.loggedIn = false; 
-	}
-
-	// returns a combined list of owned and member of projects
-	public List<Project> getProjects() {
-		List<Project> allProjects = new ArrayList<>(); 
-		for (int i = 0; i < memberOfProjects.size(); i++) {
-			if (!allProjects.contains(memberOfProjects.get(i))) {
-				allProjects.add(memberOfProjects.get(i)); 
-			} 
-		}
-		 
-		return allProjects; 
 	}
 
 	public boolean addAvailability(Availability newAvail) {
@@ -113,26 +101,34 @@ public class User {
 		return false; 
 	}
 
-	public List<Task> getAssignedTasks() {
-		List<Task> allTasks = new ArrayList<>(); 
+	// public List<Task> getAssignedTasks() {
+	// 	List<Task> allTasks = new ArrayList<>(); 
+	// 	List<Integer> projectIDs = getProjectIDs();
+	// 	List<Project> projects = new ArrayList<>();
+	// 	for (int i = 0; i < projectIDs.size(); i++) {
+	// 		Project project = Project.getProjectByID(projectIDs.get(i)); 
+	// 		if (project != null) {
+	// 			projects.add(project); 
+	// 		}
+	// 	}
 		
-		if (memberOfProjects != null) {
-			for (int i = 0; i < memberOfProjects.size(); i++) {
-				ProjectMember member = memberships.get(i); 
-				List<TaskAssignments> assignments = member.getAssignments();  
-				if (assignments != null) {
-					for (int j = 0; j < assignments.size(); j++) {
-						TaskAssignments assignment = assignments.get(j); 
-						if (assignment.getTask() != null && !allTasks.contains(assignment.getTask())) {
-							allTasks.add(assignment.getTask()); 
-						}
-					}
-				}
-			}
-		}
+	// 	if (projects != null) {
+	// 		for (int i = 0; i < projects.size(); i++) {
+	// 			ProjectMember member = memberships.get(i); 
+	// 			List<TaskAssignments> assignments = member.getAssignments();  
+	// 			if (assignments != null) {
+	// 				for (int j = 0; j < assignments.size(); j++) {
+	// 					TaskAssignments assignment = assignments.get(j); 
+	// 					if (assignment.getTask() != null && !allTasks.contains(assignment.getTask())) {
+	// 						allTasks.add(assignment.getTask()); 
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
 
-		return allTasks; 
-	}
+	// 	return allTasks; 
+	// }
 	
 //	Getters and Setters 
 	public int getUserID() {
@@ -189,10 +185,6 @@ public class User {
 	}
 	public void setAvailability(List<Availability> availability) {
 		this.availability = availability; 
-	}
-
-	public boolean isLoggedIn() {
-		return loggedIn; 
 	}
 }
 

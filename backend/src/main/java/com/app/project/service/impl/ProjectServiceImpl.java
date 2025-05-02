@@ -32,8 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
     private UserRepository userRepository;
 
     public Project getProjectById(int projectID) {
-        return projectRepository.findById(projectID)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+        return projectRepository.findById(projectID).orElse(null);
     }
 
     //assuming that taskStatus is set to complete when task is complete
@@ -71,11 +70,6 @@ public class ProjectServiceImpl implements ProjectService {
         User owner = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
 
         Project project = new Project(name, description, end_date, start_date, owner);
-        System.out.println("Project created with name: " + name);
-        System.out.println("Project created with description: " + description);
-        System.out.println("Project created with end date: " + end_date);
-        System.out.println("Project created with start date: " + start_date);
-        System.out.println("Project created with owner: " + owner.getUsername());
             
         Project savedProject = saveProject(project);
 
@@ -100,13 +94,8 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.deleteById(projectID);
     }
 
-    public void addMember(Project project, User user) {
-        ProjectMember member = new ProjectMember(project,user, false);
-        projectMemberRepository.save(member);
-    }
-
     public void removeMember(ProjectMember member) {
-        projectMemberRepository.delete(member);
+        projectMemberRepository.deleteById(member.getMemberID());
     }
 
     public List<ProjectMember> getProjectMembers(int projectID) {
@@ -126,7 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         //Check if the new owner is already a member
         Optional<ProjectMember> newOwnerMember = projectMemberRepository
-            .findByUser_UserIDAndProject_ProjectID(newOwnerUserID, projectID);
+            .findByUserUserIDAndProjectProjectID(newOwnerUserID, projectID);
             
         if (newOwnerMember.isEmpty()) {
             // Not a member yet, create new membership
@@ -141,7 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         // Update the current owner's role
         Optional<ProjectMember> currentOwnerMember = projectMemberRepository
-            .findByUser_UserIDAndProject_ProjectID(currentOwnerID, projectID);
+            .findByUserUserIDAndProjectProjectID(currentOwnerID, projectID);
         
         if (currentOwnerMember.isPresent()) {
             ProjectMember currentOwnerProjectMember = currentOwnerMember.get();

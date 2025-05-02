@@ -5,7 +5,6 @@ import com.app.project.model.ProjectMember;
 import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
-import com.app.project.repository.UserRepository;
 import com.app.project.service.ProjectMemberService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,26 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Autowired 
-    private UserRepository userRepository;
+    public ProjectMember getMember(int memberID) {
+        Optional<ProjectMember> member = projectMemberRepository.findById(memberID);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            return null;
+        }
+    }
 
-    public Optional<ProjectMember> getMember(int memberID) {
-        return projectMemberRepository.findById(memberID);
+    public List<ProjectMember> getAllMembers(int projectID) {
+        return projectMemberRepository.findByProject_ProjectID(projectID);
+    }
+
+    public ProjectMember getMemberByUserIDProjectID(int userID, int projectID) {
+        Optional<ProjectMember> member = projectMemberRepository.findByUserUserIDAndProjectProjectID(userID, projectID);
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            return null;
+        }
     }
 
     public void leaveProject(int memberID) {
@@ -71,8 +85,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
             throw new RuntimeException("Only the owner can delete the project.");
         }
 
-        Project project = owner.getProject();
-        int projectID = project.getProjectID();
+        int projectID = owner.getProjectID();
 
         // Delete all members related to this project
         List<ProjectMember> members = projectMemberRepository.findByProject_ProjectID(projectID);
@@ -82,16 +95,10 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         projectRepository.deleteById(projectID);
     }
 
-    public int createProjectMember(int projectID, int userID, boolean isOwner) {
-        Project project = projectRepository.findById(projectID)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-    
-        User user = userRepository.findById(userID)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public ProjectMember createProjectMember(Project project, User user, boolean isOwner) {
         ProjectMember member = new ProjectMember(project, user, isOwner);
         ProjectMember savedMember = projectMemberRepository.save(member);
-        return savedMember.getMemberID();
+        return savedMember;
     }
     
 

@@ -1,6 +1,9 @@
 package com.app.project.controller;
 
+import com.app.project.model.Project;
 import com.app.project.model.User;
+import com.app.project.service.ProjectMemberService;
+import com.app.project.service.ProjectService;
 import com.app.project.service.UserService;  
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -19,6 +24,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProjectMemberService projectMemberService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -79,7 +90,7 @@ public class UserController {
             }
             
             // If user found, check password
-            if (user != null && user.login(usernameOrEmail, usernameOrEmail, password)) {
+            if (user != null && user.verify(usernameOrEmail, usernameOrEmail, password)) {
                 // Create response with user info but exclude sensitive data
                 Map<String, Object> response = new HashMap<>();
                 response.put("userId", user.getUserID());
@@ -127,4 +138,28 @@ public class UserController {
         return new ResponseEntity<String>("User deleted Successfully.",HttpStatus.OK);
     }
 
+    // get all projects user is a member of
+    @GetMapping("/{userID}/projects")
+    public ResponseEntity<?> getProjectsByUserId(@PathVariable int userID) {
+        User user = userService.getUserByID(userID);
+        if (user == null) {
+            return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
+        }
+        List<Integer> projectIDs = user.getProjectIDs();
+        if (projectIDs.isEmpty()) {
+            return new ResponseEntity<>("User is not a member of any projects", HttpStatus.NOT_FOUND);
+        }
+
+        List<Project> projects = new ArrayList<>();
+        for (int projectID : projectIDs) {
+            Optional<Project> project = projectService.getProject(projectID);
+            if (project.isPresent()) {
+                projects.add(project.get());
+            }
+        }
+        if (projects.isEmpty()) {
+            return new ResponseEntity<>("No projects found for user with ID: " + userID, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
 }

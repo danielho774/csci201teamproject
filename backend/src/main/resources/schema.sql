@@ -25,7 +25,7 @@ CREATE TABLE Projects (
 );
 
 -- PROJECT MEMBERS  
-CREATE TABLE ProjectMember (
+CREATE TABLE project_member (
 	project_id INT, 
     	user_id INT, 
     	member_id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -89,7 +89,7 @@ CREATE TABLE TaskAssignments (
     	task_id INT, 
     	member_id INT, 
     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
-    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id)
+    	FOREIGN KEY (member_id) REFERENCES project_member(member_id)
 ); 
 
 -- REACTIONS 
@@ -112,7 +112,7 @@ CREATE TABLE Comments (
     	date_created DATE, 
     	archived BOOLEAN, 
     	resolved BOOLEAN,
-    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id)
+    	FOREIGN KEY (member_id) REFERENCES project_member(member_id)
 ); 
 CREATE TABLE CommentReactions (
 	comment_id INT, 
@@ -135,16 +135,16 @@ INSERT INTO Notification (notif_type) VALUES
     	('Resolved'); 
 
 -- HISTORY 
-CREATE TABLE History (
-	change_id INT AUTO_INCREMENT PRIMARY KEY, 
-    	task_id INT, 
-    	member_id INT, 
-    	change_date DATE, 
-    	old_data VARCHAR(150), 
-    	new_data VARCHAR(150), 
-    	notif_status INT, 
-    	field_changed VARCHAR(50), 
-    	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
-    	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id), 
-    	FOREIGN KEY (notif_status) REFERENCES Notification(notif_id)
-); 
+-- CREATE TABLE History (
+-- 	change_id INT AUTO_INCREMENT PRIMARY KEY, 
+--     	task_id INT, 
+--     	member_id INT, 
+--     	change_date DATE, 
+--     	old_data VARCHAR(150), 
+--     	new_data VARCHAR(150), 
+--     	notif_status INT, 
+--     	field_changed VARCHAR(50), 
+--     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
+--     	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id), 
+--     	FOREIGN KEY (notif_status) REFERENCES Notification(notif_id)
+-- ); 

@@ -26,7 +26,6 @@ public interface ProjectService {
     public Optional<Project> getProject(int projectID);
     public Project saveProject(Project project);
     public void deleteProject(int projectID);
-    public void addMember(Project project, User user);
     public void removeMember(ProjectMember member);
     public List<ProjectMember> getProjectMembers(int projectID);
     public void transferOwnership(int projectID, int newOwnerMemberID);

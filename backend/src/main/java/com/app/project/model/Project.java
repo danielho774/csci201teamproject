@@ -122,4 +122,12 @@ public class Project {
         tasks.remove(task);
         task.setProject(null);
     }
+
+    public List<ProjectMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<ProjectMember> members) {
+        this.members = members;
+    }
 }

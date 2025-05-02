@@ -7,6 +7,7 @@ import com.app.project.model.Comment;
 import com.app.project.model.TaskStatus;
 import com.app.project.repository.TaskRepository;
 import com.app.project.repository.UserRepository;
+import com.app.project.service.ProjectService;
 import com.app.project.service.TaskService;
 import com.app.project.repository.TaskAssignmentsRepository;
 import com.app.project.repository.ProjectMemberRepository;
@@ -30,6 +31,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private ProjectMemberRepository projectMemberRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -66,6 +70,12 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setEndDate(task.getEndDate());
         existingTask.setDuration(task.getDuration());
         existingTask.setAssigned(task.isAssigned());
+
+        //update the progress of the project
+        Project project = existingTask.getProject();
+        if (project != null) {
+            projectService.updateProjectProgress(project.getProjectID());
+        }
         
         return taskRepository.save(existingTask);
     }

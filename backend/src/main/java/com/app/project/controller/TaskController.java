@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -27,37 +30,111 @@ public class TaskController {
 
     // Create task
     @PostMapping
-    public ResponseEntity<Task> saveTask(@RequestBody Task task) {
-        // Consider fetching Project, Status, Priority objects based on IDs if needed before saving
-        // For example:
-        // Project project = projectService.getProjectById(task.getProject().getProjectID());
-        // TaskStatus status = statusService.getStatusById(task.getStatus().getStatusID());
-        // TaskPriority priority = priorityService.getPriorityById(task.getPriority().getPriorityID());
-        // task.setProject(project);
-        // task.setStatus(status);
-        // task.setPriority(priority);
-        // // Error handling if related objects are not found
-        return new ResponseEntity<>(taskService.saveTask(task), HttpStatus.CREATED);
+    public ResponseEntity<?> saveTask(@RequestBody Task task) {
+        Task savedTask = taskService.saveTask(task);
+        
+        // Return a simplified response to avoid serialization issues
+        Map<String, Object> response = new HashMap<>();
+        response.put("taskID", savedTask.getTaskID());
+        response.put("taskName", savedTask.getTaskName());
+        response.put("projectID", savedTask.getProject().getProjectID());
+        response.put("statusID", savedTask.getStatus().getStatusID());
+        response.put("priorityID", savedTask.getPriority().getPriorityID());
+        response.put("message", "Task created successfully");
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // Get all tasks
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        return new ResponseEntity<>(taskService.getAllTasks(), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
+        List<Map<String, Object>> simplifiedTasks = tasks.stream()
+            .map(task -> {
+                Map<String, Object> taskDto = new HashMap<>();
+                taskDto.put("taskID", task.getTaskID());
+                taskDto.put("taskName", task.getTaskName());
+                taskDto.put("description", task.getTaskDescrip());
+                taskDto.put("projectID", task.getProject().getProjectID());
+                taskDto.put("projectName", task.getProject().getProjectName());
+                taskDto.put("statusID", task.getStatus().getStatusID());
+                taskDto.put("statusName", task.getStatus().getStatusName());
+                taskDto.put("priorityID", task.getPriority().getPriorityID());
+                taskDto.put("priorityName", task.getPriority().getPriorityName());
+                taskDto.put("startDate", task.getStartDate());
+                taskDto.put("endDate", task.getEndDate());
+                taskDto.put("duration", task.getDuration());
+                taskDto.put("assigned", task.isAssigned());
+                return taskDto;
+            })
+            .collect(Collectors.toList());
+        
+        return new ResponseEntity<>(simplifiedTasks, HttpStatus.OK);
     }
 
     // Get task by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable("id") long taskId) {
-        // Exception handling for not found is likely in the service layer
-        return new ResponseEntity<>(taskService.getTaskById(taskId), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getTaskById(@PathVariable("id") long taskId) {
+        try {
+            Task task = taskService.getTaskById(taskId);
+            
+            // Create a simplified task DTO
+            Map<String, Object> taskDto = new HashMap<>();
+            taskDto.put("taskID", task.getTaskID());
+            taskDto.put("taskName", task.getTaskName());
+            taskDto.put("description", task.getTaskDescrip());
+            taskDto.put("projectID", task.getProject().getProjectID());
+            taskDto.put("projectName", task.getProject().getProjectName());
+            taskDto.put("statusID", task.getStatus().getStatusID());
+            taskDto.put("statusName", task.getStatus().getStatusName());
+            taskDto.put("priorityID", task.getPriority().getPriorityID());
+            taskDto.put("priorityName", task.getPriority().getPriorityName());
+            taskDto.put("startDate", task.getStartDate());
+            taskDto.put("endDate", task.getEndDate());
+            taskDto.put("duration", task.getDuration());
+            taskDto.put("assigned", task.isAssigned());
+            
+            // Simply note if there are comments without processing them
+            if (task.getComments() != null) {
+                taskDto.put("commentCount", task.getComments().size());
+            } else {
+                taskDto.put("commentCount", 0);
+            }
+            
+            return new ResponseEntity<>(taskDto, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-
     // Update task
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable("id") long id, @RequestBody Task task) {
-        // Similar to create, ensure related objects are handled if IDs are passed in request body
-        return new ResponseEntity<>(taskService.updateTask(task, id), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> updateTask(@PathVariable("id") long id, @RequestBody Task task) {
+        try {
+            Task updatedTask = taskService.updateTask(task, id);
+            
+            // Create a simplified response
+            Map<String, Object> response = new HashMap<>();
+            response.put("taskID", updatedTask.getTaskID());
+            response.put("taskName", updatedTask.getTaskName());
+            response.put("description", updatedTask.getTaskDescrip());
+            response.put("projectID", updatedTask.getProject().getProjectID());
+            response.put("projectName", updatedTask.getProject().getProjectName());
+            response.put("statusID", updatedTask.getStatus().getStatusID());
+            response.put("statusName", updatedTask.getStatus().getStatusName());
+            response.put("priorityID", updatedTask.getPriority().getPriorityID());
+            response.put("priorityName", updatedTask.getPriority().getPriorityName());
+            response.put("startDate", updatedTask.getStartDate());
+            response.put("endDate", updatedTask.getEndDate());
+            response.put("duration", updatedTask.getDuration());
+            response.put("assigned", updatedTask.isAssigned());
+            response.put("message", "Task updated successfully");
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to update task: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Delete task
@@ -150,8 +227,30 @@ public class TaskController {
 
     // Get tasks by status
     @GetMapping("/status/{statusName}")
-    public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable("statusName") String statusName) {
-        return new ResponseEntity<>(taskService.getTasksByStatus(statusName), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> getTasksByStatus(@PathVariable("statusName") String statusName) {
+        List<Task> tasks = taskService.getTasksByStatus(statusName);
+        
+        List<Map<String, Object>> taskDtos = tasks.stream()
+            .map(task -> {
+                Map<String, Object> dto = new HashMap<>();
+                dto.put("taskID", task.getTaskID());
+                dto.put("taskName", task.getTaskName());
+                dto.put("description", task.getTaskDescrip());
+                dto.put("projectID", task.getProject().getProjectID());
+                dto.put("projectName", task.getProject().getProjectName());
+                dto.put("statusID", task.getStatus().getStatusID());
+                dto.put("statusName", task.getStatus().getStatusName());
+                dto.put("priorityID", task.getPriority().getPriorityID());
+                dto.put("priorityName", task.getPriority().getPriorityName());
+                dto.put("startDate", task.getStartDate());
+                dto.put("endDate", task.getEndDate());
+                dto.put("duration", task.getDuration());
+                dto.put("assigned", task.isAssigned());
+                return dto;
+            })
+            .collect(Collectors.toList());
+        
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
 
     // Get tasks by priority

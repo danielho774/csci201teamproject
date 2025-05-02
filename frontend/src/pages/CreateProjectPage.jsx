@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import styles from './CreateProjectPage.module.css';
 import {AuthContext} from '../context/AuthContext'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateProjectPage() {
   /* Initialization */
@@ -9,6 +10,7 @@ export default function CreateProjectPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   // const {userID} = useContext(AuthContext); 
 
@@ -44,6 +46,7 @@ export default function CreateProjectPage() {
       const result = await response.json();
       console.log('Project saved:', result);
       // Lead to project confirmation page 
+      navigate('/'); 
     } else {
       console.error('Failed to create project');
     }

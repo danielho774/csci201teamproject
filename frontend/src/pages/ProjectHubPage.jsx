@@ -8,6 +8,7 @@ export default function ProjectHubPage() {
   // and display them in the project hub page
   const [projects, setProjects] = React.useState([]);
   const [noProjects, setNoProjects] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const fetchProjects = async () => {
     try {
@@ -18,23 +19,20 @@ export default function ProjectHubPage() {
           'Content-Type': 'application/json', 
         }, 
       }); 
-    
-      if (!response.ok) {
-        throw new Error('Invalid Request.'); 
-      }
+      const jsonResponse = await response.json();
 
-      if (response.status === 204) {
-        console.log('No projects found for this user.'); 
+      if (response.status === 404) {
+        console.log(jsonResponse); 
         setNoProjects(true);
+        setErrorMessage(jsonResponse.message)
         return; 
       }
-      const projects = await response.json();
-      console.log('Projects: ', projects);
-      setProjects(projects);
+
+      console.log('Projects: ', jsonResponse);
+      setProjects(jsonResponse);
     }
     catch(error) {
       console.error('Fetch failed: ', error.message); 
-      alert('Fetch failed: ' + error.message); 
     }
   }
 
@@ -52,9 +50,7 @@ export default function ProjectHubPage() {
           <ProjectCard key={project.id} projectId={project.projectID} project-title={project.projectName} />
         ))}
       </div>
-      {noProjects === true &&
-        <div>if true show</div>
-      }
+      {noProjects && <div className={styles['no-projects']}>{errorMessage}</div>}
     </div>
   );
 }

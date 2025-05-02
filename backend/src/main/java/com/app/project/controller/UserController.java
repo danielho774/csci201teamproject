@@ -143,11 +143,15 @@ public class UserController {
     public ResponseEntity<?> getProjectsByUserId(@PathVariable int userID) {
         User user = userService.getUserByID(userID);
         if (user == null) {
-            return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User not found with ID: " + userID);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
         List<Integer> projectIDs = user.getProjectIDs();
         if (projectIDs.isEmpty()) {
-            return new ResponseEntity<>("User is not a member of any projects", HttpStatus.NOT_FOUND);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User is not a member of any projects");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
 
         List<Project> projects = new ArrayList<>();
@@ -158,7 +162,9 @@ public class UserController {
             }
         }
         if (projects.isEmpty()) {
-            return new ResponseEntity<>("No projects found for user with ID: " + userID, HttpStatus.NOT_FOUND);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "No projects found for user with ID: " + userID);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }

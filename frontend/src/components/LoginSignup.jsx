@@ -5,7 +5,8 @@ import userIcon from '../Assets/person.png'
 import emailIcon from '../Assets/email.png'
 import passwordIcon from '../Assets/password.png'
 
-export const LoginSignup = () => {
+export const LoginSignup = ({setIsLoggedIn}) => {
+  
 
   const [action, setAction] = React.useState("Log In");
    const processLogin = () => {

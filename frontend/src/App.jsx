@@ -6,7 +6,7 @@ import IndividualTasks from './pages/IndividualTasksPage'
 import CreateProjectPage from './pages/CreateProjectPage';
 import ProjectConfirmedPage from './pages/ProjectConfirmedPage';
 import AvailabilityPage from './pages/AvailabilityPage';
-import LoginPage from './pages/LoginPage';
+import {LoginSignup} from './components/LoginSignup';
 import RegisterPage from './pages/RegisterPage';
 import TaskBoardPage from './pages/TaskBoardPage';
 import AddTaskPage from './pages/AddTaskPage';
@@ -45,7 +45,7 @@ function App() {
           <Route path="/create" element={<CreateProjectPage />} />
           <Route path="/confirmed" element={<ProjectConfirmedPage />} />
           <Route path="/availability" element={<AvailabilityPage />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={<LoginSignup onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/projects/:projectId/board" element={<TaskBoardPage />} />
           <Route path="/projects/:projectId/tasks/add" element={<AddTaskPage />} />

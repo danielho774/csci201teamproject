@@ -30,12 +30,32 @@ public class UserServiceImpl implements UserService {
             return user.get(); 
         }
         else {
-            throw new RuntimeException(); 
+            throw new RuntimeException("User not found with ID: " + id); 
         }
     }
 
     public void deleteUser(int id) {
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException()); 
+        userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with ID: " + id)); 
         userRepository.deleteById(id); 
+    }
+    
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+    
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

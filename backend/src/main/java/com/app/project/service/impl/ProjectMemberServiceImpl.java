@@ -2,8 +2,10 @@ package com.app.project.service.impl;
 
 import com.app.project.model.Project;
 import com.app.project.model.ProjectMember;
+import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
+import com.app.project.repository.UserRepository;
 import com.app.project.service.ProjectMemberService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired 
+    private UserRepository userRepository;
 
     public Optional<ProjectMember> getMember(int memberID) {
         return projectMemberRepository.findById(memberID);
@@ -75,6 +80,18 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
         // Delete the project itself
         projectRepository.deleteById(projectID);
+    }
+
+    public int createProjectMember(int projectID, int userID, boolean isOwner) {
+        Project project = projectRepository.findById(projectID)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+    
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ProjectMember member = new ProjectMember(project, user, isOwner);
+        ProjectMember savedMember = projectMemberRepository.save(member);
+        return savedMember.getMemberID();
     }
     
 

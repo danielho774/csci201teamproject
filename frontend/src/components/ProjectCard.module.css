@@ -99,38 +99,30 @@
 
 .dropdown-panel {
   position: absolute;
-  top: 50%;  /* Center vertically */
-  left: 100%;  /* Position it to the right of the project card */
-  transform: translateY(-50%); /* Adjust to center the panel vertically */
-  background: #333; 
-  color: white;
-  padding: 15px;
+  top: 50%;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 200px;  /* Width of the panel */
-  z-index: 1000;
+  padding: 15px;
+  width: 200px; 
 }
 
 .dropdown-button {
   display: block;
   width: 100%;
-  padding: 10px;
-  background: #007bff;
+  padding: 12px;
+  background: #df95fa;
   color: white;
-  border: none;
+  margin: 5px 0;
   text-align: left;
   cursor: pointer;
-  border-radius: 4px;
-  margin: 5px 0;
+  border-radius: 5px;
   font-size: 16px;
 }
 
 .dropdown-button:hover {
-  background: #0056b3;
+  background: #bd4df1;
 }
 
 .cardLink {
-  text-decoration: none; /* Remove underline from link */
-  color: inherit; /* Inherit text color */
-  display: block; /* Ensure the link takes up the card space */
+  display: block; 
+  text-decoration: none; 
 }

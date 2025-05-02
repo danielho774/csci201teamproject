@@ -12,16 +12,16 @@ public class Project {
     @Column(name = "project_id")
     private int projectID;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "project_name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "project_descrip")
     private String description;
 
     @Column(name = "end_date", nullable = false)
     private String end_date;
 
-    @Column(name = "start_data", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private String start_date;
 
     @Column(name = "progress")
@@ -32,15 +32,15 @@ public class Project {
     private ProjectMember owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProjectMember> members = new ArrayList<>();
-
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     public Project(){}
-    public Project(String name, String description) {
+    public Project(String name, String description, String end_date, String start_date) {
         this.name = name;
         this.description = description;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.progress = 0.0;
     }
     // Getters and Setters
     
@@ -99,20 +99,6 @@ public class Project {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public List<ProjectMember> getMembers() {
-        return members;
-    }
-    public void setMembers(List<ProjectMember> members) {
-        this.members = members;
-    }
-    public void addMember(ProjectMember member) {
-        members.add(member);
-        member.setProject(this);
-    }
-    public void removeMember(ProjectMember member) {
-        members.remove(member);
-        member.setProject(null);
     }
 
     public ProjectMember getOwner() {

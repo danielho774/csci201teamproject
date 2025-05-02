@@ -11,4 +11,10 @@ public interface UserService {
     List<User> getAllUsers(); 
     User getUserByID(int id); 
     void deleteUser(int id); 
+    
+    // Add these methods
+    User getUserByUsername(String username);
+    User getUserByEmail(String email);
+    boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 }

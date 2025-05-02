@@ -1,36 +1,33 @@
 package com.app.project.controller;
 
-import com.app.project.service.impl.ProjectMemberServiceImpl;
+import com.app.project.service.ProjectMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/members")
 public class ProjectMemberController {
-
-    private final ProjectMemberServiceImpl projectMemberServiceImpl;
-
     @Autowired
-    private ProjectMemberServiceImpl projectMemberService;
+    private ProjectMemberService projectMemberService;
 
-    ProjectMemberController(ProjectMemberServiceImpl projectMemberServiceImpl) {
-        this.projectMemberServiceImpl = projectMemberServiceImpl;
+    ProjectMemberController(ProjectMemberService projectMemberServiceImpl) {
+        this.projectMemberService = projectMemberServiceImpl;
     }
 
     @DeleteMapping("/{memberID}/leave")
     public void leaveProject(@PathVariable int memberID) {
-        projectMemberServiceImpl.leaveProject(memberID);
+        projectMemberService.leaveProject(memberID);
     }
 
     //owner leaving project
     @PostMapping("/{ownerMemberID}/transferAndLeave")
     public void ownerLeaveAndTransfer(@PathVariable int ownerMemberID, @RequestParam int newOwnerMemberID) {
-        projectMemberServiceImpl.ownerLeaveAndTransfer(ownerMemberID, newOwnerMemberID);
+        projectMemberService.ownerLeaveAndTransfer(ownerMemberID, newOwnerMemberID);
     }
 
     // Owner deletes project
     @DeleteMapping("/{ownerMemberID}/deleteProject")
     public void ownerDeleteProject(@PathVariable int ownerMemberID) {
-        projectMemberServiceImpl.ownerDeleteProject(ownerMemberID);
+        projectMemberService.ownerDeleteProject(ownerMemberID);
     }
 }

@@ -31,8 +31,19 @@ public class ProjectController {
     private UserService userService;
 
     @PostMapping("/create")
-    public Project createProject(@RequestBody Project project, @RequestParam int memberID) {
-        return projectService.createProject(project, memberID);
+    public Project createProject(
+        @RequestParam int userID,
+        @RequestParam String name,
+        @RequestParam String description,
+        @RequestParam String end_date,
+        @RequestParam String start_date) {
+        Project project = new Project(name, description, end_date, start_date);
+        int projectID = projectService.saveProject(project).getProjectID();
+        int memberID = projectMemberService.createProjectMember(projectID, userID, true);
+
+        ProjectMember owner = projectMemberService.getMember(memberID).orElseThrow();
+        project.setOwner(owner);
+        return projectService.saveProject(project);
     }
 
     @GetMapping("/{projectID}")
@@ -40,27 +51,23 @@ public class ProjectController {
         return projectService.getProject(projectID);
     }
 
-    @PostMapping("/{projectID}/addMember")
-    public void addMember(@PathVariable Project project, @RequestParam int memberID) {
+    @PostMapping("/addMember/{projectID}")
+    public void addMember(@PathVariable int projectID, @RequestParam int memberID) {
+        Project project = projectService.getProjectById(projectID);
         User member = userService.getUserByID(memberID);
         projectService.addMember(project, member);
     }
 
-    @PostMapping("/{projectID}/leave")
-    public void leaveProject(@PathVariable int projectID, @RequestParam int memberID) {
-        projectMemberService.leaveProject(memberID);
-    }
-
-    @PostMapping("/{projectID}/transferOwnership")
+    @PostMapping("/transferOwnership/{projectID}")
     public void transferOwnership(@PathVariable int projectID, @RequestParam int newOwnerMemberID) {
         projectService.transferOwnership(projectID, newOwnerMemberID);
     }
 
-
-    @GetMapping("/{projectID}/progress")
+    @GetMapping("/progress/{projectID}")
     public double getProjectProgress(@PathVariable int projectID) {
         return projectService.calculateProjectProgress(projectID);
     }
+
     @DeleteMapping("/{projectID}")
     public void deleteProject(@PathVariable int projectID) {
         projectService.deleteProject(projectID);

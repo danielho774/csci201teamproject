@@ -15,4 +15,6 @@ public interface ProjectMemberService {
 
     public void ownerDeleteProject(int ownerMemberID);
 
+    public int createProjectMember(int projectID, int userID, boolean isOwner);
+
 }

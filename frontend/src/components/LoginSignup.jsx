@@ -18,11 +18,29 @@ export const LoginSignup = ({onLogin}) => {
 
 
   async function processLogin({email, password }){
+    try {
+      const response = await fetch('http://localhost:8080/api/users/login', {
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify({email, password}), 
+      }); 
 
+      if (!response.ok) {
+        throw new Error ('Login failed. ISSUE'); 
+      }
+
+      const data = await response.json(); 
+      console.log('Logged in user: ', data); 
+      onLogin(data); 
+    }
+    catch(error) {
+      console.error('Login error: ', error); 
+      alert('Login failed: ' + error.message); 
+    }
   }
 
   async function processSignup({ username, firstName, lastName, email, password }){
-    const result = await fetch('/api/users/register', 
+    const result = await fetch('http://localhost:8080/api/users/register'', 
       {method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({username, email, password, firstName, lastName}),

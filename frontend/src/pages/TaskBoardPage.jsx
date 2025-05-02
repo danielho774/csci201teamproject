@@ -9,7 +9,7 @@ export default function TaskBoardPage() {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   useEffect(() => {
-    fetch(`/api/projects/${projectId}/tasks`)
+    fetch(`/api/tasks`)
       .then(res => res.json())
       .then(data => setTasks(data))
       .catch(() => {

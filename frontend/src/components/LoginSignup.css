@@ -135,3 +135,17 @@ body {
     cursor: pointer;
     /* matches .submit style, but green instead of purple */
 }
+
+/* below each input */
+.error {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  /* a special style for form-level errors */
+  .form-error {
+    margin: 1rem 0;
+    text-align: center;
+  }
+  

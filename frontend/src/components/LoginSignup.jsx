@@ -1,129 +1,186 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './LoginSignup.css'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import userIcon from '../Assets/person.png'
 import emailIcon from '../Assets/email.png'
 import passwordIcon from '../Assets/password.png'
 
+export const LoginSignup = ({ onLogin }) => {
+  const [username,  setUsername]  = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName,  setLastName]  = useState("")
+  const [email,     setEmail]     = useState("")
+  const [password,  setPassword]  = useState("")
 
-export const LoginSignup = ({onLogin}) => {
-  
-  const [username, setUsername] = React.useState("");
-  const [firstName, setFN] = React.useState("");
-  const [lastName, setLN] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [action, setAction] = useState("Log In")
+  const [errors, setErrors] = useState({})         // { email: "...", password: "...", form: "..." }
+  const navigate = useNavigate()
 
-  const [action, setAction] = React.useState("Log In");
-  const navigate = useNavigate();
-
-
-  async function processLogin({username, password }){
+  // Perform login against backend
+  async function processLogin({ username, password }) {
     try {
-      const result = await fetch('http://localhost:8080/api/users/login', {
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json'}, 
-        body: JSON.stringify({username, password}), 
-      }); 
-
-      if (!result.ok) {
-        const text = await result.text();
-        throw new Error(text ? text : "Error logging in"); 
+      const res = await fetch('http://localhost:8080/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      if (!res.ok) {
+        const txt = await res.text()
+        throw new Error(txt || 'Error logging in')
       }
-
-      const data = await result.json();
-      const userID = data.userID;
-      console.log(userID);
-
-      console.log('Full response: ', data); 
-
-      localStorage.setItem('logged-in', 'true');
-      localStorage.setItem('userID', userID);
-      onLogin();
-
-      navigate('/');
-
-    }
-    catch(error) {
-      console.error('Login error: ', error); 
-      alert('Login failed: ' + error.message); 
+      const data = await res.json()
+      localStorage.setItem('logged-in', 'true')
+      localStorage.setItem('userID', data.userID)
+      onLogin()
+      navigate('/')
+    } catch (e) {
+      // show a form-level error
+      setErrors({ form: e.message })
     }
   }
 
-  async function processSignup({ username, firstName, lastName, email, password }){
-    const result = await fetch('http://localhost:8080/api/users/register', 
-      {method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({username, email, password, firstName, lastName}),
-      });
-      if(!result.ok){
-        const text = await result.text();
-        throw new Error(text ? text : "Error signing up");
+  // Perform signup against backend
+  async function processSignup({ username, firstName, lastName, email, password }) {
+    const res = await fetch('http://localhost:8080/api/users/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password, firstName, lastName }),
+    })
+    if (!res.ok) {
+      const txt = await res.text().catch(() => '')
+      // detect duplicate email (HTTP 400 + MySQL duplicate key error)
+      if (res.status === 400 && txt.includes('Duplicate entry')) {
+        setErrors({ email: 'The email is already registered.' })
+      } else {
+        setErrors({ form: txt || 'Error signing up' })
       }
-
-      const data = await result.json();
-      const userID = data.userID;
-      console.log(userID);
-
-      console.log('Full response: ', data); 
-
-
-      localStorage.setItem('logged-in', 'true');
-      localStorage.setItem('userID', userID);
-      onLogin();
-      navigate('/');
+      return
+    }
+    const data = await res.json()
+    localStorage.setItem('logged-in', 'true')
+    localStorage.setItem('userID', data.userID)
+    onLogin()
+    navigate('/')
   }
-  //usestate is what React calls a Hook, it enables functional components to manage the state of the variable
-  //also note that you can import the React Usestate instead of directly calling it like I did :P
+
+  // Called when the user clicks “Log In” / “Sign Up”
+  function handleSubmit(e) {
+    e.preventDefault()
+    setErrors({})
+
+    if (action === 'Log In') {
+      // client-side required check
+      if (!username.trim() || !password) {
+        const errs = {}
+        if (!username.trim()) errs.username = 'Username is required.'
+        if (!password) errs.password = 'Password is required.'
+        return setErrors(errs)
+      }
+      return processLogin({ username, password })
+    }
+
+    // Sign Up validations
+    const errs = {}
+    if (!email.trim())     errs.email     = 'Email is required.'
+    if (!username.trim())  errs.username  = 'Username is required.'
+    if (!firstName.trim()) errs.firstName = 'First name is required.'
+    if (!lastName.trim())  errs.lastName  = 'Last name is required.'
+    if (!password)         errs.password  = 'Password is required.'
+
+    if (Object.keys(errs).length) {
+      return setErrors(errs)
+    }
+    processSignup({ username, firstName, lastName, email, password })
+  }
+
   return (
-    <div className='container'>
+    <div className="container">
       <div className="header">
         <div className="text">{action}</div>
-        <div className="underline"></div>
-      </div> 
-      <div className="inputs">
-        {action === "Log In" ? <div></div> :
-        <>
-          <div className="input"> 
-            <img src={emailIcon} alt="" />
-            <input type="email" placeholder = "Email" value = {email} onChange = {(e) => setEmail(e.target.value)}/>
-          </div>
-          <div className="input"> 
-          <img src={userIcon} alt="" />
-            <input type="text" placeholder = "First Name" value = {firstName} onChange = {(e) => setFN(e.target.value)}/>
-          </div>
-          <div className="input">
-          <img src={userIcon} alt="" /> 
-            <input type="text" placeholder = "Last Name" value = {lastName} onChange = {(e) => setLN(e.target.value)}/>
-          </div>
-          </>}
-        {/*This ternary operator makes it so that the Name field is hidden on the Login page. Because you don't need that*/}
-        <div className="input">
-          <img src={userIcon} alt="" />
-          <input type="text" placeholder = "Username"value={username} onChange={(e) => setUsername(e.target.value)}/>
-        </div>
-        <div className="input">
-          <img src={passwordIcon} alt="" />
-          <input type="password" placeholder = "Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-        </div>
+        <div className="underline" />
       </div>
-      {action === "Sign Up" ? <div></div> : <div className="forgot-password">Forgot Your Password? <span>Click Here!</span></div>}
-      {/*This ternary operator hides forgot password from the Sign Up page, because there is no password for you to forget */}
-      <div className="submit-container">
-        <div className={action === "Log In" ? "submit gray" : "submit"} onClick={() => {setAction("Sign Up")}}>Sign Up</div>
-        <div className={action === "Sign Up" ? "submit gray" : "submit"} onClick={() => { setAction("Log In") }}>Log In</div>
-        {/*These two blocks control which page you're in: Login or Sign Up, clicking on one page prevents you from re-clicking it again, and greys out the button*/}
-      </div>
-      <div className="submit-button" onClick={() => {
-        if (action === "Log In") {
-          processLogin({username, password});
-        } else {
-          processSignup({ username, firstName, lastName, email, password });
-        }
-      }}>
-        {action}
+
+      <form className="inputs" onSubmit={handleSubmit}>
+        {action === 'Sign Up' && (
+          <>
+            <div className="input">
+              <img src={emailIcon} alt="Email" />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+              {errors.email && <div className="error">{errors.email}</div>}
+            </div>
+            <div className="input">
+              <img src={userIcon} alt="First Name" />
+              <input
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+              />
+              {errors.firstName && <div className="error">{errors.firstName}</div>}
+            </div>
+            <div className="input">
+              <img src={userIcon} alt="Last Name" />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+              />
+              {errors.lastName && <div className="error">{errors.lastName}</div>}
+            </div>
+          </>
+        )}
+
+        <div className="input">
+          <img src={userIcon} alt="Username" />
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+          />
+          {errors.username && <div className="error">{errors.username}</div>}
         </div>
-    </div> 
+
+        <div className="input">
+          <img src={passwordIcon} alt="Password" />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          {errors.password && <div className="error">{errors.password}</div>}
+        </div>
+
+        {errors.form && <div className="error form-error">{errors.form}</div>}
+
+        <div className="submit-container">
+          <div
+            className={action === 'Sign Up' ? 'submit gray' : 'submit'}
+            onClick={() => setAction('Sign Up')}
+          >
+            Sign Up
+          </div>
+          <div
+            className={action === 'Log In' ? 'submit gray' : 'submit'}
+            onClick={() => setAction('Log In')}
+          >
+            Log In
+          </div>
+        </div>
+
+        <button type="submit" className="submit-button">
+          {action}
+        </button>
+      </form>
+    </div>
   )
 }
+

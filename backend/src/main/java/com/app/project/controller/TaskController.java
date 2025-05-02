@@ -6,6 +6,7 @@ import com.app.project.model.TaskStatus;
 import com.app.project.model.User; // Import User model
 import com.app.project.service.TaskService;
 import com.app.project.service.UserService; // Import UserService
+import com.app.project.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.app.project.model.Project;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private TaskService taskService;
@@ -146,28 +151,75 @@ public class TaskController {
 
     // Get tasks by project
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Task>> getTasksByProject(@PathVariable("projectId") long projectId) {
-        // This endpoint still needs full implementation
-        // You'll need ProjectService injected to fetch the Project object first
-        // Project project = projectService.getProjectById(projectId);
-        // List<Task> tasks = taskService.getTasksByProject(project);
-        // return new ResponseEntity<>(tasks, HttpStatus.OK);
-        System.out.println("Warning: /api/tasks/project/{projectId} endpoint not fully implemented."); // Added warning
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED); // Kept as NOT_IMPLEMENTED for now
+    public ResponseEntity<List<Map<String, Object>>> getTasksByProject(@PathVariable("projectId") long projectId) {
+        try {
+            // First, get the Project object using the projectId
+            Project project = projectService.getProjectById((int)projectId);
+            
+            // Then pass the Project object to the service method
+            List<Task> tasks = taskService.getTasksByProject(project);
+            
+            // Map tasks to DTOs
+            List<Map<String, Object>> taskDtos = tasks.stream()
+                .map(task -> {
+                    Map<String, Object> dto = new HashMap<>();
+                    dto.put("taskID", task.getTaskID());
+                    dto.put("taskName", task.getTaskName());
+                    dto.put("description", task.getTaskDescrip());
+                    dto.put("projectID", task.getProject().getProjectID());
+                    dto.put("projectName", task.getProject().getProjectName());
+                    dto.put("statusID", task.getStatus().getStatusID());
+                    dto.put("statusName", task.getStatus().getStatusName());
+                    dto.put("priorityID", task.getPriority().getPriorityID());
+                    dto.put("priorityName", task.getPriority().getPriorityName());
+                    dto.put("startDate", task.getStartDate());
+                    dto.put("endDate", task.getEndDate());
+                    dto.put("duration", task.getDuration());
+                    dto.put("assigned", task.isAssigned());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+            
+            return new ResponseEntity<>(taskDtos, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // Get tasks assigned to a specific user
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<Map<String, Object>>> getTasksByUser(@PathVariable("userId") int userId) {
         try {
             // Fetch the User object using the injected UserService
-            User user = userService.getUserByID(userId); // Use getUserByID from UserService
-            // Call the service method (potentially renamed, e.g., getTasksAssignedToUser)
-            List<Task> tasks = taskService.getTasksAssignedToUser(user); // Assumes TaskService method name is getTasksByUser
-            return new ResponseEntity<>(tasks, HttpStatus.OK);
-        } catch (RuntimeException e) { // Catch potential exception if user not found
-             // Log the exception e.getMessage()
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or handle as appropriate
+            User user = userService.getUserByID(userId);
+            
+            // Call the service method to get tasks assigned to user
+            List<Task> tasks = taskService.getTasksAssignedToUser(user);
+            
+            // Map tasks to DTOs
+            List<Map<String, Object>> taskDtos = tasks.stream()
+                .map(task -> {
+                    Map<String, Object> dto = new HashMap<>();
+                    dto.put("taskID", task.getTaskID());
+                    dto.put("taskName", task.getTaskName());
+                    dto.put("description", task.getTaskDescrip());
+                    dto.put("projectID", task.getProject().getProjectID());
+                    dto.put("projectName", task.getProject().getProjectName());
+                    dto.put("statusID", task.getStatus().getStatusID());
+                    dto.put("statusName", task.getStatus().getStatusName());
+                    dto.put("priorityID", task.getPriority().getPriorityID());
+                    dto.put("priorityName", task.getPriority().getPriorityName());
+                    dto.put("startDate", task.getStartDate());
+                    dto.put("endDate", task.getEndDate());
+                    dto.put("duration", task.getDuration());
+                    dto.put("assigned", task.isAssigned());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+            
+            return new ResponseEntity<>(taskDtos, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

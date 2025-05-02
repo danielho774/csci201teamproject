@@ -6,6 +6,9 @@ import com.app.project.model.User;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
+import com.app.project.model.Project;
+import com.app.project.service.ProjectService;
+
 import java.util.List;
 
 @Service
@@ -27,6 +30,4 @@ public interface ProjectService {
     public void removeMember(ProjectMember member);
     public List<ProjectMember> getProjectMembers(int projectID);
     public void transferOwnership(int projectID, int newOwnerMemberID);
-  
 }
-

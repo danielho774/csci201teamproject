@@ -13,10 +13,10 @@ public class Project {
     private int projectID;
 
     @Column(name = "project_name", nullable = false)
-    private String name;
+    private String projectName;
 
     @Column(name = "project_descrip")
-    private String description;
+    private String projectDescription;
 
     @Column(name = "end_date", nullable = false)
     private String end_date;
@@ -28,19 +28,20 @@ public class Project {
     private double progress;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private ProjectMember owner;
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     public Project(){}
-    public Project(String name, String description, String end_date, String start_date) {
-        this.name = name;
-        this.description = description;
+    public Project(String name, String description, String end_date, String start_date, User owner) {
+        this.projectName = name;
+        this.projectDescription = description;
         this.start_date = start_date;
         this.end_date = end_date;
         this.progress = 0.0;
+        this.owner = owner;
     }
     // Getters and Setters
     
@@ -52,12 +53,12 @@ public class Project {
         this.projectID = projectID;
     }
 
-    public String getName() {
-        return name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProjectName(String name) {
+        this.projectName = name;
     }
 
     public String getEndDate() {
@@ -80,36 +81,26 @@ public class Project {
         this.progress = progress;
     }
     public double getProgress() {
-        if (tasks.isEmpty()) {
-            return 0.0;
-        }
-        int completedTasks = 0;
-        for(int i = 0; i < tasks.size(); i++) {
-            if ((tasks.get(i).getStatus() != null) &&(tasks.get(i).getStatus().getStatusName().equalsIgnoreCase("complete"))) {
-                completedTasks++;
-            }
-        }
-        this.progress = (double) completedTasks / tasks.size() * 100.0;
         return this.progress;
     }
     
 
-    public String getDescription() {
-        return description;
+    public String getProjectDescription() {
+        return projectDescription;
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProjectDescription(String description) {
+        this.projectDescription = description;
     }
 
-    public ProjectMember getOwner() {
+    public User getOwner() {
         return owner;
     }
 
     public int getOwnerID() {
-        return owner.getMemberID();
+        return owner.getUserID();
     }
 
-    public void setOwner(ProjectMember owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 

@@ -1,20 +1,14 @@
 package com.app.project.controller;
 
 import com.app.project.model.Project;
-import com.app.project.model.ProjectMember;
-import com.app.project.service.impl.ProjectMemberServiceImpl;
 import com.app.project.service.ProjectService;
 import com.app.project.service.UserService;
 import com.app.project.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-
-import java.util.List;
 
 
 @RestController
@@ -25,25 +19,29 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private ProjectMemberServiceImpl projectMemberService;
-
-    @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
-    public Project createProject(
-        @RequestParam int userID,
-        @RequestParam String name,
-        @RequestParam String description,
-        @RequestParam String end_date,
-        @RequestParam String start_date) {
-        Project project = new Project(name, description, end_date, start_date);
-        int projectID = projectService.saveProject(project).getProjectID();
-        int memberID = projectMemberService.createProjectMember(projectID, userID, true);
+    @PostMapping("/{userID}/createProject")
+    public Project createProject( @PathVariable int userID, @RequestBody Project projectRequest) {
 
-        ProjectMember owner = projectMemberService.getMember(memberID).orElseThrow();
-        project.setOwner(owner);
-        return projectService.saveProject(project);
+        String name = projectRequest.getProjectName();
+        String description = projectRequest.getProjectDescription();
+        String end_date = projectRequest.getEndDate();
+        String start_date = projectRequest.getStartDate();
+
+        // Validate the request parameters
+        if (name == null || name.isEmpty() || description == null || description.isEmpty() ||
+            end_date == null || end_date.isEmpty() || start_date == null || start_date.isEmpty()) {
+            throw new IllegalArgumentException("All fields are required");
+        }
+
+        // Check if user exists
+        User owner = userService.getUserByID(userID);
+        if (owner == null) {
+            throw new IllegalArgumentException("User not found with ID: " + userID);
+        }
+
+        return projectService.createProject(userID, name, description, end_date, start_date);
     }
 
     @GetMapping("/{projectID}")

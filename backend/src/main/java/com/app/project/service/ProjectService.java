@@ -18,7 +18,7 @@ public interface ProjectService {
 
     public Project getProjectById(int projectID);
     public double updateProjectProgress(int projectID);
-    // public Project createProject(Project project, int memberID);
+    public Project createProject(int userID, String name, String description, String end_date, String start_date);
 
     public Optional<Project> getProject(int projectID);
     public Project saveProject(Project project);

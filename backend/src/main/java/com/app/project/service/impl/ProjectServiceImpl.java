@@ -8,6 +8,7 @@ import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
 import com.app.project.repository.StatusRepository;
 import com.app.project.repository.UserRepository;
+import com.app.project.service.ProjectMemberService;
 import com.app.project.service.ProjectService;
 import com.app.project.service.TaskStatusService;
 
@@ -28,7 +29,7 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectMemberRepository projectMemberRepository;
 
     @Autowired
-    private TaskStatusService taskStatusService;
+    private UserRepository userRepository;
 
     public Project getProjectById(int projectID) {
         return projectRepository.findById(projectID)
@@ -57,15 +58,35 @@ public class ProjectServiceImpl implements ProjectService {
         return project.getProgress();
     }
 
-    // //can change to user if needed
-    // public Project createProject(Project project, int memberID) {
-    //     Project savedProject = projectRepository.save(project);
-    //     ProjectMember owner = projectMemberRepository.findById(memberID).orElseThrow();
-    //     owner.setProject(savedProject);
-    //     owner.setRole(true); // Set as owner
-    //     projectMemberRepository.save(owner);
-    //     return savedProject;
-    // }
+    //creates a new project and project member for the owner
+    //returns the saved project
+    public Project createProject(
+        int userID,
+        String name,
+        String description,
+        String end_date,
+        String start_date) {
+
+        // find user by userID
+        User owner = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Project project = new Project(name, description, end_date, start_date, owner);
+        System.out.println("Project created with name: " + name);
+        System.out.println("Project created with description: " + description);
+        System.out.println("Project created with end date: " + end_date);
+        System.out.println("Project created with start date: " + start_date);
+        System.out.println("Project created with owner: " + owner.getUsername());
+            
+        Project savedProject = saveProject(project);
+
+        // create project member object to store the relationship between project and owner
+        ProjectMember projectMember = new ProjectMember(savedProject, owner, true);
+
+        // save project member in database
+        projectMemberRepository.save(projectMember);
+
+        return savedProject;
+    }
     
     public Optional<Project> getProject(int projectID) {
         return projectRepository.findById(projectID);
@@ -92,18 +113,30 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMemberRepository.findByProject_ProjectID(projectID);
     }
 
-    public void transferOwnership(int projectID, int newOwnerMemberID) {
+    public void transferOwnership(int projectID, int newOwnerUserID) {
         Project project = projectRepository.findById(projectID).orElseThrow();// get project
 
-        ProjectMember previousOwner = projectMemberRepository.findById(project.getOwnerID()).orElseThrow();
-        previousOwner.setRole(false); // set the current owner to member
-        projectMemberRepository.save(previousOwner);
+        User newOwner = userRepository.findById(newOwnerUserID).orElseThrow();// get new owner
 
-        ProjectMember newOwner = projectMemberRepository.findById(newOwnerMemberID).orElseThrow();// get new owner
-        newOwner.setRole(true); // set the new owner to owner
-        projectMemberRepository.save(newOwner);
+        int currentOwnerID = project.getOwner().getUserID();// get current owner
 
-        project.setOwner(previousOwner);
+        //create a project member object to store the relationship between project and new owner if it doesn't exist
+        if (projectMemberRepository.findByUserUserIDAndProjectProjectID(newOwner.getUserID(), projectID) == null) {
+            ProjectMember projectMember = new ProjectMember(project, newOwner, true);
+            projectMemberRepository.save(projectMember);
+        } else {
+            ProjectMember projectMember = projectMemberRepository.findByUserUserIDAndProjectProjectID(newOwner.getUserID(), projectID).orElse(null);
+            projectMember.setRole(true);
+            projectMemberRepository.save(projectMember);
+        }
+
+        //update the project member object to store the relationship between project and current owner
+        ProjectMember currentOwnerProjectMember = projectMemberRepository.findByUserUserIDAndProjectProjectID(currentOwnerID, projectID).orElse(null);
+        currentOwnerProjectMember.setRole(false);
+        projectMemberRepository.save(currentOwnerProjectMember);
+
+        //update the project owner
+        project.setOwner(newOwner);
         projectRepository.save(project);
     }
   

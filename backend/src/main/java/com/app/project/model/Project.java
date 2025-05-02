@@ -34,6 +34,10 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
+    //Delete project members when project is deleted so delete fuctionality works
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProjectMember> members;
+
     public Project(){}
     public Project(String name, String description, String end_date, String start_date, User owner) {
         this.projectName = name;

@@ -58,8 +58,12 @@ export const LoginSignup = ({ onLogin }) => {
       return
     }
     const data = await res.json()
+    console.log("Response data from backend:", data)
     localStorage.setItem('logged-in', 'true')
-    localStorage.setItem('userID', data.userId)
+
+    // register uses userID, whereas login uses userId
+    localStorage.setItem('userID', data.userID)
+    
     onLogin()
     navigate('/')
   }

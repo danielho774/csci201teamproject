@@ -18,7 +18,12 @@ export default function ProjectHubPage() {
         return;
       }
       const data    = await resp.json();
-      setProjects(Array.isArray(data) ? data : [data]);
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        setProjects([]);
+        setErrorMessage('You have no projects yet.');
+      } else {
+        setProjects(Array.isArray(data) ? data : [data]);
+      }
     } catch (e) {
       console.error(e);
       setErrorMessage('Failed to load your projects.');

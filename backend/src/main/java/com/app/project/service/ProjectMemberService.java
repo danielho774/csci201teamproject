@@ -18,9 +18,9 @@ public interface ProjectMemberService {
     
     public ProjectMember getMemberByUserIDProjectID(int userID, int projectID);
 
-    public void leaveProject(int memberID);
+    public void leaveProject(int userID, int projectID);
 
-    public void ownerLeaveAndTransfer(int ownerMemberID, int newOwnerMemberID);
+    public void ownerLeaveAndTransfer(int ownerMemberID, int newOwnerMemberID, int projectID);
 
     public void ownerDeleteProject(int ownerMemberID);
 

@@ -43,26 +43,26 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         }
     }
 
-    public void leaveProject(int memberID) {
-        ProjectMember member = projectMemberRepository.findById(memberID)
+    public void leaveProject(int userID, int projectID) {
+        ProjectMember member = projectMemberRepository.findByUserUserIDAndProjectProjectID(userID, projectID)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
         if (member.isRole()) {
             throw new RuntimeException("Owner cannot leave without transferring ownership or deleting the project.");
         } else {
-            projectMemberRepository.deleteById(memberID);
+            projectMemberRepository.deleteById(member.getMemberID());
         }
     }
 
-    public void ownerLeaveAndTransfer(int ownerMemberID, int newOwnerMemberID) {
-        ProjectMember owner = projectMemberRepository.findById(ownerMemberID)
+    public void ownerLeaveAndTransfer(int ownerUserID, int newOwnerUserID, int projectID) {
+        ProjectMember owner = projectMemberRepository.findByUserUserIDAndProjectProjectID(ownerUserID, projectID)
                 .orElseThrow(() -> new RuntimeException("Owner not found"));
         
         if (!owner.isRole()) {
             throw new RuntimeException("Only the owner can transfer ownership.");
         }
 
-        ProjectMember newOwner = projectMemberRepository.findById(newOwnerMemberID)
+        ProjectMember newOwner = projectMemberRepository.findByUserUserIDAndProjectProjectID(newOwnerUserID, projectID)
                 .orElseThrow(() -> new RuntimeException("New owner not found"));
 
         // Remove owner role from current owner
@@ -74,7 +74,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         projectMemberRepository.save(newOwner);
 
         // Now original owner can leave
-        projectMemberRepository.deleteById(ownerMemberID);
+        projectMemberRepository.deleteById(newOwner.getMemberID());
     }
 
     public void ownerDeleteProject(int ownerMemberID) {

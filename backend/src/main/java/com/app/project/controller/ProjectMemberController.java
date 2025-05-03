@@ -24,15 +24,15 @@ public class ProjectMemberController {
         return projectMemberService.getAllMembers(projectID);
     }
 
-    @DeleteMapping("/{memberID}/leave")
-    public void leaveProject(@PathVariable int memberID) {
-        projectMemberService.leaveProject(memberID);
+    @DeleteMapping("/{memberID}/leave/{projectID}")
+    public void leaveProject(@PathVariable int memberID, @PathVariable int projectID) {
+        projectMemberService.leaveProject(memberID, projectID);
     }
 
     //owner leaving project
-    @PostMapping("/{ownerMemberID}/transferAndLeave")
-    public void ownerLeaveAndTransfer(@PathVariable int ownerMemberID, @RequestParam int newOwnerMemberID) {
-        projectMemberService.ownerLeaveAndTransfer(ownerMemberID, newOwnerMemberID);
+    @PostMapping("/{ownerUserID}/transferAndLeave/{projectID}")
+    public void ownerLeaveAndTransfer(@PathVariable int ownerUserID, @RequestParam int newOwnerUserID, @PathVariable int projectID) {
+        projectMemberService.ownerLeaveAndTransfer(ownerUserID, newOwnerUserID, projectID);
     }
 
     // Owner deletes project

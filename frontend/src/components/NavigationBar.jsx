@@ -50,7 +50,7 @@ function NavigationBar() {
         </>
         ) : (
           <li className = {styles.navItem}>
-            <Link to = "/login" className = {styles.navLink}>Login</Link>
+            <Link to = "/login" className = {styles.navLink}>Login/Sign up</Link>
           </li>
         )}
       </ul>

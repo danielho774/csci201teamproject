@@ -7,16 +7,21 @@ const STATUSES = ['Not Started', 'In Progress', 'Completed'];
 export default function TaskBoardPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Filler Task', status: 'Not Started' }
+  ]);
+
   useEffect(() => {
     fetch(`/api/tasks`)
       .then(res => res.json())
-      .then(data => setTasks(data))
+      .then(data => {
+        if (data && data.length > 0) {
+          setTasks(data);
+        }
+      })
       .catch(() => {
-     
         setTasks([
-          { id: 1, title: 'Design DB schema', status: 'Not Started' },
-          { id: 2, title: 'Implement auth',    status: 'In Progress' },
+          { id: 1, title: 'Filler Task', status: 'Not Started' }
         ]);
       });
   }, [projectId]);
@@ -27,11 +32,23 @@ export default function TaskBoardPage() {
     return Math.round((done / tasks.length) * 100);
   }, [tasks]);
 
-  function handleStatusChange(id, newStatus) {
+  const handleStatusChange = async (id, newStatus) => {
     setTasks(ts =>
       ts.map(t => (t.id === id ? { ...t, status: newStatus } : t))
     );
-  }
+
+    try {
+      await fetch(`/api/tasks/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch (error) {
+      console.error('Failed to update task status:', error);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -55,9 +72,8 @@ export default function TaskBoardPage() {
               <td>
                 <select
                   value={task.status}
-                  onChange={e =>
-                    handleStatusChange(task.id, e.target.value)
-                  }
+                  onChange={e => handleStatusChange(task.id, e.target.value)}
+                  className={styles.statusSelect}
                 >
                   {STATUSES.map(s => (
                     <option key={s} value={s}>{s}</option>

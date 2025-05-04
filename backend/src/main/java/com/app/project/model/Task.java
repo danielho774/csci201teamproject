@@ -28,10 +28,6 @@ public class Task {
     @JoinColumn(name = "status_type")
     private TaskStatus status; 
 
-    @ManyToOne
-    @JoinColumn(name = "priority") 
-    private TaskPriority priority; 
-
     @Column(name = "start_date")
     private LocalDate startDate; 
 
@@ -43,9 +39,6 @@ public class Task {
 
     @Column(name = "assigned")
     private boolean assigned;
-    
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
 
     // Constructor, getters, and setters
     
@@ -54,13 +47,12 @@ public class Task {
     }
     
     public Task(Project project, String taskName, String taskDescrip, 
-                TaskStatus status, TaskPriority priority, LocalDate startDate, 
+                TaskStatus status, LocalDate startDate, 
                 LocalDate endDate, int duration, boolean assigned) {
         this.project = project; 
         this.taskName = taskName; 
         this.taskDescrip = taskDescrip; 
         this.status = status; 
-        this.priority = priority; 
         this.startDate = startDate; 
         this.endDate = endDate; 
         this.duration = duration; 
@@ -71,15 +63,6 @@ public class Task {
     public boolean updateStatus(TaskStatus status) {
         this.status = status;
         return true;
-    }
-    
-    public boolean addComment(Comment comment) {
-        if (comment != null) {
-            comment.setTask(this);
-            comments.add(comment);
-            return true;
-        }
-        return false;
     }
     
     // Getters and Setters
@@ -123,14 +106,6 @@ public class Task {
         this.status = status;
     }
     
-    public TaskPriority getPriority() {
-        return priority;
-    }
-    
-    public void setPriority(TaskPriority priority) {
-        this.priority = priority;
-    }
-    
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -161,13 +136,5 @@ public class Task {
     
     public void setAssigned(boolean assigned) {
         this.assigned = assigned;
-    }
-    
-    public List<Comment> getComments() {
-        return comments;
-    }
-    
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }

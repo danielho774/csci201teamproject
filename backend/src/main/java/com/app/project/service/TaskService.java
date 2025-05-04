@@ -3,7 +3,6 @@ package com.app.project.service;
 import com.app.project.model.Task;
 import com.app.project.model.Project;
 import com.app.project.model.User;
-import com.app.project.model.Comment;
 import com.app.project.model.TaskStatus;
 
 import java.util.List;
@@ -30,10 +29,4 @@ public interface TaskService {
     // Status related
     boolean updateTaskStatus(long taskId, TaskStatus status);
     List<Task> getTasksByStatus(String statusName);
-    
-    // Priority related
-    List<Task> getTasksByPriority(String priorityName);
-    
-    // Comment related
-    boolean addCommentToTask(long taskId, Comment comment);
 }

@@ -15,7 +15,4 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     
     // Find tasks by status
     List<Task> findByStatus_StatusName(String statusName);
-    
-    // Find tasks by priority
-    List<Task> findByPriority_PriorityName(String priorityName);
 }

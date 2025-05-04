@@ -1,7 +1,6 @@
 package com.app.project.controller;
 
 import com.app.project.model.Task;
-import com.app.project.model.Comment;
 import com.app.project.model.TaskStatus;
 import com.app.project.model.User; // Import User model
 import com.app.project.service.TaskService;
@@ -44,7 +43,6 @@ public class TaskController {
         response.put("taskName", savedTask.getTaskName());
         response.put("projectID", savedTask.getProject().getProjectID());
         response.put("statusID", savedTask.getStatus().getStatusID());
-        response.put("priorityID", savedTask.getPriority().getPriorityID());
         response.put("message", "Task created successfully");
         
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -64,8 +62,6 @@ public class TaskController {
                 taskDto.put("projectName", task.getProject().getProjectName());
                 taskDto.put("statusID", task.getStatus().getStatusID());
                 taskDto.put("statusName", task.getStatus().getStatusName());
-                taskDto.put("priorityID", task.getPriority().getPriorityID());
-                taskDto.put("priorityName", task.getPriority().getPriorityName());
                 taskDto.put("startDate", task.getStartDate());
                 taskDto.put("endDate", task.getEndDate());
                 taskDto.put("duration", task.getDuration());
@@ -92,19 +88,10 @@ public class TaskController {
             taskDto.put("projectName", task.getProject().getProjectName());
             taskDto.put("statusID", task.getStatus().getStatusID());
             taskDto.put("statusName", task.getStatus().getStatusName());
-            taskDto.put("priorityID", task.getPriority().getPriorityID());
-            taskDto.put("priorityName", task.getPriority().getPriorityName());
             taskDto.put("startDate", task.getStartDate());
             taskDto.put("endDate", task.getEndDate());
             taskDto.put("duration", task.getDuration());
             taskDto.put("assigned", task.isAssigned());
-            
-            // Simply note if there are comments without processing them
-            if (task.getComments() != null) {
-                taskDto.put("commentCount", task.getComments().size());
-            } else {
-                taskDto.put("commentCount", 0);
-            }
             
             return new ResponseEntity<>(taskDto, HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -126,8 +113,6 @@ public class TaskController {
             response.put("projectName", updatedTask.getProject().getProjectName());
             response.put("statusID", updatedTask.getStatus().getStatusID());
             response.put("statusName", updatedTask.getStatus().getStatusName());
-            response.put("priorityID", updatedTask.getPriority().getPriorityID());
-            response.put("priorityName", updatedTask.getPriority().getPriorityName());
             response.put("startDate", updatedTask.getStartDate());
             response.put("endDate", updatedTask.getEndDate());
             response.put("duration", updatedTask.getDuration());
@@ -170,8 +155,6 @@ public class TaskController {
                     dto.put("projectName", task.getProject().getProjectName());
                     dto.put("statusID", task.getStatus().getStatusID());
                     dto.put("statusName", task.getStatus().getStatusName());
-                    dto.put("priorityID", task.getPriority().getPriorityID());
-                    dto.put("priorityName", task.getPriority().getPriorityName());
                     dto.put("startDate", task.getStartDate());
                     dto.put("endDate", task.getEndDate());
                     dto.put("duration", task.getDuration());
@@ -207,8 +190,6 @@ public class TaskController {
                     dto.put("projectName", task.getProject().getProjectName());
                     dto.put("statusID", task.getStatus().getStatusID());
                     dto.put("statusName", task.getStatus().getStatusName());
-                    dto.put("priorityID", task.getPriority().getPriorityID());
-                    dto.put("priorityName", task.getPriority().getPriorityName());
                     dto.put("startDate", task.getStartDate());
                     dto.put("endDate", task.getEndDate());
                     dto.put("duration", task.getDuration());
@@ -292,8 +273,6 @@ public class TaskController {
                 dto.put("projectName", task.getProject().getProjectName());
                 dto.put("statusID", task.getStatus().getStatusID());
                 dto.put("statusName", task.getStatus().getStatusName());
-                dto.put("priorityID", task.getPriority().getPriorityID());
-                dto.put("priorityName", task.getPriority().getPriorityName());
                 dto.put("startDate", task.getStartDate());
                 dto.put("endDate", task.getEndDate());
                 dto.put("duration", task.getDuration());
@@ -303,47 +282,5 @@ public class TaskController {
             .collect(Collectors.toList());
         
         return new ResponseEntity<>(taskDtos, HttpStatus.OK);
-    }
-
-    // Get tasks by priority
-    @GetMapping("/priority/{priorityName}")
-    public ResponseEntity<List<Map<String, Object>>> getTasksByPriority(@PathVariable("priorityName") String priorityName) {
-        List<Task> tasks = taskService.getTasksByPriority(priorityName);
-        
-        List<Map<String, Object>> taskDtos = tasks.stream()
-            .map(task -> {
-                Map<String, Object> dto = new HashMap<>();
-                dto.put("taskID", task.getTaskID());
-                dto.put("taskName", task.getTaskName());
-                dto.put("description", task.getTaskDescrip());
-                dto.put("projectID", task.getProject().getProjectID());
-                dto.put("projectName", task.getProject().getProjectName());
-                dto.put("statusID", task.getStatus().getStatusID());
-                dto.put("statusName", task.getStatus().getStatusName());
-                dto.put("priorityID", task.getPriority().getPriorityID());
-                dto.put("priorityName", task.getPriority().getPriorityName());
-                dto.put("startDate", task.getStartDate());
-                dto.put("endDate", task.getEndDate());
-                dto.put("duration", task.getDuration());
-                dto.put("assigned", task.isAssigned());
-                return dto;
-            })
-            .collect(Collectors.toList());
-        
-        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
-    }
-
-    // Add comment to task
-    @PostMapping("/{taskId}/comment")
-    public ResponseEntity<String> addCommentToTask(
-            @PathVariable("taskId") long taskId,
-            @RequestBody Comment comment) {
-         // Ensure comment has required fields set (e.g., Member/User info if needed)
-        boolean success = taskService.addCommentToTask(taskId, comment);
-        if (success) {
-            return new ResponseEntity<>("Comment added successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to add comment", HttpStatus.BAD_REQUEST);
-        }
     }
 }

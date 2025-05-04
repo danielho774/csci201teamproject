@@ -63,6 +63,7 @@ body {
 }
 
 .input input{
+    padding: 5px;
     height: 50px;
     width: 400px;
     background: transparent;
@@ -70,7 +71,7 @@ body {
     outline: none;
     color: #797979;
     font-size: 19px;
-    /*Changes the actualtext boxes to be flush with the grey boxes we made earlier*/
+    /*Changes the actual text boxes to be flush with the grey boxes we made earlier*/
     /*Also removes its own color field, removed the border line, and other aesthetic changes*/
 }
 
@@ -147,5 +148,52 @@ body {
   .form-error {
     margin: 1rem 0;
     text-align: center;
+  }
+  /* slider bar shenanigans */
+  .slider-toggle {
+    position: relative;
+    width: 440px;
+    height: 50px;
+    background: #e0e0e0;
+    border-radius: 25px;
+    margin: 40px auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .slider-option {
+    width: 50%;
+    text-align: center;
+    z-index: 2;
+    padding: 10px 0;
+    color: #4c00b4;
+    transition: color 0.3s;
+  }
+  
+  .slider-option.active {
+    color: white;
+  }
+  
+  .slider-bg {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: #4c00b4;
+    border-radius: 25px;
+    transition: transform 0.3s ease;
+    z-index: 1;
+  }
+  
+  .slider-bg.left {
+    transform: translateX(0%);
+  }
+  
+  .slider-bg.right {
+    transform: translateX(100%);
   }
   

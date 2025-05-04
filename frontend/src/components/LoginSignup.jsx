@@ -105,6 +105,22 @@ export const LoginSignup = ({ onLogin }) => {
         <div className="underline" />
       </div>
 
+      <div className="slider-toggle">
+          <div
+           className={`slider-option ${action === 'Log In' ? 'active' : ''}`}
+           onClick={() => setAction('Log In')}
+           >
+          Log In
+          </div>
+          <div
+            className={`slider-option ${action === 'Sign Up' ? 'active' : ''}`}
+            onClick={() => setAction('Sign Up')}
+          >
+          Sign Up
+          </div>
+          <div className={`slider-bg ${action === 'Sign Up' ? 'right' : 'left'}`} />
+        </div>
+
       <form className="inputs" onSubmit={handleSubmit}>
         {action === 'Sign Up' && (
           <>
@@ -165,20 +181,6 @@ export const LoginSignup = ({ onLogin }) => {
 
         {errors.form && <div className="error form-error">{errors.form}</div>}
 
-        <div className="submit-container">
-          <div
-            className={action === 'Sign Up' ? 'submit gray' : 'submit'}
-            onClick={() => setAction('Sign Up')}
-          >
-            Sign Up
-          </div>
-          <div
-            className={action === 'Log In' ? 'submit gray' : 'submit'}
-            onClick={() => setAction('Log In')}
-          >
-            Log In
-          </div>
-        </div>
 
         <button type="submit" className="submit-button">
           {action}

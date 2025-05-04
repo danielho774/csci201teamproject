@@ -63,14 +63,12 @@ CREATE TABLE Tasks (
     	task_name VARCHAR(25),
     	task_descrip VARCHAR(150), 
     	status_type INT, 
-    	priority INT, 
     	start_date DATE, 
     	end_date DATE, 
     	duration INT, 
     	assigned BOOLEAN, 
     	FOREIGN KEY (project_id) REFERENCES Projects(project_id), 
     	FOREIGN KEY (status_type) REFERENCES Status(status_id), 
-    	FOREIGN KEY (priority) REFERENCES Priority(priority_id)
 );
 
 -- TASK ASSIGNMENTS 

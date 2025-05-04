@@ -40,3 +40,17 @@
     text-align: center;
     margin-top: 2rem;
 } 
+
+p {
+  color: white;
+}
+
+.input-wrapper {
+  text-align: center;
+
+}
+
+.submit-button {
+  color: white;
+  background-color: #c283ec;
+}

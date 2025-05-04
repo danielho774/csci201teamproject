@@ -1,56 +1,126 @@
 import React from 'react';
 import styles from './ProjectHubPage.module.css';
-
 import ProjectCard from '../components/ProjectCard';
 
 export default function ProjectHubPage() {
-  //create a function to fetch projects from the backend
-  // and display them in the project hub page
-  const [projects, setProjects] = React.useState([]);
-  const [noProjects, setNoProjects] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [projects, setProjects]           = React.useState(null);
+  const [errorMessage, setErrorMessage]   = React.useState('');
+  const [projectIDInput, setProjectIDInput] = React.useState('');
+  const [isLoggedIn, setIsLoggedIn]       = React.useState(false);
 
-  const fetchProjects = async () => {
+  const fetchUserProjects = async () => {
     try {
-      const userID = localStorage.getItem('userID');
-      const response = await fetch(`http://localhost:8080/api/users/${userID}/projects`, {
-        method: 'GET', 
-        headers: {
-          'Content-Type': 'application/json', 
-        }, 
-      }); 
-      const jsonResponse = await response.json();
-
-      if (response.status === 404) {
-        console.log(jsonResponse); 
-        setNoProjects(true);
-        setErrorMessage(jsonResponse.message)
-        return; 
+      const userID  = localStorage.getItem('userID');
+      const resp    = await fetch(`http://localhost:8080/api/users/${userID}/projects`);
+      if (resp.status === 404) {
+        setProjects([]); 
+        setErrorMessage('You have no projects yet.');
+        return;
       }
-
-      console.log('Projects: ', jsonResponse);
-      setProjects(jsonResponse);
+      const data    = await resp.json();
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        setProjects([]);
+        setErrorMessage('You have no projects yet.');
+      } else {
+        setProjects(Array.isArray(data) ? data : [data]);
+      }
+    } catch (e) {
+      console.error(e);
+      setErrorMessage('Failed to load your projects.');
+      setProjects([]);
     }
-    catch(error) {
-      console.error('Fetch failed: ', error.message); 
-    }
-  }
+  };
 
-  // Call the fetchProjects function to fetch projects from the backend
   React.useEffect(() => {
-    fetchProjects();
+    const loggedIn = localStorage.getItem('logged-in') === 'true';
+    setIsLoggedIn(loggedIn);
+    if (loggedIn) {
+      fetchUserProjects();
+    }
   }, []);
 
 
+  const handleProjectIDSubmit = async () => {
+    setErrorMessage('');
+    setProjects(null); 
+    if (!projectIDInput.trim()) {
+      setErrorMessage('Please enter a Project ID.');
+      return;
+    }
+    try {
+      const resp = await fetch(`http://localhost:8080/api/projects/${projectIDInput}`);
+      if (resp.status === 404) {
+        setProjects([]); 
+        setErrorMessage(`Project "${projectIDInput}" not found.`);
+        return;
+      }
+      const data = await resp.json();
+      setProjects(Array.isArray(data) ? data : [data]);
+    } catch (e) {
+      console.error(e);
+      setErrorMessage('Lookup failed. Try again.');
+      setProjects([]);
+    }
+  };
+
   return (
-    <div className = {styles['project-hub']}>
+    <div className={styles['project-hub']}>
       <h2>Project Hub</h2>
-      <div className={styles['grid']}>
-        {projects.map(project => (
-          <ProjectCard key={project.id} projectId={project.projectID} project-title={project.projectName} />
-        ))}
-      </div>
-      {noProjects && <div className={styles['no-projects']}>{errorMessage}</div>}
+
+      {isLoggedIn ? (
+        <>
+          {projects === null ? (
+            <p>Loading your projects…</p>
+          ) : projects.length > 0 ? (
+            <div className={styles.grid}>
+              {projects.map(p => (
+                <ProjectCard
+                  key={p.projectID}
+                  projectId={p.projectID}
+                  project-title={p.projectName}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className={styles['no-projects']}>{errorMessage}</p>
+          )}
+        </>
+      ) : (
+       
+        <div className={styles['input-wrapper']}>
+          <p>Please enter a project ID to view:</p>
+          <input
+            type="text"
+            value={projectIDInput}
+            onChange={e => setProjectIDInput(e.target.value)}
+            placeholder="Enter Project ID"
+            className={styles['project-id-input']}
+          />
+          <button
+            onClick={handleProjectIDSubmit}
+            className={styles['submit-button']}
+          >
+            Submit
+          </button>
+
+          {errorMessage && (
+            <div className={styles['no-projects']}>{errorMessage}</div>
+          )}
+
+          {/* only show cards once we have results */}
+          {projects && projects.length > 0 && (
+            <div className={styles.grid}>
+              {projects.map(p => (
+                <ProjectCard
+                  key={p.projectID}
+                  projectId={p.projectID}
+                  project-title={p.projectName}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

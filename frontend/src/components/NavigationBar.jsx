@@ -35,22 +35,18 @@ function NavigationBar() {
 
         {isLoggedIn ? (
           <>
-            <li className={styles.navItem}>
-              <Link to="/tasks" className={styles.navLink}>Individual Tasks</Link>
-           </li>
+            
           <li className={styles.navItem}>
             <Link to="/create" className={styles.navLink}>Create Project</Link>
           </li>
-          <li className={styles.navItem}>
-            <Link to="/availability" className={styles.navLink}>Availability</Link>
-          </li>
+          
           <li className={styles.navItem}>
             <button onClick={handleLogout} className = {`${styles.navLink} ${styles.logoutButton}`}>Logout</button>
           </li>
         </>
         ) : (
           <li className = {styles.navItem}>
-            <Link to = "/login" className = {styles.navLink}>Login</Link>
+            <Link to = "/login" className = {styles.navLink}>Login/Sign up</Link>
           </li>
         )}
       </ul>

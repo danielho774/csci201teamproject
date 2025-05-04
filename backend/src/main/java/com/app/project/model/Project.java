@@ -27,6 +27,9 @@ public class Project {
     @Column(name = "progress")
     private double progress;
 
+    @Column(name = "share_code", nullable = false, unique = true)
+    private String shareCode;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
@@ -42,13 +45,14 @@ public class Project {
     private List<Availability> availabilities = new ArrayList<>();
 
     public Project(){}
-    public Project(String name, String description, String end_date, String start_date, User owner) {
+    public Project(String name, String description, String end_date, String start_date, User owner, String shareCode) {
         this.projectName = name;
         this.projectDescription = description;
         this.start_date = start_date;
         this.end_date = end_date;
         this.progress = 0.0;
         this.owner = owner;
+        this.shareCode = shareCode;
     }
     // Getters and Setters
     
@@ -139,5 +143,12 @@ public class Project {
     }
     public void setAvailabilities(List<Availability> availabilities) {
         this.availabilities = availabilities;
+    }
+
+    public String getShareCode() {
+        return shareCode;
+    }
+    public void setShareCode(String shareCode) {
+        this.shareCode = shareCode;
     }
 }

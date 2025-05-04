@@ -20,7 +20,7 @@ public interface ProjectService {
     public void ownerLeaving(Long projectId, String currentOwnerEmail, String newOwnerEmail);*/
 
     public double updateProjectProgress(int projectID);
-    public Project createProject(int userID, String name, String description, String end_date, String start_date);
+    public Project createProject(int userID, String name, String description, String end_date, String start_date, String shareCode);
 
     public Project getProjectByID(int projectID);
     public Project saveProject(Project project);
@@ -28,4 +28,5 @@ public interface ProjectService {
     public void removeMember(ProjectMember member);
     public List<ProjectMember> getProjectMembers(int projectID);
     public void transferOwnership(int projectID, int newOwnerMemberID);
+    public Project getProjectByShareCode(String shareCode);
 }

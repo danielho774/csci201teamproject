@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus; 
 
-import java.util.Optional;
-
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/projects")
@@ -39,10 +37,12 @@ public class ProjectController {
         String description = projectRequest.getProjectDescription();
         String end_date = projectRequest.getEndDate();
         String start_date = projectRequest.getStartDate();
+        String shareCode = projectRequest.getShareCode();
 
         // Validate the request parameters
         if (name == null || name.isEmpty() || description == null || description.isEmpty() ||
-            end_date == null || end_date.isEmpty() || start_date == null || start_date.isEmpty()) {
+            end_date == null || end_date.isEmpty() || start_date == null || start_date.isEmpty() || 
+            shareCode == null || shareCode.isEmpty()) {
             return new ResponseEntity<>("All fields are required", HttpStatus.BAD_REQUEST);
         }
 
@@ -52,8 +52,14 @@ public class ProjectController {
             return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
         }
 
+        // Check if project with the same share code already exists
+        Project existingProject = projectService.getProjectByShareCode(shareCode);
+        if (existingProject != null) {
+            return new ResponseEntity<>("Project with the same share code already exists", HttpStatus.CONFLICT);
+        }
+
         // create project
-        Project newProject = projectService.createProject(userID, name, description, end_date, start_date);
+        Project newProject = projectService.createProject(userID, name, description, end_date, start_date, shareCode);
         if (newProject == null) {
             return new ResponseEntity<>("Failed to create project", HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
@@ -79,8 +85,8 @@ public class ProjectController {
         return projectService.getProjectMembers(projectID);
     }
 
-    @PostMapping("/{projectID}/addMember")
-    public ResponseEntity<?> addMember(@PathVariable int projectID, @RequestParam int userID) {
+    @PostMapping("/joinProject/{projectID}/user/{userID}")
+    public ResponseEntity<?> joinProject(@PathVariable int projectID, @PathVariable int userID, @RequestParam String shareCode) {
         // Check if user exists
         User user = userService.getUserByID(userID);
         if (user == null) {
@@ -91,6 +97,11 @@ public class ProjectController {
         if (project == null) {
             return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
         }
+        // Check if share code is valid
+        if (!project.getShareCode().equals(shareCode)) {
+            return new ResponseEntity<>("Invalid share code", HttpStatus.UNAUTHORIZED);
+        }
+
         // Check if user is already a member of the project
         ProjectMember existingMember = projectMemberService.getMemberByUserIDProjectID(userID, projectID);
         if (existingMember != null) {

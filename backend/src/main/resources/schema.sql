@@ -21,6 +21,7 @@ CREATE TABLE Projects (
     	start_date DATE, 
     	end_date DATE, 
     	progress FLOAT,
+		share_code VARCHAR(25) UNIQUE,
     	FOREIGN KEY (owner_id) REFERENCES Users(user_id)
 );
 
@@ -53,8 +54,9 @@ CREATE TABLE Status (
 ); 
 INSERT INTO Status(status_name) VALUES 
 	('Incomplete'), 
-    ('In Progress'), 
-    ('Complete'); 
+    	('In Progress'), 
+    	('Complete'); 
+
 
 -- TASKS 
 CREATE TABLE Tasks (
@@ -68,7 +70,7 @@ CREATE TABLE Tasks (
     	duration INT, 
     	assigned BOOLEAN, 
     	FOREIGN KEY (project_id) REFERENCES Projects(project_id), 
-    	FOREIGN KEY (status_type) REFERENCES Status(status_id), 
+    	FOREIGN KEY (status_type) REFERENCES Status(status_id)
 );
 
 -- TASK ASSIGNMENTS 

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
+
+    Project findByShareCode(String shareCode);
     //caused errors and unused, commenting out for now 
     
     // Optional: find all projects for a user (owner or member)

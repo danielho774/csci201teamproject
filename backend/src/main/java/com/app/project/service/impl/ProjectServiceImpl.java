@@ -56,12 +56,13 @@ public class ProjectServiceImpl implements ProjectService {
         String name,
         String description,
         String end_date,
-        String start_date) {
+        String start_date,
+        String shareCode) {
 
         // find user by userID
         User owner = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
 
-        Project project = new Project(name, description, end_date, start_date, owner);
+        Project project = new Project(name, description, end_date, start_date, owner, shareCode);
             
         Project savedProject = saveProject(project);
 
@@ -140,4 +141,16 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
     }
   
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
+    public Project getProjectByShareCode(String shareCode) {
+        Project project = projectRepository.findByShareCode(shareCode);
+        if (project != null) {
+            return project;
+        } else {
+            return null;
+        }
+    }
 }

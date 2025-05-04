@@ -3,7 +3,6 @@ package com.app.project.service.impl;
 import com.app.project.model.Task;
 import com.app.project.model.Project;
 import com.app.project.model.User;
-import com.app.project.model.Comment;
 import com.app.project.model.TaskStatus;
 import com.app.project.repository.TaskRepository;
 import com.app.project.repository.UserRepository;
@@ -65,7 +64,6 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setTaskName(task.getTaskName());
         existingTask.setTaskDescrip(task.getTaskDescrip());
         existingTask.setStatus(task.getStatus());
-        existingTask.setPriority(task.getPriority());
         existingTask.setStartDate(task.getStartDate());
         existingTask.setEndDate(task.getEndDate());
         existingTask.setDuration(task.getDuration());
@@ -184,20 +182,5 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getTasksByStatus(String statusName) {
         return taskRepository.findByStatus_StatusName(statusName);
-    }
-    
-    @Override
-    public List<Task> getTasksByPriority(String priorityName) {
-        return taskRepository.findByPriority_PriorityName(priorityName);
-    }
-    
-    @Override
-    public boolean addCommentToTask(long taskId, Comment comment) {
-        Task task = getTaskById(taskId);
-        boolean result = task.addComment(comment);
-        if (result) {
-            taskRepository.save(task);
-        }
-        return result;
     }
 }

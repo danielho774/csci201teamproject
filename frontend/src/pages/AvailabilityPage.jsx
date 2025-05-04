@@ -14,7 +14,10 @@ const SAMPLE = [
 
 export default function AvailabilityPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [showInputForm, setShowInputForm] = useState(false);
+  const [selectedDay, setSelectedDay] = useState('Mon');
+  const [selectedStartTime, setSelectedStartTime] = useState('9 AM');
+  const [selectedEndTime, setSelectedEndTime] = useState('10 AM');
 
   const weekStart = useMemo(() => {
     const d = new Date(currentDate);
@@ -67,11 +70,66 @@ export default function AvailabilityPage() {
     return m;
   }, []);
 
+  const handleSubmit = () => {
+    console.log('Submitting availability:', selectedDay, selectedStartTime, selectedEndTime);
+    setShowInputForm(false);
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1>{weekTitle}</h1>
+        <button 
+          onClick={() => setShowInputForm(!showInputForm)} 
+          className={styles.availabilityButton}
+        >
+          {showInputForm ? 'Cancel' : '+ Add Availability'}
+        </button>
       </div>
+
+      {showInputForm && (
+        <div className={styles.inputForm}>
+          <div className={styles.formRow}>
+            <label>Day:</label>
+            <select 
+              value={selectedDay} 
+              onChange={(e) => setSelectedDay(e.target.value)}
+            >
+              {DAYS.map(day => (
+                <option key={day} value={day}>{day}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div className={styles.formRow}>
+            <label>From:</label>
+            <select 
+              value={selectedStartTime} 
+              onChange={(e) => setSelectedStartTime(e.target.value)}
+            >
+              {TIMES.map(time => (
+                <option key={time} value={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div className={styles.formRow}>
+            <label>To:</label>
+            <select 
+              value={selectedEndTime} 
+              onChange={(e) => setSelectedEndTime(e.target.value)}
+            >
+              {TIMES.map(time => (
+                <option key={time} value={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+          
+          <button onClick={handleSubmit} className={styles.submitButton}>
+            Submit
+          </button>
+        </div>
+      )}
 
       <div className={styles.weekBar}>
         <button onClick={prevWeek} className={styles.arrow}>&lt;</button>

@@ -53,18 +53,8 @@ CREATE TABLE Status (
 ); 
 INSERT INTO Status(status_name) VALUES 
 	('Incomplete'), 
-    	('In Progress'), 
-    	('Complete'); 
-
--- PRIORITY 
-CREATE TABLE Priority (
-	priority_id INT AUTO_INCREMENT PRIMARY KEY, 
-    	priority_name VARCHAR(25)
-); 
-INSERT INTO Priority(priority_name) VALUES 
-	('Low'), 
-    	('Medium'), 
-    	('High'); 
+    ('In Progress'), 
+    ('Complete'); 
 
 -- TASKS 
 CREATE TABLE Tasks (
@@ -73,14 +63,12 @@ CREATE TABLE Tasks (
     	task_name VARCHAR(25),
     	task_descrip VARCHAR(150), 
     	status_type INT, 
-    	priority INT, 
     	start_date DATE, 
     	end_date DATE, 
     	duration INT, 
     	assigned BOOLEAN, 
     	FOREIGN KEY (project_id) REFERENCES Projects(project_id), 
     	FOREIGN KEY (status_type) REFERENCES Status(status_id), 
-    	FOREIGN KEY (priority) REFERENCES Priority(priority_id)
 );
 
 -- TASK ASSIGNMENTS 
@@ -91,60 +79,3 @@ CREATE TABLE TaskAssignments (
     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
     	FOREIGN KEY (member_id) REFERENCES project_member(member_id)
 ); 
-
--- REACTIONS 
-CREATE TABLE Reactions (
-	reaction_id INT AUTO_INCREMENT PRIMARY KEY, 
-    	reaction_type VARCHAR(25)
-); 
-INSERT INTO Reactions(reaction_type) VALUES 
-    	('heart'), 
-    	('thumbs_up'), 
-    	('fire'), 
-    	('laugh'), 
-    	('thumbs_down'); 
-
--- COMMENTS 
-CREATE TABLE Comments (
-	comment_id INT AUTO_INCREMENT PRIMARY KEY,
-    	member_id INT, 
-    	comment VARCHAR(150), 
-    	date_created DATE, 
-    	archived BOOLEAN, 
-    	resolved BOOLEAN,
-    	FOREIGN KEY (member_id) REFERENCES project_member(member_id)
-); 
-CREATE TABLE CommentReactions (
-	comment_id INT, 
-	user_id INT, 
-	reaction_id INT, 
-	PRIMARY KEY (comment_id, user_id, reaction_id), 
-	FOREIGN KEY (comment_id) REFERENCES Comments(comment_id), 
-	FOREIGN KEY (user_id) REFERENCES Users(user_id), 
-	FOREIGN KEY (reaction_id) REFERENCES Reactions(reaction_id)
-);
-
--- NOTIFICATION 
-CREATE TABLE Notification (
-	notif_id INT AUTO_INCREMENT PRIMARY KEY, 
-    	notif_type VARCHAR(150)
-); 
-INSERT INTO Notification (notif_type) VALUES 
-	('Unseen'), 
-    	('Pending'), 
-    	('Resolved'); 
-
--- HISTORY 
--- CREATE TABLE History (
--- 	change_id INT AUTO_INCREMENT PRIMARY KEY, 
---     	task_id INT, 
---     	member_id INT, 
---     	change_date DATE, 
---     	old_data VARCHAR(150), 
---     	new_data VARCHAR(150), 
---     	notif_status INT, 
---     	field_changed VARCHAR(50), 
---     	FOREIGN KEY (task_id) REFERENCES Tasks(task_id), 
---     	FOREIGN KEY (member_id) REFERENCES ProjectMember(member_id), 
---     	FOREIGN KEY (notif_status) REFERENCES Notification(notif_id)
--- ); 

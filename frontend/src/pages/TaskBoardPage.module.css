@@ -64,6 +64,24 @@
   background-color: #1f1f57;
 }
 
+.statusSelect {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #2a2a5e;
+  background-color: #1a1a5a;
+  color: #e0e0ff;
+  cursor: pointer;
+}
+
+.statusSelect:hover {
+  background-color: #2a2a7a;
+}
+
+.statusSelect option {
+  background-color: #1a1a5a;
+  color: #e0e0ff;
+}
 
 .addButton {
   display: block;

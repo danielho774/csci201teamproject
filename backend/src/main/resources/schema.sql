@@ -39,7 +39,7 @@ CREATE TABLE Availability (
 	avail_id INT AUTO_INCREMENT PRIMARY KEY, 
     	user_id INT, 
     	project_id INT,
-    	day VARCHAR(10), 
+    	date DATE, 
     	start_time TIME, 
     	end_time TIME,
     	FOREIGN KEY (user_id) REFERENCES Users(user_id), 

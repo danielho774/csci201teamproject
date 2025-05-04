@@ -1,7 +1,6 @@
 package com.app.project.model;
 
 import jakarta.persistence.*;
-import java.time.LocalTime; 
 
 @Entity
 @Table(name = "Availability") 
@@ -19,19 +18,21 @@ public class Availability {
     @JoinColumn(name = "project_id", nullable = false) 
     private Project project; 
 
-    @Column(name = "day", nullable = false) 
-    private String day; 
+    @Column(name = "date", nullable = false) 
+    private String date; 
 
+    // "HH:mm:ss" format
     @Column(name = "start_time", nullable = false) 
-    private LocalTime startTime; 
+    private String startTime; 
 
+    // "HH:mm:ss" format
     @Column(name = "end_time", nullable = false) 
-    private LocalTime endTime; 
+    private String endTime; 
 
-    public Availability(User user, Project project, String day, LocalTime startTime, LocalTime endTime) { 
+    public Availability(User user, Project project, String date, String startTime, String endTime) { 
         this.user = user; 
         this.project = project; 
-        this.day = day; 
+        this.date = date; 
         this.startTime = startTime; 
         this.endTime = endTime; 
     }
@@ -47,31 +48,38 @@ public class Availability {
         this.availID = availID; 
     }
 
-    public User getUser() {
-        return user; 
+    public int getUserID() {
+        return user.getUserID(); 
     }
     public void setUser(User user) {
         this.user = user; 
     }
 
-    public String getDay() {
-        return day; 
+    public int getProjectID() {
+        return project.getProjectID(); 
     }
-    public void setDay(String day) {
-        this.day = day; 
+    public void setProject(Project project) {
+        this.project = project; 
     }
 
-    public LocalTime getStartTime() {
+    public String getDate() {
+        return date; 
+    }
+    public void setDay(String date) {
+        this.date = date; 
+    }
+
+    public String getStartTime() {
         return startTime; 
     }
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime; 
     }
 
-    public LocalTime getEndTime() {
+    public String getEndTime() {
         return endTime; 
     }
-    public void setEndTime(LocalTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime; 
     }
 }

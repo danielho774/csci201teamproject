@@ -38,6 +38,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectMember> members;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Availability> availabilities = new ArrayList<>();
+
     public Project(){}
     public Project(String name, String description, String end_date, String start_date, User owner) {
         this.projectName = name;
@@ -129,5 +132,12 @@ public class Project {
 
     public void setMembers(List<ProjectMember> members) {
         this.members = members;
+    }
+
+    public List<Availability> getAvailabilities() {
+        return availabilities;
+    }
+    public void setAvailabilities(List<Availability> availabilities) {
+        this.availabilities = availabilities;
     }
 }

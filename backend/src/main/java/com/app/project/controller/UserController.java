@@ -2,7 +2,6 @@ package com.app.project.controller;
 
 import com.app.project.model.Project;
 import com.app.project.model.User;
-import com.app.project.service.ProjectMemberService;
 import com.app.project.service.ProjectService;
 import com.app.project.service.UserService;  
 
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -24,9 +22,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ProjectMemberService projectMemberService;
 
     @Autowired
     private ProjectService projectService;
@@ -156,9 +151,9 @@ public class UserController {
 
         List<Project> projects = new ArrayList<>();
         for (int projectID : projectIDs) {
-            Optional<Project> project = projectService.getProject(projectID);
-            if (project.isPresent()) {
-                projects.add(project.get());
+            Project project = projectService.getProjectByID(projectID);
+            if (project != null) {
+                projects.add(project);
             }
         }
         if (projects.isEmpty()) {

@@ -66,7 +66,7 @@ public class ProjectController {
     @GetMapping("/{projectID}")
     public ResponseEntity<?> getProject(@PathVariable int projectID) {
         // Check if project exists
-        Project project = projectService.getProjectById(projectID);
+        Project project = projectService.getProjectByID(projectID);
         if (project == null) {
             return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
         }
@@ -87,7 +87,7 @@ public class ProjectController {
             return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
         }
         // Check if project exists
-        Project project = projectService.getProjectById(projectID);
+        Project project = projectService.getProjectByID(projectID);
         if (project == null) {
             return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
         }
@@ -112,7 +112,7 @@ public class ProjectController {
     public ResponseEntity<?> removeMember(@PathVariable int projectID, @RequestParam int userID) {
         try {
             // Check if project exists
-            Project project = projectService.getProjectById(projectID);
+            Project project = projectService.getProjectByID(projectID);
             if (project == null) {
                 return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
             }
@@ -156,6 +156,6 @@ public class ProjectController {
 
     @DeleteMapping("/{projectID}")
     public void deleteProject(@PathVariable int projectID) {
-        projectService.deleteProject(projectID);
+        projectService.deleteProjectByID(projectID);
     }
 }

@@ -19,13 +19,12 @@ public interface ProjectService {
     public void reassignOwner(Long projectId, String currentOwnerEmail, String newOwnerEmail);
     public void ownerLeaving(Long projectId, String currentOwnerEmail, String newOwnerEmail);*/
 
-    public Project getProjectById(int projectID);
     public double updateProjectProgress(int projectID);
     public Project createProject(int userID, String name, String description, String end_date, String start_date);
 
-    public Optional<Project> getProject(int projectID);
+    public Project getProjectByID(int projectID);
     public Project saveProject(Project project);
-    public void deleteProject(int projectID);
+    public void deleteProjectByID(int projectID);
     public void removeMember(ProjectMember member);
     public List<ProjectMember> getProjectMembers(int projectID);
     public void transferOwnership(int projectID, int newOwnerMemberID);

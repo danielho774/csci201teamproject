@@ -6,16 +6,12 @@ import com.app.project.model.Task;
 import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.repository.ProjectRepository;
-import com.app.project.repository.StatusRepository;
 import com.app.project.repository.UserRepository;
-import com.app.project.service.ProjectMemberService;
 import com.app.project.service.ProjectService;
-import com.app.project.service.TaskStatusService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
-import java.io.ObjectInputFilter.Status;
 import java.util.List;
 
 
@@ -31,13 +27,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    public Project getProjectById(int projectID) {
-        return projectRepository.findById(projectID).orElse(null);
-    }
-
     //assuming that taskStatus is set to complete when task is complete
     public double updateProjectProgress(int projectID) {
-        Project project = getProjectById(projectID);
+        Project project = getProjectByID(projectID);
 
         if (project.getTasks().isEmpty()) {
             return 0.0;
@@ -82,15 +74,20 @@ public class ProjectServiceImpl implements ProjectService {
         return savedProject;
     }
     
-    public Optional<Project> getProject(int projectID) {
-        return projectRepository.findById(projectID);
+    public Project getProjectByID(int projectID) {
+        Optional<Project> project = projectRepository.findById(projectID);
+        if (project.isPresent()) {
+            return project.get();
+        } else {
+            return null;
+        }
     }
 
     public Project saveProject(Project project) {
         return projectRepository.save(project);
     }
 
-    public void deleteProject(int projectID) {
+    public void deleteProjectByID(int projectID) {
         projectRepository.deleteById(projectID);
     }
 

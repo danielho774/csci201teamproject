@@ -154,7 +154,7 @@ public class TaskController {
     public ResponseEntity<List<Map<String, Object>>> getTasksByProject(@PathVariable("projectId") long projectId) {
         try {
             // First, get the Project object using the projectId
-            Project project = projectService.getProjectById((int)projectId);
+            Project project = projectService.getProjectByID((int)projectId);
             
             // Then pass the Project object to the service method
             List<Task> tasks = taskService.getTasksByProject(project);

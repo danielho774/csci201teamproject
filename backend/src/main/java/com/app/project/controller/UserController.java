@@ -93,7 +93,7 @@ public class UserController {
             if (user != null && user.verify(usernameOrEmail, usernameOrEmail, password)) {
                 // Create response with user info but exclude sensitive data
                 Map<String, Object> response = new HashMap<>();
-                response.put("userId", user.getUserID());
+                response.put("userID", user.getUserID());
                 response.put("username", user.getUsername());
                 response.put("email", user.getEmail());
                 response.put("firstName", user.getFirstName());

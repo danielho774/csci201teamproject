@@ -22,14 +22,19 @@ export default function CreateProjectPage() {
     return; 
   }
 
+  const code = Array.from({length: 5}, () =>
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]
+  ).join('');
+
   const newProject = {
     projectName,
     projectDescription,
     startDate,
-    endDate
-
+    endDate,
+    shareCode: code
   }
-  console.log('Project Created:', { projectName, projectDescription, startDate, endDate });
+
+  console.log('Project Created:', newProject);
 
   try {
     const userID = localStorage.getItem('userID');
@@ -49,8 +54,10 @@ export default function CreateProjectPage() {
 
       const projectID = result.projectID; 
       localStorage.setItem('projectID', projectID); 
+      localStorage.setItem('projectName', projectName); 
+      localStorage.setItem('projectCode', code); 
       // Lead to project confirmation page 
-      navigate('/'); 
+      navigate('/confirmed'); 
     } else {
       console.error('Failed to create project');
     }

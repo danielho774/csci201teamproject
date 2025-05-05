@@ -49,8 +49,9 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
         if (member.isRole()) {
             throw new RuntimeException("Owner cannot leave without transferring ownership or deleting the project.");
-        } else {
-            projectMemberRepository.deleteById(member.getMemberID());
+        } {
+            projectMemberRepository.deleteByMemberID(member.getMemberID());
+            System.out.println("Deleted member with ID: " + member.getMemberID());
         }
     }
 

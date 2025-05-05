@@ -3,6 +3,7 @@ package com.app.project.controller;
 import com.app.project.model.Project;
 import com.app.project.model.ProjectMember;
 import com.app.project.model.User;
+import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.service.ProjectMemberService;
 import com.app.project.service.ProjectService;
 import com.app.project.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/members")
 public class ProjectMemberController {
@@ -27,6 +29,9 @@ public class ProjectMemberController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ProjectMemberRepository projectMemberRepository;
 
     @GetMapping("/{memberID}")
     public ProjectMember getMember(@PathVariable int memberID) {
@@ -94,8 +99,7 @@ public class ProjectMemberController {
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
 
-        
-        projectMemberService.leaveProject(projectMember.getMemberID(), projectID);
+        projectMemberService.leaveProject(userID, projectID);
         Map<String, String> successResponse = new HashMap<>();
         successResponse.put("message", "Member successfully removed");
         return new ResponseEntity<>(successResponse, HttpStatus.OK);

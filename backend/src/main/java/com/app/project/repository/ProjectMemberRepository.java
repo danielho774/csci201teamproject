@@ -6,6 +6,8 @@ import com.app.project.model.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository; // Add if missing
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List; // Add if needed
 import java.util.Optional; // Add if needed
 
@@ -20,6 +22,9 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, In
     List<ProjectMember> findByProject_ProjectID(int projectID);
     //Role of user in a project
     Optional<ProjectMember> findByProjectProjectIDAndRoleTrue(int projectId);
+
+    @Transactional
+    void deleteByMemberID(int projectMemberID);
     
 
 }

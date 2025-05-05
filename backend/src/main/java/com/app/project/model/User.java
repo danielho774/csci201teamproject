@@ -51,7 +51,7 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
 	private List<Availability> availability = new ArrayList<>(); 
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProjectMember> memberships = new ArrayList<>(); 
 	
 	public User(int userID, String username, String email, boolean isGuest) {

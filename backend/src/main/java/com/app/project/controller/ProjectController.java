@@ -7,7 +7,11 @@ import com.app.project.service.UserService;
 import com.app.project.model.User;
 import com.app.project.repository.ProjectMemberRepository;
 import com.app.project.model.ProjectMember;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -43,25 +47,33 @@ public class ProjectController {
         if (name == null || name.isEmpty() || description == null || description.isEmpty() ||
             end_date == null || end_date.isEmpty() || start_date == null || start_date.isEmpty() || 
             shareCode == null || shareCode.isEmpty()) {
-            return new ResponseEntity<>("All fields are required", HttpStatus.BAD_REQUEST);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "All fields are required");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
         // Check if user exists
         User owner = userService.getUserByID(userID);
         if (owner == null) {
-            return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "User not found with ID: " + userID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
 
         // Check if project with the same share code already exists
         Project existingProject = projectService.getProjectByShareCode(shareCode);
         if (existingProject != null) {
-            return new ResponseEntity<>("Project with the same share code already exists", HttpStatus.CONFLICT);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project with the same share code already exists");
+            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
         }
 
         // create project
         Project newProject = projectService.createProject(userID, name, description, end_date, start_date, shareCode);
         if (newProject == null) {
-            return new ResponseEntity<>("Failed to create project", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to create project");
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             return new ResponseEntity<>(newProject, HttpStatus.CREATED);
         }
@@ -74,7 +86,9 @@ public class ProjectController {
         // Check if project exists
         Project project = projectService.getProjectByID(projectID);
         if (project == null) {
-            return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
         // return project details
         return new ResponseEntity<>(project, HttpStatus.OK);
@@ -90,32 +104,41 @@ public class ProjectController {
         // Check if user exists
         User user = userService.getUserByID(userID);
         if (user == null) {
-            return new ResponseEntity<>("User not found with ID: " + userID, HttpStatus.NOT_FOUND);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "User not found with ID: " + userID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
         // Check if project exists
         Project project = projectService.getProjectByID(projectID);
         if (project == null) {
-            return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
         // Check if share code is valid
         if (!project.getShareCode().equals(shareCode)) {
-            return new ResponseEntity<>("Invalid share code", HttpStatus.UNAUTHORIZED);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid share code");
+            return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
 
         // Check if user is already a member of the project
         ProjectMember existingMember = projectMemberService.getMemberByUserIDProjectID(userID, projectID);
         if (existingMember != null) {
-            return new ResponseEntity<>("User is already a member of the project", HttpStatus.CONFLICT);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "User is already a member of the project");
+            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
         }
 
         // Create project member
         ProjectMember projectMember = projectMemberService.createProjectMember(project, user, false);
         try {
-            projectMemberRepository.save(projectMember);
-            return new ResponseEntity<>("Member added successfully", HttpStatus.CREATED);
+            ProjectMember savedProjectMember = projectMemberRepository.save(projectMember);
+            return new ResponseEntity<>(savedProjectMember, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to add member: " + e.getMessage(), 
-                                    HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to add member: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -125,25 +148,34 @@ public class ProjectController {
             // Check if project exists
             Project project = projectService.getProjectByID(projectID);
             if (project == null) {
-                return new ResponseEntity<>("Project not found with ID: " + projectID, HttpStatus.NOT_FOUND);
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Project not found with ID: " + projectID);
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
 
             // Check if member exists
             ProjectMember member = projectMemberService.getMemberByUserIDProjectID(userID, projectID);
             if (member == null) {
-                return new ResponseEntity<>("Member not found with User ID: " + userID, HttpStatus.NOT_FOUND);
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Member not found with User ID: " + userID);
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
             }
 
             //check if member is owner
             if (member.isRole()) {
-                return new ResponseEntity<>("Owner cannot be removed without transferring ownership or deleting the project.", 
-                                        HttpStatus.FORBIDDEN);
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Owner cannot be removed without transferring ownership or deleting the project.");
+                return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
             }
             projectService.removeMember(member);
-            return new ResponseEntity<>("Member removed successfully", HttpStatus.OK);
+            Map<String, String> successResponse = new HashMap<>();
+            successResponse.put("message", "Member removed successfully");
+            return new ResponseEntity<>(successResponse, HttpStatus.OK);
+
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to remove member: " + e.getMessage(), 
-                                    HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to remove member: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -151,18 +183,39 @@ public class ProjectController {
     public ResponseEntity<?> transferOwnership(
             @PathVariable int projectID, 
             @RequestParam int newOwnerUserID) {
+
+        //check that project exists
+        Project project = projectService.getProjectByID(projectID);
+        if (project == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
         try {
             projectService.transferOwnership(projectID, newOwnerUserID);
-            return new ResponseEntity<>("Ownership transferred successfully", HttpStatus.OK);
+            Project updatedProject = projectService.getProjectByID(projectID);
+            return new ResponseEntity<>(updatedProject, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to transfer ownership: " + e.getMessage(), 
-                                    HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to transfer ownership: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{projectID}/progress")
-    public double getProjectProgress(@PathVariable int projectID) {
-        return projectService.updateProjectProgress(projectID);
+    public ResponseEntity<?> getProjectProgress(@PathVariable int projectID) {
+        // Check if project exists
+        Project project = projectService.getProjectByID(projectID);
+        if (project == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+        // return project progress
+        Map<String, Double> progressResponse = new HashMap<>();
+        progressResponse.put("progress", projectService.updateProjectProgress(projectID));
+        return new ResponseEntity<>(progressResponse, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{projectID}")

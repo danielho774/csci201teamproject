@@ -30,8 +30,9 @@ export const LoginSignup = ({ onLogin }) => {
         throw new Error(txt || 'Error logging in')
       }
       const data = await res.json()
+      console.log(data)
       localStorage.setItem('logged-in', 'true')
-      localStorage.setItem('userID', data.userId)
+      localStorage.setItem('userID', data.userID)
       onLogin()
       navigate('/')
     } catch (e) {

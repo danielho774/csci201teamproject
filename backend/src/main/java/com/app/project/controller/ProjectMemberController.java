@@ -33,6 +33,37 @@ public class ProjectMemberController {
         return projectMemberService.getMember(memberID);
     }
 
+    @GetMapping("/{userID}/getOwnership/{projectID}")
+    public ResponseEntity<?> getOwnership(@PathVariable int userID, @PathVariable int projectID) {
+
+        User user = userService.getUserByID(userID);
+        if (user == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "User not found with ID: " + userID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+        // Check if project exists
+        Project project = projectService.getProjectByID(projectID);
+        if (project == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        // check that user is a member of the project
+        ProjectMember projectMember = projectMemberService.getMemberByUserIDProjectID(userID,projectID);
+        if(projectMember == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "User with ID: " + userID + " is not a member of Project with ID: " + projectID);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        //
+        Map<String, Boolean> successResponse = new HashMap<>();
+        successResponse.put("role", projectMember.isRole());
+        return new ResponseEntity<>(successResponse, HttpStatus.OK);
+    }
+
     @GetMapping("/project/{projectID}")
     public List<ProjectMember> getAllMembers(@PathVariable int projectID) {
         return projectMemberService.getAllMembers(projectID);

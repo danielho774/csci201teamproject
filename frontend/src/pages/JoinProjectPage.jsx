@@ -17,15 +17,60 @@ export default function JoinProjectPage() {
       return;
     }
     try {
-      // waiting for try fetching without needing projectID
-      const resp = await fetch(`http://localhost:8080/api/projects/joinProject/${shareCodeInput}`);
-      if (resp.status === 404) {
-        setProjects([]); 
-        setErrorMessage(`Project with share code "${shareCodeInput}" not found.`);
+      const resp = await fetch(`http://localhost:8080/api/projects/getByShareCode?shareCode=${shareCodeInput}`);
+      
+      let data;
+      try {
+        data = await resp.json();
+      } catch (err) {
+        console.error('Failed to parse JSON from response', err);
+        setErrorMessage('Invalid response from server.');
         return;
       }
-      const data = await resp.json();
-      setProjects(Array.isArray(data) ? data : [data]);
+
+      if (!resp.ok) {
+        console.error('Join project error:', data);
+        setErrorMessage(data.message || 'Failed to get project from share code.');
+        return;
+      }
+     
+      const projectID = data.projectID;
+      if (projectID) {
+        setProjects(Array.isArray(data) ? data : [data]);
+        const userID = localStorage.getItem('userID');
+        const postResp = await fetch(`http://localhost:8080/api/projects/joinProject/${projectID}/user/${userID}?shareCode=${shareCodeInput}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (postResp.ok) {
+          console.log('Successfully joined the project');
+        } else {
+          const errorData = await postResp.json().catch(() => ({}));
+          console.error('Join project error:', errorData);
+          setErrorMessage(errorData.message || errorData.error || 'Failed to join the project. Please try again.');
+        }
+
+
+      } else {
+        setErrorMessage('Project ID not found.');
+        setProjects([]);
+      }
+
+  
+      //   if (postResp.status === 200) {
+      //     // Handle successful join (maybe navigate or show a success message)
+      //     console.log('Successfully joined the project');
+      //   } else {
+      //     // Handle failure (display error message)
+      //     setErrorMessage('Failed to join the project. Please try again.');
+      //   }
+      // } else {
+      //   setErrorMessage('Project ID not found.');
+      //   setProjects([]);
+      // }
     } catch (e) {
       console.error(e);
       setErrorMessage('Lookup failed. Try again.');

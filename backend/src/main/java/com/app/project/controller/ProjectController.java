@@ -97,6 +97,8 @@ public class ProjectController {
     @GetMapping("/getByShareCode")
     public ResponseEntity<?> getProjectByShareCode(@RequestParam String shareCode) {
         // Check if project exists by share code
+        System.out.println("Received shareCode: " + shareCode);
+
         Project project = projectService.getProjectByShareCode(shareCode);
         if (project == null) {
             Map<String, String> errorResponse = new HashMap<>();
@@ -139,7 +141,7 @@ public class ProjectController {
         ProjectMember existingMember = projectMemberService.getMemberByUserIDProjectID(userID, projectID);
         if (existingMember != null) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "User is already a member of the project");
+            errorResponse.put("error", "You already joined this project");
             return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
         }
 
@@ -236,3 +238,4 @@ public class ProjectController {
         projectService.deleteProjectByID(projectID);
     }
 }
+

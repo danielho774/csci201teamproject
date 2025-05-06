@@ -13,6 +13,7 @@ import AddTaskPage from './pages/AddTaskPage';
 import ProjectCard from './components/ProjectCard';
 import NavigationBar from './components/NavigationBar';
 import styles from './components/NavigationBar.module.css';
+import TransferOwnershipPage from './pages/TransferOwnershipPage';
 
 function showProjectsList(projectItem){
   return(
@@ -48,8 +49,10 @@ function App() {
           <Route path="/availability" element={<AvailabilityPage />} />
           <Route path="/login" element={<LoginSignup onLogin={handleLogin} />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/transfer" element={<TransferOwnershipPage />} />
           <Route path="/projects/:projectId/board" element={<TaskBoardPage />} />
           <Route path="/projects/:projectId/tasks/add" element={<AddTaskPage />} />
+          <Route path="/projects/:projectId/ownership" element={<TransferOwnershipPage />}  />
         </Routes>
     </div>
     </Router>

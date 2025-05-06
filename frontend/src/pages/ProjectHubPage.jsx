@@ -123,6 +123,7 @@ export default function ProjectHubPage() {
             <div className={styles.grid}>
               {projects.map(p => {
                 const isOwner = ownership[p.projectID]; 
+                const currentUserId = localStorage.getItem('userID'); 
                 return (
                   <ProjectCard
                   key={p.projectID}
@@ -130,6 +131,7 @@ export default function ProjectHubPage() {
                   project-title={p.projectName}
                   onLeaveProject={handleLeaveProject}
                   isOwner={ownership[p.projectID]}
+                  currentUserId = {currentUserId}
                 />
                 ); 
     })}

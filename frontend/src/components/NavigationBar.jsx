@@ -35,9 +35,6 @@ function NavigationBar() {
 
         {isLoggedIn ? (
           <>
-            <li className={styles.navItem}>
-               <Link to="/tasks" className={styles.navLink}>Individual Tasks</Link>
-            </li>
           <li className={styles.navItem}>
             <Link to="/create" className={styles.navLink}>Create Project</Link>
           </li>

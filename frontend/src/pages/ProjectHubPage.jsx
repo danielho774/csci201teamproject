@@ -63,6 +63,27 @@ export default function ProjectHubPage() {
     }
   };
 
+  const handleLeaveProject = async (projectId) => {
+    const userID = localStorage.getItem('userID');
+    try {
+      const resp = await fetch(`http://localhost:8080/api/members/${userID}/leave/${projectId}`, {
+        method: 'DELETE',
+        
+      });
+
+      if (resp.ok) {
+        setProjects(projects.filter(project => project.projectID !== projectId));
+        setErrorMessage('Successfully left the project.');
+      } else {
+        const errorData = await resp.json();
+        setErrorMessage(errorData.message || 'Failed to leave the project.');
+      }
+    } catch (e) {
+      console.error(e);
+      setErrorMessage('Failed to leave the project. Try again.');
+    }
+  };
+
   return (
     <div className={styles['project-hub']}>
       <h2>Project Hub</h2>
@@ -78,6 +99,7 @@ export default function ProjectHubPage() {
                   key={p.projectID}
                   projectId={p.projectID}
                   project-title={p.projectName}
+                  onLeaveProject={handleLeaveProject}
                 />
               ))}
             </div>
@@ -115,6 +137,7 @@ export default function ProjectHubPage() {
                   key={p.projectID}
                   projectId={p.projectID}
                   project-title={p.projectName}
+                  
                 />
               ))}
             </div>

@@ -9,6 +9,7 @@ export default function CreateProjectPage() {
   const [projectDescription, setProjectDescription] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [shareCode, setShareCode] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -26,8 +27,8 @@ export default function CreateProjectPage() {
     projectName,
     projectDescription,
     startDate,
-    endDate
-
+    endDate,
+    shareCode
   }
   console.log('Project Created:', { projectName, projectDescription, startDate, endDate });
 
@@ -52,7 +53,16 @@ export default function CreateProjectPage() {
       // Lead to project confirmation page 
       navigate('/'); 
     } else {
-      console.error('Failed to create project');
+      const errorData = await response.text();
+      if (response.status === 409) { // 409 since backend: HttpStatus.CONFLICT
+        setError('A project with the same share code already exists.');
+      } else {
+        setError(errorData || 'Failed to create project. Please try again.');
+        console.error('Failed to create project');
+        const error = await response.json();
+        console.error('Error:', error);
+      }
+      
     }
   } catch (error) {
     console.error('Error sending to backend:', error);
@@ -91,7 +101,11 @@ export default function CreateProjectPage() {
               setError('');
             }
           }}
-          required></input>       
+          required></input>  
+
+          <h3>Share Code</h3>
+          <input type="text" name="shareCode" placeholder = "Choose share code" value={shareCode}
+          onChange={(e) => setShareCode(e.target.value)} required></input>     
           
         
         {error && <p className={styles['error']}>{error}</p>}

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 import ProjectHub from './pages/ProjectHubPage';
-import IndividualTasks from './pages/IndividualTasksPage'
 import CreateProjectPage from './pages/CreateProjectPage';
+import JoinProjectPage from './pages/JoinProjectPage';
 import ProjectConfirmedPage from './pages/ProjectConfirmedPage';
 import AvailabilityPage from './pages/AvailabilityPage';
 import {LoginSignup} from './components/LoginSignup';
@@ -42,8 +42,8 @@ function App() {
       <div className={styles.mainContent}>
         <Routes>
           <Route path="/" element={<ProjectHub />} />
-          <Route path="/tasks" element={<IndividualTasks />} />
           <Route path="/create" element={<CreateProjectPage />} />
+          <Route path="/join" element={<JoinProjectPage />} />
           <Route path="/confirmed" element={<ProjectConfirmedPage />} />
           <Route path="/availability" element={<AvailabilityPage />} />
           <Route path="/login" element={<LoginSignup onLogin={handleLogin} />} />

@@ -74,7 +74,7 @@ CREATE TABLE Tasks (
 );
 
 -- TASK ASSIGNMENTS 
-CREATE TABLE TaskAssignments (
+CREATE TABLE Task_Assignments (
 	assignment_id INT AUTO_INCREMENT PRIMARY KEY, 
     	task_id INT, 
     	member_id INT, 

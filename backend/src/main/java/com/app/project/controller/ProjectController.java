@@ -94,6 +94,19 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> getProjectByShareCode(@RequestParam String shareCode) {
+        // Check if project exists by share code
+        Project project = projectService.getProjectByShareCode(shareCode);
+        if (project == null) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Project not found with share code: " + shareCode);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+        // Return project details
+        return new ResponseEntity<>(project, HttpStatus.OK);
+    }
+
     @GetMapping("/{projectID}/members")
     public List<ProjectMember> getProjectMembers(@PathVariable int projectID) {
         return projectService.getProjectMembers(projectID);

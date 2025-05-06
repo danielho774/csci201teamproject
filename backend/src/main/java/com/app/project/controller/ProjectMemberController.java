@@ -116,4 +116,19 @@ public class ProjectMemberController {
     public void ownerDeleteProject(@PathVariable int ownerMemberID) {
         projectMemberService.ownerDeleteProject(ownerMemberID);
     }
+
+    @GetMapping("/{memberID}/getUserIDByMemberID") 
+    public ResponseEntity<?> getUserIDByMemberID(@PathVariable int memberID) {
+        ProjectMember projectMember = projectMemberService.getMember(memberID); 
+
+        if (projectMember == null) {
+            Map<String, String> errorResponse = new HashMap<>(); 
+            errorResponse.put("error", "Member not found with ID: " + memberID); 
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND); 
+        }
+
+        Map<String, Integer> response = new HashMap<>(); 
+        response.put("userID", projectMember.getUserID()); 
+        return new ResponseEntity<>(response, HttpStatus.OK); 
+    }
 }

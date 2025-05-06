@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ProjectCard.module.css';
+import { useNavigate } from 'react-router-dom'
 
-function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject }) {
+function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, isOwner}) {
 
     // console.log({onLeaveProject});
     
@@ -15,6 +16,9 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject }
     };
 
     const boardLink = `/projects/${projectId}/board`;
+    const navigate = useNavigate()
+
+    // console.log(`Check for ownership: : ${projectId}, isOwner: ${isOwner}`); 
 
     return (
         <Link to={boardLink} className={styles.cardLink}>
@@ -28,7 +32,10 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject }
                 {isMenuOpen && (
                     <div className={styles['dropdown-menu']} onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
                         <button onClick={() => onLeaveProject(projectId)} className={styles['dropdown-button']}>Leave Project</button>
-                        <button className={styles['dropdown-button']}>Transfer Ownership</button>
+
+                        {isOwner && (
+                            <button onClick={() => navigate(`/projects/${projectId}/ownership`)} className={styles['dropdown-button']}>Ownership</button>
+                        )}
                     </div>
                 )}
             </div>

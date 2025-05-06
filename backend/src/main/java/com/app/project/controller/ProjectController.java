@@ -94,7 +94,7 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping("/getByShareCode")
     public ResponseEntity<?> getProjectByShareCode(@RequestParam String shareCode) {
         // Check if project exists by share code
         Project project = projectService.getProjectByShareCode(shareCode);

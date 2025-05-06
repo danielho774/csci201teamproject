@@ -1,0 +1,55 @@
+.container {
+  padding: 1rem;
+  background-color: #020f1c;
+  min-height: 100vh;
+}
+
+
+.join-project {
+  background: #060412;
+  min-height: calc(100vh - 45px);
+  /* border-radius: 7px;
+  box-shadow: 0 2px 5px #b6e2fd;
+  padding: 10px;
+  width: 240px;
+  margin: 16px;
+  float: left; */
+}
+
+.join-project h2 {
+  background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
+  padding: 1rem;
+  font-size: 3.5em;
+  margin: 0;
+  color: #eeebff;
+  text-align: center;
+}
+
+
+.grid {
+  display: flex;
+  gap: 2.5rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.no-projects {
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+} 
+
+p {
+color: white;
+}
+
+.input-wrapper {
+text-align: center;
+}
+
+.submit-button {
+color: white;
+background-color: #c283ec;
+}

@@ -130,8 +130,10 @@ public class Project {
         task.setProject(null);
     }
 
-    public List<ProjectMember> getMembers() {
-        return members;
+    public List<Integer> getMemberIDs() {
+        return members.stream()
+                      .map(ProjectMember::getMemberID)
+                      .toList();
     }
 
     public void setMembers(List<ProjectMember> members) {

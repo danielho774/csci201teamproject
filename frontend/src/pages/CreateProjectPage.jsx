@@ -59,7 +59,7 @@ export default function CreateProjectPage() {
       } else {
         setError(errorData || 'Failed to create project. Please try again.');
         console.error('Failed to create project');
-        const error = await response.json();
+        // const error = await response.json();
         console.error('Error:', error);
       }
       

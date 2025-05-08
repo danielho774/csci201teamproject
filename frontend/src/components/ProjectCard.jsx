@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import styles from './ProjectCard.module.css';
 import { useNavigate } from 'react-router-dom'
 
-function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, isOwner}) {
+function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, isOwner, currentUserId}) {
 
+    // console.log('Current User ID: ', currentUserId); 
     // console.log({onLeaveProject});
     
     // const { projectId } = props;
@@ -20,6 +21,10 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, 
 
     // console.log(`Check for ownership: : ${projectId}, isOwner: ${isOwner}`); 
 
+    const handleOwnershipTransfer = () => {
+        navigate(`/projects/${projectId}/ownership`, {state: {currentUserId}}); 
+    }
+
     return (
         <Link to={boardLink} className={styles.cardLink}>
             <div className={styles['wrapper']}>
@@ -34,7 +39,7 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, 
                         <button onClick={() => onLeaveProject(projectId)} className={styles['dropdown-button']}>Leave Project</button>
 
                         {isOwner && (
-                            <button onClick={() => navigate(`/projects/${projectId}/ownership`)} className={styles['dropdown-button']}>Ownership</button>
+                            <button onClick={handleOwnershipTransfer} className={styles['dropdown-button']}>Ownership</button>
                         )}
                     </div>
                 )}

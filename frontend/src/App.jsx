@@ -52,7 +52,7 @@ function App() {
           <Route path="/transfer" element={<TransferOwnershipPage />} />
           <Route path="/projects/:projectId/board" element={<TaskBoardPage />} />
           <Route path="/projects/:projectId/tasks/add" element={<AddTaskPage />} />
-          <Route path="/projects/:projectId/ownership" element={<TransferOwnershipPage />}  />
+          <Route path="/projects/:projectID/ownership" element={<TransferOwnershipPage />}  />
         </Routes>
     </div>
     </Router>

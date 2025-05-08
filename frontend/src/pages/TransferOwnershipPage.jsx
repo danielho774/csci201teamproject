@@ -1,24 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'; 
 import styles from './JoinProjectPage.module.css';
+import { useLocation } from 'react-router-dom'; 
 
-export default function TransferOwnershipPage({ currentUserId }) {
+export default function TransferOwnershipPage() {
   const [members, setMembers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { projectID } = useParams(); // Assuming route provides projectID
+  const {projectID } = useParams(); // Assuming route provides projectID
+
+  const location = useLocation(); 
+  const currentUserId = location.state?.currentUserId; 
+
+  // console.log('Current User ID: ', currentUserId); 
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
+        // console.log('Check projectID: ', projectID); 
         const response = await fetch(`/api/projects/${projectID}/members`);
         const data = await response.json();
+        // console.log('Members: ', data); 
 
+        // data.forEach(member => {
+        //   console.log(`MemberID: ${member.memberID}, isOwner: ${member.role}`)
+        // })
         // Filter out the current user
-        const filteredMembers = data.filter(member => member.id !== currentUserId);
-        setMembers(filteredMembers);
+        const filteredMembers = data.filter(member => !member.role);
+        // console.log('Filtered Members: ', filteredMembers); 
+        const memberDetails = await Promise.all(
+          filteredMembers.map(async (member) => {
+            const resp = await fetch(`/api/members/${member.memberID}/getUserIDByMemberID`); 
+            const userData = await resp.json(); 
+            const userID = userData.userID; 
+
+            const userResp = await fetch(`/api/users/${userID}`); 
+            const data = await userResp.json(); 
+
+            return {
+              ...member, 
+              firstName: data.firstName, 
+              lastName: data.lastName,
+              userID: userID, 
+            }; 
+          })
+        ); 
+        setMembers(memberDetails);
         setLoading(false);
       } catch (error) {
         setErrorMessage('Failed to load project members.');
@@ -35,16 +64,22 @@ export default function TransferOwnershipPage({ currentUserId }) {
       return;
     }
 
+    const newOwner = members.find(member => member.memberID === selectedUserId); 
+    if (!newOwner) {
+      setErrorMessage('Selected member user not found.'); 
+      return; 
+    }
+
+    const newOwnerUserID = newOwner.userID;
+
     try {
-      const response = await fetch(`/api/projects/${projectID}/transfer-ownership`, {
+      const response = await fetch(`/api/projects/${projectID}/transferOwnership?newOwnerUserID=${newOwnerUserID}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newOwnerId: selectedUserId }),
       });
 
       if (!response.ok) throw new Error('Transfer failed');
 
-      navigate(`/projects/${projectID}`);
+      navigate(`/projects/${projectID}/ownership`);
     } catch (error) {
       setErrorMessage('Error transferring ownership.');
     }
@@ -63,15 +98,15 @@ export default function TransferOwnershipPage({ currentUserId }) {
           ) : (
             <div className={styles['input-wrapper']}>
               {members.map(member => (
-                <label key={member.id} className={styles['member-option']}>
+                <label key={member.memberID} style={{color: 'white' }} className={styles['member-option']}>
                   <input
                     type="radio"
                     name="transferTarget"
-                    value={member.id}
-                    checked={selectedUserId === member.id}
-                    onChange={() => setSelectedUserId(member.id)}
+                    value={member.memberID}
+                    checked={selectedUserId === member.memberID}
+                    onChange={() => setSelectedUserId(member.memberID)}
                   />
-                  {member.name}
+                  {member.firstName} {member.lastName}
                 </label>
               ))}
               {errorMessage && <p className={styles['error']}>{errorMessage}</p>}

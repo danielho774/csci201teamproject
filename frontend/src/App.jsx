@@ -14,6 +14,7 @@ import ProjectCard from './components/ProjectCard';
 import NavigationBar from './components/NavigationBar';
 import styles from './components/NavigationBar.module.css';
 import TransferOwnershipPage from './pages/TransferOwnershipPage';
+import Logout from './components/Logout';
 
 function showProjectsList(projectItem){
   return(
@@ -53,6 +54,7 @@ function App() {
           <Route path="/projects/:projectId/board" element={<TaskBoardPage />} />
           <Route path="/projects/:projectId/tasks/add" element={<AddTaskPage />} />
           <Route path="/projects/:projectID/ownership" element={<TransferOwnershipPage />}  />
+          <Route path="/logout" element={<Logout setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
     </div>
     </Router>

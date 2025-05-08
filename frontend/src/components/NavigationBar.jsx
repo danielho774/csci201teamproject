@@ -45,7 +45,7 @@ function NavigationBar() {
              <Link to="/availability" className={styles.navLink}>Availability</Link>
            </li>
           <li className={styles.navItem}>
-            <button onClick={handleLogout} className = {`${styles.navLink} ${styles.logoutButton}`}>Logout</button>
+            <Link to="/logout" className={styles.navLink}>Logout</Link>
           </li>
         </>
         ) : (

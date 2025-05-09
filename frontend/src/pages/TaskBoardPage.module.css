@@ -98,3 +98,30 @@
 .addButton:hover {
   background-color: #9a6fee;
 }
+.taskButton {
+  display: block;
+  margin: 0 auto;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  min-width: 130px;
+  text-align: center;
+}
+
+.claim {
+  background-color: #3f8f29;
+}
+.claim:hover {
+  background-color: #056517;
+}
+
+.unclaim {
+  background-color: #de1a24;
+}
+.unclaim:hover {
+  background-color: #bf1029;
+}

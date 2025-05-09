@@ -8,23 +8,16 @@
 .project-hub {
     background: #060412;
     min-height: calc(100vh - 45px);
-    /* border-radius: 7px;
-    box-shadow: 0 2px 5px #b6e2fd;
-    padding: 10px;
-    width: 240px;
-    margin: 16px;
-    float: left; */
   }
 
-  .project-hub h2 {
-    background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
-    padding: 1rem;
-    font-size: 3.5em;
-    margin: 0;
-    color: #eeebff;
-    text-align: center;
-  }
-
+.project-hub h2 {
+  background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
+  padding: 1rem;
+  font-size: 3.5em;
+  margin: 0;
+  color: #eeebff;
+  text-align: center;
+}
 
 .grid {
     display: flex;
@@ -43,6 +36,7 @@
 
 p {
   color: white;
+  font-size: 1.2rem;
 }
 
 .input-wrapper {
@@ -66,6 +60,7 @@ p {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 12px rgba(194, 131, 236, 0.3);
+  font-family: 'Times New Roman', sans-serif;
 }
 
 .submit-button:hover {

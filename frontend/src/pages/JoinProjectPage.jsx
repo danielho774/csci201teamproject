@@ -46,6 +46,7 @@ export default function JoinProjectPage() {
 
         if (postResp.ok) {
           console.log('Successfully joined the project');
+          navigate('/'); 
         } else {
           const errorData = await postResp.json().catch(() => ({}));
           console.error('Join project error:', errorData);

@@ -100,6 +100,7 @@ export default function TransferOwnershipPage() {
             <p className={styles['centered-message']}> No other members to transfer ownership to.</p>
           ) : (
             <div className={styles['input-wrapper']}>
+              <p className={styles['centered-message']}> Choose a member to become the new owner for this project</p>
               {members.map(member => (
                 <label key={member.memberID} style={{color: 'white' }} className={styles['member-option']}>
                   <input
@@ -113,9 +114,11 @@ export default function TransferOwnershipPage() {
                 </label>
               ))}
               {errorMessage && <p className={styles['error']}>{errorMessage}</p>}
-              <button className={styles['submit-button']} onClick={handleSubmit}>
-                Confirm Transfer
-              </button>
+              <div className={styles['submit-button-container']}>
+                <button className={styles['submit-button']} onClick={handleSubmit}>
+                  Confirm Transfer
+                </button>
+              </div>
             </div>
           )}
         </>

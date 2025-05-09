@@ -1,52 +1,51 @@
 .container {
     padding: 1rem;
-    
 }
 
 .project-join {
     background: #060412;
-    min-height: calc(100vh - 45px);
-  
-  }
+    min-height: calc(100vh - 45px);  
+}
 
-  .project-creation h2 {
-    background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
-    padding: 1rem;
-    font-size: 3.5em;
-    margin: 0;
-    color: #eeebff;
-    text-align: center;
-  }
+.project-creation h2 {
+  background-image: linear-gradient(90deg,#1a023b 15%, #360F6A 40%, #21ebf9 100%);
+  padding: 1rem;
+  font-size: 3.5em;
+  margin: 0;
+  color: #eeebff;
+  text-align: center;
+}
 
-  .project-creation h3 {
-    color: white;
-    margin: 1rem 0 0.5rem;
-    text-align: center;
-  }
+.project-creation h3 {
+  color: white;
+  margin: 1rem 0 0.5rem;
+  text-align: center;
+}
 
-  .project-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }
+.project-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  font-family: 'Times New Roman', sans-serif;
+}
 
+input[type=text], 
+input[type=date],
+select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #D9FCFF;
+  width: 300px;
+  font-family: 'Times New Roman', sans-serif;
+}
 
-  input[type=text], 
-  input[type=date],
-  select {
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #D9FCFF;
-    width: 300px;
-  }
-
-  input[type=submit] {
-    padding: 0.75rem 2rem;
+input[type=submit] {
+  padding: 0.75rem 2rem;
   margin-top: 1rem;
   font-size: 1.25rem;
   font-weight: bold;
@@ -57,15 +56,16 @@
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 12px rgba(194, 131, 236, 0.3);
-  }
+  font-family: 'Times New Roman', sans-serif;
+}
   
-  input[type=submit]:hover {
-    background-color: #a763cf;
-    transform: scale(1.05);
-  }
+input[type=submit]:hover {
+  background-color: #a763cf;
+  transform: scale(1.05);
+}
   
-  .error {
+.error {
     color: white;
-  }
+}
 
   

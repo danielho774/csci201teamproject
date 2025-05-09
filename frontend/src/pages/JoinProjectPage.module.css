@@ -25,7 +25,6 @@
   text-align: center;
 }
 
-
 .grid {
   display: flex;
   gap: 2.5rem;
@@ -66,6 +65,7 @@ color: white;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 12px rgba(194, 131, 236, 0.3);
+  font-family: 'Times New Roman', sans-serif;
 }
 
 .submit-button:hover {

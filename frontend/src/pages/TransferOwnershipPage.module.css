@@ -2,16 +2,12 @@
   padding: 1rem;
   background-color: #020f1c;
   min-height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
+  width: 100%
 }
 
 .ownership {
   background: #060412;
   min-height: calc(100vh - 45px);
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0
 }
 
 .ownership h2 {
@@ -42,17 +38,46 @@ color: white;
 .input-wrapper label {
   color: white; 
   font-size: 1.2rem; 
-  margin: 0.5rem 0; 
-  display: inline-block; 
+  margin: 1rem 0; 
+  text-transform: capitalize; 
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .submit-button {
-color: white;
-background-color: #c283ec;
+  color: white;
+  background-color: #c283ec;
+  display: block;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  border: none;
+  font-family: 'Times New Roman', sans-serif;
+}
+
+.submit-button:hover {
+  color: white;
+  background-color: #ae54ea;
 }
 
 .centered-message {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 22px;
+}
+
+.member-option {
+  display: block; 
+  margin-bottom: 10px; 
+  font-size: 18px;
+}
+
+.error {
+  color: white;
+  font-size: 16px;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './AvailabilityPage.module.css';
 
-const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const TIMES = [
   '8 AM','9 AM','10 AM','11 AM','12 PM',
   '1 PM','2 PM','3 PM','4 PM','5 PM','6 PM'
@@ -51,7 +51,6 @@ export default function AvailabilityPage() {
           }
         });
         
-        // Don't treat 404 as an error, just set empty availabilities
         if (response.status === 404) {
           setAvailabilities([]);
           return;
@@ -65,21 +64,24 @@ export default function AvailabilityPage() {
         const data = await response.json();
         setAvailabilities(data);
         
-        // Fetch current user's name immediately
-        const userID = localStorage.getItem('userID');
-        const userResponse = await fetch(`http://localhost:8080/api/users/${userID}`, {
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
+        // Fetch ALL users' names who have availabilities
+        const userIds = [...new Set(data.map(a => a.userID))];
+        const userDetails = {};
         
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          setAllUsers(prev => ({
-            ...prev,
-            [userID]: `${userData.firstName} ${userData.lastName}`
-          }));
+        for (const userId of userIds) {
+          const userResponse = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+          
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            userDetails[userId] = `${userData.firstName} ${userData.lastName}`;
+          }
         }
+        
+        setAllUsers(userDetails);
       } catch (error) {
         console.error('Failed to fetch availabilities:', error);
       }
@@ -107,10 +109,9 @@ export default function AvailabilityPage() {
 
   const weekStart = useMemo(() => {
     const d = new Date(currentDate);
-    const day = d.getDay();            
-    return new Date(d.getFullYear(),
-                    d.getMonth(),
-                    d.getDate() - day);
+    const day = d.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff);
   }, [currentDate]);
 
 
@@ -148,11 +149,11 @@ export default function AvailabilityPage() {
   const slotMap = useMemo(() => {
     const m = {};
     availabilities.forEach(avail => {
-      // Convert the date string to a Date object
       const date = new Date(avail.date);
-      const day = DAYS[date.getDay()];
+      let day = date.getDay() - 1;
+      if (day === -1) day = 6;
+      const dayName = DAYS[day];
       
-      // Convert time strings from "HH:mm:ss" to hour number
       const getHour = (timeStr) => {
         const [hours] = timeStr.split(':');
         return parseInt(hours);
@@ -161,13 +162,11 @@ export default function AvailabilityPage() {
       const startHour = getHour(avail.startTime);
       const endHour = getHour(avail.endTime);
       
-      // Add entries for each hour in the time range
       for (let hour = startHour; hour < endHour; hour++) {
         const timeStr = `${hour % 12 || 12} ${hour < 12 ? 'AM' : 'PM'}`;
-        const slotKey = `${day}-${timeStr}`;
+        const slotKey = `${dayName}-${timeStr}`;
         m[slotKey] = m[slotKey] || [];
         
-        // Add user name if we have it
         const userName = allUsers[avail.userID];
         if (userName && !m[slotKey].includes(userName)) {
           m[slotKey].push(userName);
@@ -185,9 +184,12 @@ export default function AvailabilityPage() {
     }
 
     const userID = localStorage.getItem('userID');
-    const date = weekDates[DAYS.indexOf(selectedDay)].toISOString().split('T')[0];
     
-    // Convert time format from "H AM/PM" to "HH:mm:ss"
+    const selectedDayIndex = DAYS.indexOf(selectedDay);
+    const date = new Date(weekStart);
+    date.setDate(date.getDate() + selectedDayIndex);
+    const formattedDate = date.toISOString().split('T')[0];
+
     const convertTime = (timeStr) => {
       const [time, period] = timeStr.split(' ');
       let hour = parseInt(time);
@@ -204,7 +206,7 @@ export default function AvailabilityPage() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          date: date,
+          date: formattedDate,
           startTime: convertTime(selectedStartTime),
           endTime: convertTime(selectedEndTime)
         })
@@ -216,13 +218,41 @@ export default function AvailabilityPage() {
         return;
       }
 
-      // Get the newly added availability
-      const newAvailability = await response.json();
-      
-      // Update the availabilities state immediately
-      setAvailabilities(prev => [...prev, newAvailability]);
       setShowInputForm(false);
 
+      // Refresh ALL availabilities for the project
+      const updatedResponse = await fetch(`http://localhost:8080/api/availability/get/all/project/${selectedProject}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (updatedResponse.ok) {
+        const data = await updatedResponse.json();
+        setAvailabilities(data);
+        
+        // Update user names if there's a new user
+        const newUserIds = [...new Set(data.map(a => a.userID))];
+        const existingUserIds = Object.keys(allUsers).map(id => parseInt(id));
+        const newUsers = newUserIds.filter(id => !existingUserIds.includes(id));
+        
+        if (newUsers.length > 0) {
+          const userDetails = { ...allUsers };
+          for (const userId of newUsers) {
+            const userResponse = await fetch(`http://localhost:8080/api/users/${userId}`, {
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
+            
+            if (userResponse.ok) {
+              const userData = await userResponse.json();
+              userDetails[userId] = `${userData.firstName} ${userData.lastName}`;
+            }
+          }
+          setAllUsers(userDetails);
+        }
+      }
     } catch (error) {
       console.error('Error adding availability:', error);
     }

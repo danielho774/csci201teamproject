@@ -36,16 +36,16 @@ CREATE TABLE project_member (
 ); 
 
 -- AVAILABILITY 
-CREATE TABLE Availability (
-	avail_id INT AUTO_INCREMENT PRIMARY KEY, 
-    	user_id INT, 
-    	project_id INT,
-    	date DATE, 
-    	start_time TIME, 
-    	end_time TIME,
-    	FOREIGN KEY (user_id) REFERENCES Users(user_id), 
-    	FOREIGN KEY (project_id) REFERENCES Projects(project_id)
-); 
+CREATE TABLE IF NOT EXISTS Availability (
+    avail_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+    date VARCHAR(10) NOT NULL,
+    start_time VARCHAR(8) NOT NULL,
+    end_time VARCHAR(8) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (project_id) REFERENCES Projects(project_id)
+);
 
 -- STATUS 
 CREATE TABLE Status (

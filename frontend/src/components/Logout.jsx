@@ -10,7 +10,7 @@ function Logout({setIsLoggedIn}) {
     localStorage.setItem('logged-in', 'false');
     setIsLoggedIn(false);
     navigate('/login');
-  }, [navigate]);
+  }, [navigate, setIsLoggedIn]);
 
   return null;
 }

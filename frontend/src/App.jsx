@@ -16,21 +16,22 @@ import styles from './components/NavigationBar.module.css';
 import TransferOwnershipPage from './pages/TransferOwnershipPage';
 import Logout from './components/Logout';
 
-function showProjectsList(projectItem){
-  return(
-    <ProjectCard
-      key = {projectItem.key}
-      project-title = {projectItem['project-title']}
-      project-info = {projectItem['project-info']}
-    />
-  );
-}
+// function showProjectsList(projectItem){
+//   return(
+//     <ProjectCard
+//       key = {projectItem.key}
+//       project-title = {projectItem['project-title']}
+//       project-info = {projectItem['project-info']}
+//     />
+//   );
+// }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('logged-in') === 'true');
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    localStorage.setItem('logged-in', 'true');
   };
 
   const handleLogout = () => {

@@ -81,8 +81,9 @@ export default function ProjectHubPage() {
         return;
       }
       const data = await resp.json();
-      setProjects(Array.isArray(data) ? data : [data]);
-      checkOwnership(data)
+      const processedData = Array.isArray(data) ? data : [data]; 
+      setProjects(processedData);
+      checkOwnership(processedData); 
 
     } catch (e) {
       console.error(e);

@@ -36,8 +36,9 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, 
                 </div>
                 {isMenuOpen && (
                     <div className={styles['dropdown-menu']} onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
-                        <button onClick={() => onLeaveProject(projectId)} className={styles['dropdown-button']}>Leave Project</button>
-
+                        {!isOwner && (
+                            <button onClick={() => onLeaveProject(projectId)} className={styles['dropdown-button']}>Leave Project</button>
+                        )}
                         {isOwner && (
                             <button onClick={handleOwnershipTransfer} className={styles['dropdown-button']}>Ownership</button>
                         )}

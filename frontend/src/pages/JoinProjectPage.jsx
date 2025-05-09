@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import styles from './JoinProjectPage.module.css';
-import ProjectCard from '../components/ProjectCard';
 
 export default function JoinProjectPage() {
   const [projects, setProjects]           = React.useState(null);

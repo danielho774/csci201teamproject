@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'; 
-import styles from './JoinProjectPage.module.css';
+import styles from './TransferOwnershipPage.module.css';
 import { useLocation } from 'react-router-dom'; 
 
 export default function TransferOwnershipPage() {
@@ -77,24 +77,27 @@ export default function TransferOwnershipPage() {
         method: 'POST',
       });
 
-      if (!response.ok) throw new Error('Transfer failed');
+      if (!response.ok) throw new Error('Transfer failed')
 
-      navigate(`/projects/${projectID}/ownership`);
+
+      // navigate(`/projects/${projectID}/ownership`);
+
+      navigate('/'); 
     } catch (error) {
       setErrorMessage('Error transferring ownership.');
     }
   };
 
   return (
-    <div className={styles['join-project']}>
+    <div className={styles['ownership']}>
       <h2>Transfer Ownership</h2>
 
       {loading ? (
-        <p>Loading members...</p>
+        <p className={styles['centered-message']}>Loading members...</p>
       ) : (
         <>
           {members.length === 0 ? (
-            <p>No other members to transfer ownership to.</p>
+            <p className={styles['centered-message']}> No other members to transfer ownership to.</p>
           ) : (
             <div className={styles['input-wrapper']}>
               {members.map(member => (

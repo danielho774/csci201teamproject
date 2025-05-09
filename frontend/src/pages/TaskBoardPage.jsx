@@ -109,9 +109,33 @@ export default function TaskBoardPage() {
     }
   };
 
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setTasks(tasks.filter(t => t.taskID !== taskId));
+      } else {
+        console.error('Failed to delete task:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error while deleting task:', error);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <h2>Task Board for Project: {projectId}</h2>
+      <div className={styles.header}>
+        <button 
+          className={styles.backButton}
+          onClick={() => navigate('/')}
+        >
+          Back to Project Hub
+        </button>
+        <h2>Task Board for Project: {projectId}</h2>
+      </div>
 
       <div className={styles.progressBar}>
         <label>Overall Progress: {progress}%</label>
@@ -126,6 +150,7 @@ export default function TaskBoardPage() {
             <th>End Date</th>
             <th>Status</th>
             <th>Assignment</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -147,12 +172,20 @@ export default function TaskBoardPage() {
                 </select>
               </td>
               <td>
-              <button 
-                className={`${styles.taskButton} ${task.assigned == userID ? styles.unclaim : styles.claim}`} 
-                onClick={() => handleClaimTask(task)}
-              >
-                {task.assigned != userID ? 'Claim Task' : 'Unclaim Task'}
-              </button>
+                <button 
+                  className={`${styles.taskButton} ${task.assigned == userID ? styles.unclaim : styles.claim}`} 
+                  onClick={() => handleClaimTask(task)}
+                >
+                  {task.assigned != userID ? 'Claim Task' : 'Unclaim Task'}
+                </button>
+              </td>
+              <td>
+                <button 
+                  className={`${styles.taskButton} ${styles.delete}`}
+                  onClick={() => handleDeleteTask(task.taskID)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

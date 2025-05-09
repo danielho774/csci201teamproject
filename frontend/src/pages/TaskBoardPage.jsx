@@ -29,7 +29,7 @@ export default function TaskBoardPage() {
 
   const progress = useMemo(() => {
     if (!tasks.length) return 0;
-    const done = tasks.filter(t => t.status === 'Completed').length;
+    const done = tasks.filter(t => t.statusName === 'Completed').length;
     return Math.round((done / tasks.length) * 100);
   }, [tasks]);
 
@@ -48,7 +48,7 @@ export default function TaskBoardPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ statusID }), // NOT statusName
+        body: JSON.stringify({ statusID }), 
       });
   
       if (!res.ok) {

@@ -16,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/availability")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AvailabilityController {
 
     ///* AVAILABILITY SERVICE ROUTES

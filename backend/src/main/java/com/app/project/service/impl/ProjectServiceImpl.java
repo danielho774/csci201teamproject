@@ -38,7 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
         int completedTasks = 0;
 
         for (Task task : project.getTasks()) {
-            if (task.getStatus().getStatusName() == "Completed") { 
+            if (task.getStatus().getStatusName().equals("Completed")) {
                 completedTasks++;
             }
         }

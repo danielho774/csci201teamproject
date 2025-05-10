@@ -6,6 +6,8 @@
 
     justify-content: center;
 }
+
+/* css reference from https://prismic.io/blog/css-hover-effects */
 .project-card {
     
     background-color: #b1a7e4; /*for browsers that don't support gradients*/

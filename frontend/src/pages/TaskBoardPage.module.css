@@ -155,3 +155,9 @@
 .backButton:hover {
   background-color: #3a3a7a;
 }
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #555 !important;
+}

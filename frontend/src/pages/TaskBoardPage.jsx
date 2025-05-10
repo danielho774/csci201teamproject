@@ -2,39 +2,68 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './TaskBoardPage.module.css';
 
-const STATUSES = ['Not Started', 'In Progress', 'Completed'];
+const STATUSES = ['Incomplete', 'In Progress', 'Complete'];
 
 export default function TaskBoardPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const STATUS_ID_MAP = {
-    'Not Started': 0,
-    'In Progress': 1,
-    'Completed': 2,
+    'Incomplete': 1,
+    'In Progress': 2,
+    'Complete': 3,
+  };
+
+  const userID = localStorage.getItem("userID");
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!userID) return;
+      try {
+        const response = await fetch(`/api/users/${userID}`);
+        if (response.ok) {
+          const userData = await response.json();
+          setUserName(`${userData.firstName} ${userData.lastName}`);
+        }
+      } catch (err) {
+        console.error('Failed to fetch user info:', err);
+      }
+    };
+    fetchUserInfo();
+  }, [userID]);
+
+  const fetchTasks = async () => {
+    try {
+      console.log('Fetching tasks for project:', projectId);
+      const response = await fetch(`/api/tasks/project/${projectId}`);
+      if (!response.ok) {
+        console.error('Failed to fetch tasks:', response.status, response.statusText);
+        return;
+      }
+      const data = await response.json();
+      console.log('Fetched tasks:', data);
+      if (data && data.length > 0) {
+        setTasks(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch project tasks:', err);
+    }
   };
 
   useEffect(() => {
-    fetch(`/api/tasks/project/${projectId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setTasks(data);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch project tasks:', err);
-      });
+    fetchTasks();
   }, [projectId]);
 
   const progress = useMemo(() => {
     if (!tasks.length) return 0;
-    const done = tasks.filter(t => t.statusName === 'Completed').length;
+    const done = tasks.filter(t => t.statusName === 'Complete').length;
     return Math.round((done / tasks.length) * 100);
   }, [tasks]);
 
   const handleStatusChange = async (taskId, newStatusName) => {
     const statusID = STATUS_ID_MAP[newStatusName];
+    console.log(`Updating task ${taskId} status to: ${newStatusName} (ID: ${statusID})`);
   
     setTasks(ts =>
       ts.map(t =>
@@ -51,24 +80,32 @@ export default function TaskBoardPage() {
         body: JSON.stringify({ statusID }), 
       });
   
+      const responseData = await res.text();
+      console.log('Status update response:', responseData);
+      
       if (!res.ok) {
-        const msg = await res.text();
-        console.error('Failed to update task status:', msg);
+        console.error('Failed to update task status:', responseData);
+        fetchTasks();
       }
     } catch (error) {
       console.error('Network error while updating status:', error);
+      fetchTasks();
     }
   };
 
-  const userID = localStorage.getItem("userID");
-
   const handleClaimTask = async (task) => {
-    const isClaiming = task.assigned != userID;
+    if (task.assigned && task.assignedUserId !== parseInt(userID)) {
+      console.log("This task is already claimed by another user");
+      return;
+    }
+
+    const isClaiming = !task.assigned || task.assignedUserId !== parseInt(userID);
   
     const endpoint = `/api/tasks/${task.taskID}/${isClaiming ? "assign" : "remove"}/${userID}`;
     const method = isClaiming ? "POST" : "DELETE";
   
     try {
+      console.log(`${isClaiming ? 'Claiming' : 'Unclaiming'} task ${task.taskID}`);
       const response = await fetch(endpoint, { method });
   
       if (!response.ok) {
@@ -83,7 +120,7 @@ export default function TaskBoardPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ statusID: 1 }),
+          body: JSON.stringify({ statusID: 2 }),
         });
   
         if (!statusUpdate.ok) {
@@ -97,15 +134,19 @@ export default function TaskBoardPage() {
           t.taskID === task.taskID
             ? {
                 ...t,
-                assigned: isClaiming ? userID : null,
-                statusID: isClaiming ? 1 : t.statusID,
+                assigned: isClaiming,
+                assignedUserId: isClaiming ? parseInt(userID) : -1,
+                statusID: isClaiming ? 2 : t.statusID,
                 statusName: isClaiming ? 'In Progress' : t.statusName,
               }
             : t
         )
       );
+
+      fetchTasks();
     } catch (err) {
       console.error("Error while claiming task:", err);
+      fetchTasks();
     }
   };
 
@@ -123,6 +164,22 @@ export default function TaskBoardPage() {
     } catch (error) {
       console.error('Error while deleting task:', error);
     }
+  };
+
+  const getClaimButtonText = (task) => {
+    if (!task.assigned) {
+      return 'Claim Task';
+    }
+    
+    if (task.assignedUserId === parseInt(userID)) {
+      return 'Unclaim Task';
+    }
+    
+    return 'Already Claimed';
+  };
+
+  const isClaimButtonDisabled = (task) => {
+    return task.assigned && task.assignedUserId !== parseInt(userID);
   };
 
   return (
@@ -173,10 +230,11 @@ export default function TaskBoardPage() {
               </td>
               <td>
                 <button 
-                  className={`${styles.taskButton} ${task.assigned == userID ? styles.unclaim : styles.claim}`} 
+                  className={`${styles.taskButton} ${task.assignedUserId === parseInt(userID) ? styles.unclaim : styles.claim} ${isClaimButtonDisabled(task) ? styles.disabled : ''}`} 
                   onClick={() => handleClaimTask(task)}
+                  disabled={isClaimButtonDisabled(task)}
                 >
-                  {task.assigned != userID ? 'Claim Task' : 'Unclaim Task'}
+                  {getClaimButtonText(task)}
                 </button>
               </td>
               <td>

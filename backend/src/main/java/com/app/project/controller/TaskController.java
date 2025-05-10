@@ -6,6 +6,9 @@ import com.app.project.model.User; // Import User model
 import com.app.project.service.TaskService;
 import com.app.project.service.UserService; // Import UserService
 import com.app.project.service.ProjectService;
+import com.app.project.model.Project;
+import com.app.project.model.TaskAssignments;
+import com.app.project.repository.TaskAssignmentsRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.app.project.model.Project;
 
 import java.util.List;
 
@@ -32,6 +34,9 @@ public class TaskController {
     // Inject UserService to fetch User objects by ID
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TaskAssignmentsRepository taskAssignmentsRepository;
 
     // Create task
     @PostMapping
@@ -160,6 +165,22 @@ public class TaskController {
                     dto.put("endDate", task.getEndDate());
                     dto.put("duration", task.getDuration());
                     dto.put("assigned", task.isAssigned());
+                    
+                    // Find who is assigned to this task (if anyone)
+                    int assignedUserId = -1;
+                    try {
+                        // Get all assignments for this task
+                        List<TaskAssignments> assignments = taskAssignmentsRepository.findByTaskTaskID(task.getTaskID());
+                        if (!assignments.isEmpty()) {
+                            // Get the first assignment's ProjectMember's User ID
+                            assignedUserId = assignments.get(0).getMember().getUserID();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error getting assigned user: " + e.getMessage());
+                    }
+                    
+                    dto.put("assignedUserId", assignedUserId);
+                    
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -245,17 +266,38 @@ public class TaskController {
 
     // Update task status
     @PutMapping("/{taskId}/status")
-    public ResponseEntity<String> updateTaskStatus(
+    public ResponseEntity<Map<String, Object>> updateTaskStatus(
             @PathVariable("taskId") long taskId,
-            @RequestBody TaskStatus status) { // Assuming TaskStatus has an ID to find the real entity
-        // Might need StatusService injected to fetch the full TaskStatus object first
-        // TaskStatus fullStatus = statusService.getStatusById(status.getStatusID());
-        // boolean success = taskService.updateTaskStatus(taskId, fullStatus);
-        boolean success = taskService.updateTaskStatus(taskId, status); // Assuming service handles lookup
-        if (success) {
-            return new ResponseEntity<>("Task status updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to update task status", HttpStatus.BAD_REQUEST);
+            @RequestBody TaskStatus status) {
+        try {
+            System.out.println("Received status update request for task " + taskId + ", status ID: " + status.getStatusID());
+            
+            boolean success = taskService.updateTaskStatus(taskId, status);
+            
+            if (success) {
+                // Get the updated task to return the current state
+                Task updatedTask = taskService.getTaskById(taskId);
+                Map<String, Object> response = new HashMap<>();
+                response.put("taskID", updatedTask.getTaskID());
+                response.put("statusID", updatedTask.getStatus().getStatusID());
+                response.put("statusName", updatedTask.getStatus().getStatusName());
+                response.put("message", "Task status updated successfully");
+                
+                System.out.println("Task status updated successfully: " + updatedTask.getStatus().getStatusName());
+                
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Failed to update task status");
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in controller updating task status: " + e.getMessage());
+            e.printStackTrace();
+            
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error updating task status: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

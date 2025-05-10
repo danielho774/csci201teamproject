@@ -1,6 +1,7 @@
 package com.app.project.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -30,17 +31,21 @@ public class Project {
     @Column(name = "share_code", nullable = false, unique = true)
     private String shareCode;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     //Delete project members when project is deleted so delete fuctionality works
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectMember> members;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Availability> availabilities = new ArrayList<>();
 
@@ -108,7 +113,7 @@ public class Project {
     }
 
     public int getOwnerID() {
-        return owner.getUserID();
+        return owner != null ? owner.getUserID() : 0;
     }
 
     public void setOwner(User owner) {

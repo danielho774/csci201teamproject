@@ -149,7 +149,10 @@ public class ProjectController {
         ProjectMember projectMember = projectMemberService.createProjectMember(project, user, false);
         try {
             ProjectMember savedProjectMember = projectMemberRepository.save(projectMember);
-            return new ResponseEntity<>(savedProjectMember, HttpStatus.CREATED);
+            // Return a simplified success response
+            Map<String, String> successResponse = new HashMap<>();
+            successResponse.put("message", "Successfully joined project");
+            return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Failed to add member: " + e.getMessage());

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import styles from './ProjectHubPage.module.css';
 import ProjectCard from '../components/ProjectCard';
 
@@ -8,38 +9,50 @@ export default function ProjectHubPage() {
   const [projectIDInput, setProjectIDInput] = React.useState('');
   const [isLoggedIn, setIsLoggedIn]       = React.useState(false);
   const [ownership, setOwnership] = React.useState({});
+  const location = useLocation();
 
   const fetchUserProjects = async () => {
     try {
-      const userID  = localStorage.getItem('userID');
-      const resp= await fetch(`http://localhost:8080/api/users/${userID}/projects`);
+      const userID = localStorage.getItem('userID');
+      console.log('Fetching projects for user:', userID);
+      
+      const resp = await fetch(`http://localhost:8080/api/users/${userID}/projects`);
+      console.log('Response status:', resp.status);
+      
+      const data = await resp.json();
+      console.log('Fetched projects:', data);
+
       if (resp.status === 404) {
         setProjects([]); 
         setErrorMessage('You have no projects yet.');
         return;
       }
-      const data    = await resp.json();
+
       if (!data || (Array.isArray(data) && data.length === 0)) {
         setProjects([]);
         setErrorMessage('You have no projects yet.');
+      } else if (data.message) {
+        // Handle error message from backend
+        setProjects([]);
+        setErrorMessage(data.message);
       } else {
         setProjects(Array.isArray(data) ? data : [data]);
-        checkOwnership(Array.isArray(data) ? data : [data]); 
+        checkOwnership(Array.isArray(data) ? data : [data]);
       }
     } catch (e) {
-      console.error(e);
+      console.error('Error fetching projects:', e);
       setErrorMessage('Failed to load your projects.');
       setProjects([]);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loggedIn = localStorage.getItem('logged-in') === 'true';
     setIsLoggedIn(loggedIn);
     if (loggedIn) {
       fetchUserProjects();
     }
-  }, []);
+  }, [location.state?.refresh]);
 
   const checkOwnership = async (projects) => {
     const userID = localStorage.getItem('userID');
@@ -56,15 +69,6 @@ export default function ProjectHubPage() {
     }
     setOwnership(ownershipStatus);
   };
-
-  React.useEffect(() => {
-    const loggedIn = localStorage.getItem('logged-in') === 'true';
-    setIsLoggedIn(loggedIn);
-    if (loggedIn) {
-      fetchUserProjects();
-    }
-  }, []);
-
 
   const handleProjectIDSubmit = async () => {
     setErrorMessage('');

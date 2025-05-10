@@ -46,31 +46,16 @@ export default function JoinProjectPage() {
 
         if (postResp.ok) {
           console.log('Successfully joined the project');
-          navigate('/'); 
+          navigate('/', { state: { refresh: true } });
         } else {
           const errorData = await postResp.json().catch(() => ({}));
           console.error('Join project error:', errorData);
           setErrorMessage(errorData.message || errorData.error || 'Failed to join the project. Please try again.');
         }
-
-
       } else {
         setErrorMessage('Project ID not found.');
         setProjects([]);
       }
-
-  
-      //   if (postResp.status === 200) {
-      //     // Handle successful join (maybe navigate or show a success message)
-      //     console.log('Successfully joined the project');
-      //   } else {
-      //     // Handle failure (display error message)
-      //     setErrorMessage('Failed to join the project. Please try again.');
-      //   }
-      // } else {
-      //   setErrorMessage('Project ID not found.');
-      //   setProjects([]);
-      // }
     } catch (e) {
       console.error(e);
       setErrorMessage('Lookup failed. Try again.');

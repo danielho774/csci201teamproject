@@ -1,5 +1,6 @@
 package com.app.project.model;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 import java.util.ArrayList; 
@@ -48,9 +49,11 @@ public class User {
 	// private List<Project> projects = new ArrayList<>(); 
 
 	// one user can have multiple availabilities 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL) 
 	private List<Availability> availability = new ArrayList<>(); 
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ProjectMember> memberships = new ArrayList<>(); 
 	
@@ -185,6 +188,14 @@ public class User {
 	}
 	public void setAvailability(List<Availability> availability) {
 		this.availability = availability; 
+	}
+
+	public List<ProjectMember> getMemberships() {
+		return memberships;
+	}
+
+	public void setMemberships(List<ProjectMember> memberships) {
+		this.memberships = memberships;
 	}
 }
 

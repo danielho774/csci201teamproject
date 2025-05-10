@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.List;
+import java.util.ArrayList;
 
 
 @Service
@@ -71,6 +72,20 @@ public class ProjectServiceImpl implements ProjectService {
 
         // save project member in database
         projectMemberRepository.save(projectMember);
+
+        // Add the project member to the project's members list
+        if (savedProject.getMembers() == null) {
+            savedProject.setMembers(new ArrayList<>());
+        }
+        savedProject.getMembers().add(projectMember);
+        projectRepository.save(savedProject);
+
+        // Add the project member to the user's memberships list
+        if (owner.getMemberships() == null) {
+            owner.setMemberships(new ArrayList<>());
+        }
+        owner.getMemberships().add(projectMember);
+        userRepository.save(owner);
 
         return savedProject;
     }

@@ -1,6 +1,7 @@
 package com.app.project.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 import java.util.ArrayList; 
@@ -13,10 +14,12 @@ public class ProjectMember {
     @Column(name = "member_id")
     private int memberID; 
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false) 
     private Project project; 
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     //can change to user if needed
@@ -25,6 +28,7 @@ public class ProjectMember {
     @Column(name = "role")//owner is true, member is false
 	private boolean role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL) 
     private List<TaskAssignments> assignments = new ArrayList<>(); 
 

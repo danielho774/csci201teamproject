@@ -15,59 +15,47 @@ export default function CreateProjectPage() {
 
   // const {userID} = useContext(AuthContext); 
 
-  const handleSubmission = async (event) => {
-    event.preventDefault(); 
-
-    if ((startDate && endDate) && (new Date(startDate) > new Date(endDate))) { // startDate && endDate checks if both fields are not empty, create a Date object and check startDate < endDate
-    setError('End date cannot be before start date.'); 
-    return; 
-  }
-
-  const newProject = {
-    projectName,
-    projectDescription,
-    startDate,
-    endDate,
-    shareCode
-  }
-  console.log('Project Created:', { projectName, projectDescription, startDate, endDate });
-
-  try {
-    const userID = localStorage.getItem('userID');
-    console.log('UserID: ', userID); 
-    // check if this is correct
-    const response = await fetch(`http://localhost:8080/api/projects/createProject?userID=${userID}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newProject),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log('Project saved:', result);
-
-      const projectID = result.projectID; 
-      localStorage.setItem('projectID', projectID); 
-      // Lead to project confirmation page 
-      navigate('/'); 
-    } else {
-      const errorData = await response.text();
-      if (response.status === 409) { // 409 since backend: HttpStatus.CONFLICT
-        setError('A project with the same share code already exists.');
-      } else {
-        setError(errorData || 'Failed to create project. Please try again.');
-        console.error('Failed to create project');
-        // const error = await response.json();
-        console.error('Error:', error);
-      }
-      
+  const handleSubmission = async (e) => {
+    e.preventDefault();
+    
+    // Validate dates
+    if (new Date(endDate) <= new Date(startDate)) {
+      setError('End date must be after start date');
+      return;
     }
-  } catch (error) {
-    console.error('Error sending to backend:', error);
-  }
 
+    const userID = localStorage.getItem('userID');
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/projects/createProject?userID=' + userID, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectName,
+          projectDescription,
+          startDate: startDate.split('T')[0],
+          endDate: endDate.split('T')[0],
+          shareCode
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        setError(errorData || 'Failed to create project');
+        return;
+      }
+
+      const project = await response.json();
+      console.log('Project Created:', project); // Add this for debugging
+
+      // After successful creation, navigate to hub
+      navigate('/', { state: { refresh: true } });
+    } catch (err) {
+      console.error('Error creating project:', err);
+      setError('Failed to create project. Please try again.');
+    }
   };
 
   return (

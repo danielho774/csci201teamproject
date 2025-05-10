@@ -198,7 +198,7 @@ export default function TaskBoardPage() {
         <label>Overall Progress: {progress}%</label>
         <progress value={progress} max="100" />
       </div>
-      <table className={styles.table}>
+     <table className={styles.table}>
         <thead>
           <tr>
             <th>Task</th>
@@ -206,8 +206,8 @@ export default function TaskBoardPage() {
             <th>Start Date</th>
             <th>End Date</th>
             <th>Status</th>
-            <th>Assignment</th>
-            <th>Actions</th>
+            {userID && <th>Assignment</th>}
+            {userID && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -222,29 +222,34 @@ export default function TaskBoardPage() {
                   value={task.statusName}
                   onChange={e => handleStatusChange(task.taskID, e.target.value)}
                   className={styles.statusSelect}
+                  disabled={!userID}
                 >
                   {STATUSES.map(s => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </td>
-              <td>
-                <button 
-                  className={`${styles.taskButton} ${task.assignedUserId === parseInt(userID) ? styles.unclaim : styles.claim} ${isClaimButtonDisabled(task) ? styles.disabled : ''}`} 
-                  onClick={() => handleClaimTask(task)}
-                  disabled={isClaimButtonDisabled(task)}
-                >
-                  {getClaimButtonText(task)}
-                </button>
-              </td>
-              <td>
-                <button 
-                  className={`${styles.taskButton} ${styles.delete}`}
-                  onClick={() => handleDeleteTask(task.taskID)}
-                >
-                  Delete
-                </button>
-              </td>
+              {userID && (
+                <td>
+                  <button 
+                    className={`${styles.taskButton} ${task.assignedUserId === parseInt(userID) ? styles.unclaim : styles.claim} ${isClaimButtonDisabled(task) ? styles.disabled : ''}`} 
+                    onClick={() => handleClaimTask(task)}
+                    disabled={isClaimButtonDisabled(task)}
+                  >
+                    {getClaimButtonText(task)}
+                  </button>
+                </td>
+              )}
+              {userID && (
+                <td>
+                  <button 
+                    className={`${styles.taskButton} ${styles.delete}`}
+                    onClick={() => handleDeleteTask(task.taskID)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

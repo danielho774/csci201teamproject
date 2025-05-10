@@ -6,7 +6,7 @@ import ProjectCard from '../components/ProjectCard';
 export default function ProjectHubPage() {
   const [projects, setProjects]           = React.useState(null);
   const [errorMessage, setErrorMessage]   = React.useState('');
-  const [projectIDInput, setProjectIDInput] = React.useState('');
+  const [shareCodeInput, setShareCodeInput] = React.useState('');
   const [isLoggedIn, setIsLoggedIn]       = React.useState(false);
   const [ownership, setOwnership] = React.useState({});
   const location = useLocation();
@@ -70,18 +70,18 @@ export default function ProjectHubPage() {
     setOwnership(ownershipStatus);
   };
 
-  const handleProjectIDSubmit = async () => {
+  const handleShareCodeSubmit = async () => {
     setErrorMessage('');
     setProjects(null); 
-    if (!projectIDInput.trim()) {
+    if (!shareCodeInput.trim()) {
       setErrorMessage('Please enter a Project ID.');
       return;
     }
     try {
-      const resp = await fetch(`http://localhost:8080/api/projects/${projectIDInput}`);
+      const resp = await fetch(`http://localhost:8080/api/projects/getByShareCode?shareCode=${shareCodeInput}`);
       if (resp.status === 404) {
         setProjects([]); 
-        setErrorMessage(`Project "${projectIDInput}" not found.`);
+        setErrorMessage(`Project with share code "${shareCodeInput}" not found.`);
         return;
       }
       const data = await resp.json();
@@ -148,16 +148,15 @@ export default function ProjectHubPage() {
       ) : (
        
         <div className={styles['input-wrapper']}>
-          <p>Please enter a project ID to view:</p>
+          <p>Please enter a project share code to view:</p>
           <input
             type="text"
-            value={projectIDInput}
-            onChange={e => setProjectIDInput(e.target.value)}
-            placeholder="Enter Project ID"
-            className={styles['project-id-input']}
+            value={shareCodeInput}
+            onChange={e => setShareCodeInput(e.target.value)}
+            placeholder="Enter share code"
           />
           <button
-            onClick={handleProjectIDSubmit}
+            onClick={handleShareCodeSubmit}
             className={styles['submit-button']}
           >
             Submit
@@ -167,7 +166,6 @@ export default function ProjectHubPage() {
             <div className={styles['no-projects']}>{errorMessage}</div>
           )}
 
-          {/* only show cards once we have results */}
           {projects && projects.length > 0 && (
             <div className={styles.grid}>
               {projects.map(p => (

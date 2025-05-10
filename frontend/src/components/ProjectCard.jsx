@@ -18,6 +18,7 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, 
 
     const boardLink = `/projects/${projectId}/board`;
     const navigate = useNavigate()
+    const isLoggedIn = localStorage.getItem('logged-in') === 'true';
 
     // console.log(`Check for ownership: : ${projectId}, isOwner: ${isOwner}`); 
 
@@ -31,7 +32,9 @@ function ProjectCard({projectId, 'project-title': projectTitle, onLeaveProject, 
                 <div className={styles['project-card']}>
                     <div className={styles['project-text']}>
                         <h1 className = {styles['project-title']}>{projectTitle}</h1>
-                        <div className={styles['menu-button']} onClick={toggleMenu}>☰</div>
+                        {isLoggedIn && (
+                            <div className={styles['menu-button']} onClick={toggleMenu}>☰</div>
+                        )}                    
                     </div>
                 </div>
                 {isMenuOpen && (

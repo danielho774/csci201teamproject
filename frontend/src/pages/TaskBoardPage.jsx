@@ -273,13 +273,15 @@ export default function TaskBoardPage() {
           ))}
         </tbody>
       </table>
-
-      <button
-        className={styles.addButton}
-        onClick={() => navigate(`/projects/${projectId}/tasks/add`)}
-      >
-        + Add New Task
-      </button>
+      
+      {userID && (
+        <button
+          className={styles.addButton}
+          onClick={() => navigate(`/projects/${projectId}/tasks/add`)}
+        >
+          + Add New Task
+        </button>
+      )}
     </div>
   );
 }

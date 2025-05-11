@@ -86,7 +86,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(long id) {
         getTaskById(id); // Check if exists
-        taskRepository.deleteById((int) id);
+        taskAssignmentsRepository.deleteByTaskTaskID((int) id); // delete task assignment
+        taskRepository.deleteById((int) id); // then delete task
     }
     
     @Override

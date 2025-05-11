@@ -1,8 +1,12 @@
 package com.app.project.repository; 
 
 import com.app.project.model.TaskAssignments;
+
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository; // Add if missing
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List; // Add if using List-based methods
 import java.util.Optional; // Add if using Optional-based methods
 
@@ -17,6 +21,9 @@ public interface TaskAssignmentsRepository extends JpaRepository<TaskAssignments
     Optional<TaskAssignments> findByTaskTaskIDAndMemberMemberID(int taskId, int memberId);
 
     void deleteByTaskTaskIDAndMemberMemberID(int taskId, int memberId);
+
+    @Transactional
+    void deleteByTaskTaskID(int taskId);
 
     boolean existsByTaskTaskID(int taskId); // Useful for checking if a task has any assignments
 

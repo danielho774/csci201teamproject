@@ -16,6 +16,25 @@ export default function TaskBoardPage() {
 
   const userID = localStorage.getItem("userID");
   const [userName, setUserName] = useState("");
+  const [projectName, setProjectName] = useState("");
+
+  useEffect(() => {
+    const fetchProjectName = async () => {
+      try {
+        const response = await fetch(`/api/projects/${projectId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProjectName(data.projectName);
+        } else {
+          console.error('Failed to fetch project name');
+        }
+      } catch (err) {
+        console.error('Error fetching project:', err);
+      }
+    };
+
+    fetchProjectName();
+  }, [projectId]);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -191,7 +210,7 @@ export default function TaskBoardPage() {
         >
           Back to Project Hub
         </button>
-        <h2>Task Board for Project: {projectId}</h2>
+        <h2>Task Board for Project: {[projectName]}</h2>
       </div>
 
       <div className={styles.progressBar}>

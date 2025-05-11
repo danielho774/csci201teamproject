@@ -20,6 +20,11 @@ export default function AddTaskPage() {
       return;
     }
 
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      setError("Start date cannot be after end date");
+      return;
+  }
+
     const newTask = {
       taskName: title,
       taskDescrip: description,
